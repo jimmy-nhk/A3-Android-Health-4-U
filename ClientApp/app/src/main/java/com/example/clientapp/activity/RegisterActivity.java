@@ -1,6 +1,5 @@
 package com.example.clientapp.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.model.Client;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,14 +20,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     // Constants
-    private final String CLIENT_COLLECTION = "clients";
+    private final String emailRegex = "^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
+            + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$";
     private final String TAG ="RegisterActivity";
 
     // Views
-    private EditText emailText, usernameText, passwordText, confirmPasswordText;
+    private EditText emailText, usernameText, passwordText, confirmPasswordText
+            , fullNameText, phoneText, dobText;
     private TextView errorTxt;
     private Button signUpBtn;
 
@@ -55,28 +56,34 @@ public class RegisterActivity extends AppCompatActivity {
         signUpBtn.setOnClickListener(v -> {
             Log.d(TAG, "signUpBtn");
 
-            // validate name
-            if (!usernameExists(usernameText.getText().toString())){
-                usernameText.setError("Username already existed");
-                Log.d(TAG, "Username already exists");
-                return;
-            }
-
-            // validate mail
-            if (!emailExists(emailText.getText().toString())){
-                emailText.setError("Email already existed");
-                Log.d(TAG, "Email already exists");
-                return;
-            }
-
-            // validate the password
-            if (!validatePassword()){
-                Log.d(TAG, "Password does not match or less than 6 characters ");
-                return;
-            }
-
-            addClientToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
-
+//            // validate name
+//            if (!isUsernameUnique(usernameText.getText().toString())){
+////                usernameText.setError("Username already existed");
+//                Log.d(TAG, "Username already exists");
+//                return;
+//            }
+//
+//            // validate mail
+//            if (!isEmailUnique(emailText.getText().toString())){
+////                emailText.setError("Email already existed");
+//                Log.d(TAG, "Email already exists");
+//                return;
+//            }
+//
+//            // validate the password
+//            if (!isPasswordValid(passwordText.getText().toString(), confirmPasswordText.getText().toString())){
+//                Log.d(TAG, "Password does not match or less than 6 characters ");
+//                return;
+//            }
+            String username = usernameText.getText().toString().trim();
+            String fullName = "fullname";
+            String email = emailText.getText().toString().trim();
+            String phone = "123456789";
+            String dob = "123456789";
+            String password = passwordText.getText().toString().trim();
+            String confirmPassword = confirmPasswordText.getText().toString().trim();
+            if (validateInput(username, email, password, confirmPassword, fullName, phone, dob))
+                addClientToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
         });
 
     }
@@ -112,9 +119,9 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.d(TAG, "Successfully added new Client in Register Activity");
                         addClientToFireStore();
                     } else {
-
+                        String INVALID_GMAIL = "The gmail format is invalid.";
                         errorTxt.setVisibility(View.VISIBLE);
-                        errorTxt.setText("The gmail format is incorrect.");
+                        errorTxt.setText(INVALID_GMAIL);
 
                         Log.w(TAG,"createClientWithEmail:failure", task.getException());
 //                            Toast.makeText(RegisterActivity.this, "Create account fail", Toast.LENGTH_SHORT).show();
@@ -131,7 +138,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         userCollection.document(username)
                 .set(c.toMap())
-                .addOnSuccessListener(unused -> Log.d(TAG, "Successfully added client to FireStore: " + c.toString()))
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Successfully added client to FireStore: " + c.toString());
+                    updateUI(c);
+                })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + c.toString()));
     }
 
@@ -143,46 +153,194 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
-    // validate Client name
-    private boolean usernameExists(String username){
-        for (Client client: clientList) {
-            if (username.equals(client.getUsername())){
-                return false;
-            }
+    // Validate client's fullname
+    private boolean isFullNameValid(String fullName) {
+        if (fullName.isEmpty()) {
+            passwordText.setError("Name cannot be empty");
+            return false;
         }
         return true;
     }
 
-    // validate Client email
-    private boolean emailExists(String email){
+    // Validate client's phone
+    private boolean isPhoneValid(String phone) {
+        if (phone.isEmpty()) {
+            String EMPTY_PHONE = "Phone cannot be empty. Please try again!";
+            fullNameText.setError(EMPTY_PHONE);
+            return false;
+        } else if (phone.length() != 9) {
+            String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
+                    "of your phone number!";
+            fullNameText.setError(INVALID_PHONE);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validate client's dob
+    private boolean isDobValid(String dob) {
+        if (dob.isEmpty()) {
+            String EMPTY_DOB = "Date of birth cannot be empty. Please try again!";
+            dobText.setError(EMPTY_DOB);
+            return false;
+        }
+        return true;
+    }
+
+    // Validate client's username
+    private boolean isUsernameValid(String username) {
+        if (username.isEmpty()) {
+            usernameText.setError("Username cannot be empty");
+            return false;
+        }
+
+        if (!isUsernameUnique(username)) {
+            usernameText.setError("This username was already used by another account");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Check if username is unique
+    private boolean isUsernameUnique(String username){
         for (Client client: clientList) {
-            if (email.equals(client.getEmail())){
-                return false;
-            }
+            if (username.equals(client.getUsername())) return false;
+        }
+        return true;
+    }
+
+    // Check if username is unique
+    private boolean isEmailValid(String email) {
+        if (email.isEmpty()) {
+            emailText.setError("Email cannot be empty. Please try again!");
+            return false;
+        }
+        if (!Pattern.compile(emailRegex)
+                .matcher(email)
+                .matches()) {
+            emailText.setError("Invalid email format (e.g abc@gmail.com)");
+            return false;
+        }
+        if (!isEmailUnique(email)) {
+            emailText.setError("This email was already used by another account");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Check if username is unique
+    private boolean isEmailUnique(String email){
+        for (Client client: clientList) {
+            if (email.equals(client.getEmail())) return false;
         }
         return true;
     }
 
     // validate password
-    private boolean validatePassword() {
-        String password = passwordText.getText().toString();
-        String confirmPassword = confirmPasswordText.getText().toString();
+    private boolean isPasswordValid(String password, String confirmPassword) {
+//        String password = passwordText.getText().toString();
+//        String confirmPassword = confirmPasswordText.getText().toString();
 
-        // check validation
-        if (!password.equals(confirmPassword)){
-            passwordText.setError("Password does not match");
-            confirmPasswordText.setError("Password does not match");
+        if (password.isEmpty()) {
+            passwordText.setError("Password cannot be empty");
+            confirmPasswordText.setError("Password cannot be empty");
             return false;
         }
 
         // check length
-        if (confirmPassword.length() < 6){
+        if (password.length() < 6){
             passwordText.setError("Password cannot have less than 6 characters");
             confirmPasswordText.setError("Password cannot have less than 6 characters");
             return false;
         }
 
+        // check validation
+        if (!password.equals(confirmPassword)){
+            passwordText.setError("Confirm password does not match");
+            confirmPasswordText.setError("Confirm password does not match");
+            return false;
+        }
         return true;
+    }
+
+    private boolean validateInput(String username,
+                                  String email,
+                                  String password,
+                                  String confirmPassword,
+                                  String fullName,
+                                  String phone,
+                                  String dob) {
+//        boolean isValid = true;
+
+        return isUsernameValid(username)
+                && isFullNameValid(fullName)
+                && isDobValid(dob)
+                && isPhoneValid(phone)
+                && isEmailValid(email)
+                && isPasswordValid(password, confirmPassword);
+
+
+//        if (phone.length() < 4 && isValid) {
+//            warningMsg = EMPTY_PHONE;
+//            isValid = false;
+//        }
+//        // Phone number format
+//        if (phone.length() != 12 && isValid) {
+//            warningMsg = INVALID_PHONE;
+//            isValid = false;
+//        }
+
+
+//        if (dob.isEmpty() && isValid) {
+//            warningMsg = EMPTY_DOB;
+//            isValid = false;
+//        }
+//        try {
+//            int year = Integer.parseInt(dob.substring(6, 10));
+//            if ((2021 - year < 18) && isValid) {
+//                warningMsg = INVALID_DOB;
+//                isValid = false;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+//        if (email.isEmpty() && isValid) {
+//            warningMsg = EMPTY_EMAIL;
+//            isValid = false;
+//        }
+//        // Email format
+//        if (!isPatternValid(email, EMAIL_REGEX) && isValid) {
+//            warningMsg = INVALID_EMAIL;
+//            isValid = false;
+//        }
+//
+//
+//        if (password.isEmpty() && isValid) {
+//            warningMsg = EMPTY_PASSWORD;
+//            isValid = false;
+//        }
+//        if (password.length() < 6 && isValid) {
+//            warningMsg = INVALID_PASSWORD;
+//            isValid = false;
+//        }
+//        if (confirmPassword.isEmpty() && isValid) {
+//            warningMsg = EMPTY_CONFIRM_PASSWORD;
+//            isValid = false;
+//        }
+//        if (!confirmPassword.equals(password) && isValid) {
+//            warningMsg = INVALID_CONFIRM_PASSWORD;
+//            isValid = false;
+//        }
+//
+//        if (!isValid) {
+//            warningTextView.setText(warningMsg);
+//            warningTextView.setVisibility(View.VISIBLE);
+//            return false;
+//        }
     }
 
     // init service
@@ -190,6 +348,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Init firestore
         mAuth = FirebaseAuth.getInstance();
         fireStore = FirebaseFirestore.getInstance();
+        String CLIENT_COLLECTION = "clients";
         userCollection = fireStore.collection(CLIENT_COLLECTION);
         // init realtime db
 //        firebaseDatabase = FirebaseDatabase.getInstance("https://a2-android-56cbb-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -212,4 +371,4 @@ public class RegisterActivity extends AppCompatActivity {
     }
 }
 
-//TODO: after logging in => (send email by intent to other activity ? check firebaseUser in every activity)
+//TODO: add datepicker @Phuc
