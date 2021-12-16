@@ -188,53 +188,53 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         //TODO: Take firestore from c Phuc to validate ne
 
 
-        // validate in case it cannot sign in with authentication
-        try {
-            //TODO: remember to change back to normal way
-            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-//            firebaseAuth.signInWithEmailAndPassword("2@gmail.com" , "123456")
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-
-                                // Sign in success, update UI with signed-in user's information
-                                Log.d(TAG, "signInWithEmail:success");
-//                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
-
-                                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-
-                                User user;
-                                Log.d(TAG, userFirebase.getEmail() + " mail1");
-
-                                try {
-                                    // get the user from realtime db
-                                    user = searchUser(userFirebase.getEmail());
-                                    Log.d(TAG, user.getEmail().toString());
-
-                                    // update UI (send intent)
-                                    updateUI(user);
-
-
-                                } catch (Exception e){
-                                    Log.d(TAG, "Cannot validate the user in firestone");
-
-                                }
-
-                            }else {
-
-                                // if sign in fails, display a message to the user
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-        } catch (Exception e){
-            errorLoginTxt.setVisibility(View.VISIBLE);
-            errorLoginTxt.setText("Please enter your mail and password.");
-            return;
-        }
+//        // validate in case it cannot sign in with authentication
+//        try {
+//            //TODO: remember to change back to normal way
+//            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+////            firebaseAuth.signInWithEmailAndPassword("2@gmail.com" , "123456")
+//                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if (task.isSuccessful()){
+//
+//                                // Sign in success, update UI with signed-in user's information
+//                                Log.d(TAG, "signInWithEmail:success");
+////                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
+//
+//                                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+//
+//                                User user;
+//                                Log.d(TAG, userFirebase.getEmail() + " mail1");
+//
+//                                try {
+//                                    // get the user from realtime db
+//                                    user = searchUser(userFirebase.getEmail());
+//                                    Log.d(TAG, user.getEmail().toString());
+//
+//                                    // update UI (send intent)
+//                                    updateUI(user);
+//
+//
+//                                } catch (Exception e){
+//                                    Log.d(TAG, "Cannot validate the user in firestone");
+//
+//                                }
+//
+//                            }else {
+//
+//                                // if sign in fails, display a message to the user
+//                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+////                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//
+//        } catch (Exception e){
+//            errorLoginTxt.setVisibility(View.VISIBLE);
+//            errorLoginTxt.setText("Please enter your mail and password.");
+//            return;
+//        }
     }
 
     // handle sign in with google
