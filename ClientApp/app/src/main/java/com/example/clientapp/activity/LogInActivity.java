@@ -80,13 +80,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
 
 
-        // sign in gg btn
-        signInGoogleButton.setOnClickListener(view -> {
-            Log.d(TAG, "Before going into google");
-            Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
-        });
-
     }
 
     // init services
@@ -98,6 +91,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
         userCollection = fireStore.collection(CLIENT_COLLECTION);
+        FirebaseAuth.getInstance().signOut();
 
 
         //this is where we start the Auth state Listener to listen for whether the user is signed in or not
@@ -137,6 +131,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
+
+        // sign in gg btn
+        signInGoogleButton.setOnClickListener(view -> {
+            Log.d(TAG, "Before going into google");
+            Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+            startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
+        });
 
     }
 
@@ -287,15 +288,23 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         // check if from google
         if (requestCode == GOOGLE_SUCCESSFULLY_SIGN_IN){
 
+//            // The Task returned from this call is always completed, no need to attach
+//            // a listener.
+//            GoogleSignInResult result = null;
+//            if (data != null) {
+//                result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+//            }
+//            if (result != null) {
+//                handleSignInResult(result);
+//            }
+
             // The Task returned from this call is always completed, no need to attach
             // a listener.
-            GoogleSignInResult result = null;
-            if (data != null) {
-                result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            }
-            if (result != null) {
-                handleSignInResult(result);
-            }
+            Log.d(TAG, "signInWithGoogle: " + data.getType());
+            Log.d(TAG, "signInWithGoogle: " + data.toString());
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+
         }
     }
 
