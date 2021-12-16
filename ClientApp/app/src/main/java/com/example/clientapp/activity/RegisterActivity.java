@@ -13,32 +13,34 @@ import android.widget.TextView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.model.Client;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
+    // Constants
+    private final String CLIENT_COLLECTION = "clients";
+    private final String TAG ="RegisterActivity";
 
-    private EditText emailText, clientNameText, passwordText, confirmPasswordText;
+    // Views
+    private EditText emailText, usernameText, passwordText, confirmPasswordText;
+    private TextView errorTxt;
     private Button signUpBtn;
-    private FirebaseAuth mAuth;
-//    private FirebaseDatabase firebaseDatabase;
-//    private DatabaseReference databaseReference;
 
+    // Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore fireStore ;
+    private CollectionReference userCollection;
+
+    // Data
     private List<Client> clientList;
 
-    private TextView errorTxt;
-
-    public static final String Client_COLLECTION = "clients";
-
-    public static final String TAG ="RegisterActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,114 +48,91 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         //Init necessary components
-        attachComponents();
+        getViews();
         initService();
         loadClientData();
 
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "signUpBtn");
+        signUpBtn.setOnClickListener(v -> {
+            Log.d(TAG, "signUpBtn");
 
-                // validate name
-                if (!validateClientName(clientNameText.getText().toString())){
-                    clientNameText.setError("This Clientname is already existed");
-                    Log.d(TAG, "Clientname already exists");
-                    return;
-                }
-
-                // validate mail
-                if (!validateMail(emailText.getText().toString())){
-                    emailText.setError("This email is already existed");
-                    Log.d(TAG, "email already exists");
-                    return;
-                }
-
-                // validate the password
-                if (!validatePassword()){
-                    Log.d(TAG, "Password does not match or less than 6 characters ");
-                    return;
-                }
-
-                addClientToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
-
+            // validate name
+            if (!usernameExists(usernameText.getText().toString())){
+                usernameText.setError("Username already existed");
+                Log.d(TAG, "Username already exists");
+                return;
             }
+
+            // validate mail
+            if (!emailExists(emailText.getText().toString())){
+                emailText.setError("Email already existed");
+                Log.d(TAG, "Email already exists");
+                return;
+            }
+
+            // validate the password
+            if (!validatePassword()){
+                Log.d(TAG, "Password does not match or less than 6 characters ");
+                return;
+            }
+
+            addClientToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
+
         });
 
     }
 
     // load the Client data
-    public void loadClientData(){
-
-//        // load Clients
-//        databaseReference.child("Clients").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//
-//
-//                GenericTypeIndicator<HashMap<String, Client>> genericTypeIndicator = new GenericTypeIndicator<HashMap<String, Client>>() {
-//                };
-//
-//                HashMap<String, Client> Clients = snapshot.getValue(genericTypeIndicator);
-//
-//
-//                try {
-//                    for (Client u : Clients.values()) {
-////                        Log.d(TAG, "Value is: " + u.getEmail());
-//                        ClientList.add(u);
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    Log.d(TAG, "Cannot load the Clients");
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+    private void loadClientData() {
+        userCollection.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w(TAG, "Listen failed.", error);
+                return;
+            }
+            Client c;
+            if (value != null) {
+                for (QueryDocumentSnapshot doc : value) {
+                    if (doc != null) {
+                        c = doc.toObject(Client.class);
+                        clientList.add(c);
+                        Log.d(TAG, "Client data loaded successfully: " + c.toString());
+                    }
+                }
+            }
+        });
     }
 
     // add to authentication
-    public void addClientToAuthentication(String mail, String password){
-
+    private void addClientToAuthentication(String mail, String password){
         mAuth.createUserWithEmailAndPassword(mail, password)
-                .addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(this, task -> {
 
-                        if (task.isSuccessful()){
-                            // Sign in success, update UI
-                            Log.d(TAG,"createClientWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-//                            Toast.makeText(RegisterActivity.this, "Successfully created", Toast.LENGTH_SHORT).show();
+                    if (task.isSuccessful()){
+                        // Sign in success, update UI
+//                        FirebaseUser user = mAuth.getCurrentUser();
+                        Log.d(TAG, "Successfully added new Client in Register Activity");
+                        addClientToFireStore();
+                    } else {
 
+                        errorTxt.setVisibility(View.VISIBLE);
+                        errorTxt.setText("The gmail format is incorrect.");
 
-                            // create Client
-                            Client client1 = new Client(clientNameText.getText().toString(), emailText.getText().toString(), "false");
-
-//                            databaseReference.child("Clients").child(client1.getName()).setValue(client1.toMap());
-
-                            Log.d(TAG, "Successfully added new Client in Register Activity");
-
-                            updateUI(client1);
-                        } else {
-
-                            errorTxt.setVisibility(View.VISIBLE);
-                            errorTxt.setText("The gmail format is incorrect.");
-
-                            Log.w(TAG,"createClientWithEmail:failure", task.getException());
+                        Log.w(TAG,"createClientWithEmail:failure", task.getException());
 //                            Toast.makeText(RegisterActivity.this, "Create account fail", Toast.LENGTH_SHORT).show();
-
-
-                        }
                     }
                 });
+    }
+
+    private void addClientToFireStore() {
+        // create Client
+        String username = usernameText.getText().toString().trim();
+        Client c = new Client();
+        c.setEmail(emailText.getText().toString().trim());
+        c.setUsername(usernameText.getText().toString().trim());
+
+        userCollection.document(username)
+                .set(c.toMap())
+                .addOnSuccessListener(unused -> Log.d(TAG, "Successfully added client to FireStore: " + c.toString()))
+                .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + c.toString()));
     }
 
     //update ui
@@ -165,11 +144,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // validate Client name
-    private boolean validateClientName(String clientName){
-
-        for (Client client: clientList
-        ) {
-            if (clientName.equals(client.getName())){
+    private boolean usernameExists(String username){
+        for (Client client: clientList) {
+            if (username.equals(client.getUsername())){
                 return false;
             }
         }
@@ -177,47 +154,43 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // validate Client email
-    private boolean validateMail(String mail){
-
-        for (Client client: clientList
-        ) {
-            if (mail.equals(client.getEmail())){
+    private boolean emailExists(String email){
+        for (Client client: clientList) {
+            if (email.equals(client.getEmail())){
                 return false;
             }
         }
         return true;
     }
 
-
     // validate password
     private boolean validatePassword() {
-
         String password = passwordText.getText().toString();
         String confirmPassword = confirmPasswordText.getText().toString();
 
         // check validation
         if (!password.equals(confirmPassword)){
-            passwordText.setError("The password does not match");
-            confirmPasswordText.setError("The password does not match");
+            passwordText.setError("Password does not match");
+            confirmPasswordText.setError("Password does not match");
             return false;
         }
 
         // check length
         if (confirmPassword.length() < 6){
-            passwordText.setError("The password cannot have less than 6 characters");
-            confirmPasswordText.setError("The password cannot have less than 6 characters");
+            passwordText.setError("Password cannot have less than 6 characters");
+            confirmPasswordText.setError("Password cannot have less than 6 characters");
             return false;
         }
 
         return true;
     }
 
-
     // init service
     public void initService(){
-        // Init firestone
+        // Init firestore
         mAuth = FirebaseAuth.getInstance();
-
+        fireStore = FirebaseFirestore.getInstance();
+        userCollection = fireStore.collection(CLIENT_COLLECTION);
         // init realtime db
 //        firebaseDatabase = FirebaseDatabase.getInstance("https://a2-android-56cbb-default-rtdb.asia-southeast1.firebasedatabase.app/");
 //        databaseReference = firebaseDatabase.getReference();
@@ -227,14 +200,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // attach components
-    public void attachComponents(){
+    public void getViews() {
         errorTxt = findViewById(R.id.errorTxt);
         errorTxt.setVisibility(View.INVISIBLE);
 
         emailText = findViewById(R.id.editEmail);
-        clientNameText = findViewById(R.id.editUserName);
+        usernameText = findViewById(R.id.editUserName);
         passwordText = findViewById(R.id.editPassword);
         confirmPasswordText = findViewById(R.id.editConfirmPassword);
         signUpBtn = findViewById(R.id.signUpBtn);
     }
 }
+
+//TODO: after logging in => (send email by intent to other activity ? check firebaseUser in every activity)

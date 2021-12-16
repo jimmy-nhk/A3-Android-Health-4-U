@@ -71,19 +71,22 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-
+        Log.d(TAG, "hello");
         // init services
         attachComponents();
         initService();
 
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            firebaseUser.getEmail();
+        }
+
+
         // sign in gg btn
-        signInGoogleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Before going into google");
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
-            }
+        signInGoogleButton.setOnClickListener(view -> {
+            Log.d(TAG, "Before going into google");
+            Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+            startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
         });
 
     }
@@ -121,14 +124,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         clientList = new ArrayList<>();
 
         // load users
-        userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        userCollection.addSnapshotListener((value, error) -> {
 
-                for (QueryDocumentSnapshot doc : value) {
+            for (QueryDocumentSnapshot doc : value) {
 
-                    Log.d(TAG, "onEvent: " + doc.get("name"));
-                }
+                Log.d(TAG, "onEvent: " + doc.get("name"));
             }
         });
 //        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
@@ -244,12 +244,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if(result.isSuccess()){
             // get the account
             GoogleSignInAccount account = result.getSignInAccount();
-            idToken = account.getIdToken();
+            idToken = account != null ? account.getIdToken() : null;
 
 
             // you can store user data to SharedPreference
             AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-            firebaseAuthWithGoogle(credential);
+//            firebaseAuthWithGoogle(credential);
         }else{
             // Google Sign In failed, update UI appropriately
             Log.e(TAG, "Login Unsuccessful. "+result);
@@ -262,38 +262,34 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // sign in with gg
         firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                        if(task.isSuccessful()){
+                .addOnCompleteListener(this, task -> {
+                    Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                    if(task.isSuccessful()){
 //                            Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                            // get the current logged in user
-                            FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-                            Log.d(TAG,userFirebase.getDisplayName() + " name" );
-                            Log.d(TAG, Objects.requireNonNull(userFirebase).getEmail() + " email");
+                        // get the current logged in user
+                        FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+                        Log.d(TAG,userFirebase.getDisplayName() + " name" );
+                        Log.d(TAG, Objects.requireNonNull(userFirebase).getEmail() + " email");
 
 
+                        // Create the user
+//                            Client client = new Client(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
 
-                            // create the user
-                            Client client = new Client(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
-
-                            //TODO: Switch to fireStore
+                        //TODO: Switch to fireStore
 //                            databaseReference.child("users").child(user.getName()).setValue(user.toMap());
 
-                            // update the UI
-                            updateUI(client);
-                        }else{
-                            Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
-                            task.getException().printStackTrace();
-                            errorLoginTxt.setVisibility(View.VISIBLE);
-                            errorLoginTxt.setText("Cannot found the account in the system.\nPlease check again the password and mail");
+                        // update the UI
+//                            updateUI(client);
+                    }else{
+                        Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
+                        task.getException().printStackTrace();
+                        errorLoginTxt.setVisibility(View.VISIBLE);
+                        errorLoginTxt.setText("Cannot found the account in the system.\nPlease check again the password and mail");
 //                            Toast.makeText(LogInActivity.this, "Authentication failed.",
 //                                    Toast.LENGTH_SHORT).show();
-                        }
-
                     }
+
                 });
     }
 
@@ -317,15 +313,17 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
             // The Task returned from this call is always completed, no need to attach
             // a listener.
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-
-            return;
+            GoogleSignInResult result = null;
+            if (data != null) {
+                result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            }
+            if (result != null) {
+                handleSignInResult(result);
+            }
         }
     }
 
     public void signUpActivity(View view) {
-
         Intent intent = new Intent(LogInActivity.this, RegisterActivity.class);
         startActivityForResult(intent, REGISTER_CODE);
     }
