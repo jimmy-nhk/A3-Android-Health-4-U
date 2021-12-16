@@ -52,8 +52,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "LogInActivity";
 
     private FirebaseAuth firebaseAuth;
-//    private FirebaseDatabase firebaseDatabase;
-//    private DatabaseReference databaseReference;
     private FirebaseFirestore fireStore ;
     private CollectionReference userCollection;
     private static final String CLIENT_COLLECTION = "clients";
@@ -101,8 +99,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         fireStore = FirebaseFirestore.getInstance();
         userCollection = fireStore.collection(CLIENT_COLLECTION);
 
-//        firebaseDatabase = FirebaseDatabase.getInstance("https://a2-android-56cbb-default-rtdb.asia-southeast1.firebasedatabase.app/");
-//        databaseReference = firebaseDatabase.getReference();
 
         //this is where we start the Auth state Listener to listen for whether the user is signed in or not
         authStateListener = firebaseAuth -> {
@@ -131,33 +127,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.d(TAG, "onEvent: " + doc.get("name"));
             }
         });
-//        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//
-//                GenericTypeIndicator<HashMap<String, User>> genericTypeIndicator =new GenericTypeIndicator<HashMap<String, User>>(){};
-//
-//                HashMap<String,User> users= snapshot.getValue(genericTypeIndicator);
-//
-//                try {
-//                    for (User u : users.values() ){
-//                        Log.d(TAG, "Value is: " + u.getEmail());
-//                        userList.add(u);
-//                    }
-//                } catch (Exception e){
-//                    Log.d(TAG, "Cannot load the users");
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
 
         GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))//you can also use R.string.default_web_client_id
@@ -185,56 +154,48 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     public void normalLogIn(View view) {
 
-        //TODO: Take firestore from c Phuc to validate ne
+        // validate in case it cannot sign in with authentication
+        try {
+            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()){
+
+                                // Sign in success, update UI with signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+//                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
+
+                                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+
+                                Client client;
+                                Log.d(TAG, userFirebase.getEmail() + " mail1");
+
+                                try {
+
+                                    // update UI (send intent)
+                                    updateUI();
 
 
-//        // validate in case it cannot sign in with authentication
-//        try {
-//            //TODO: remember to change back to normal way
-//            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-////            firebaseAuth.signInWithEmailAndPassword("2@gmail.com" , "123456")
-//                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<AuthResult> task) {
-//                            if (task.isSuccessful()){
-//
-//                                // Sign in success, update UI with signed-in user's information
-//                                Log.d(TAG, "signInWithEmail:success");
-////                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
-//
-//                                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-//
-//                                User user;
-//                                Log.d(TAG, userFirebase.getEmail() + " mail1");
-//
-//                                try {
-//                                    // get the user from realtime db
-//                                    user = searchUser(userFirebase.getEmail());
-//                                    Log.d(TAG, user.getEmail().toString());
-//
-//                                    // update UI (send intent)
-//                                    updateUI(user);
-//
-//
-//                                } catch (Exception e){
-//                                    Log.d(TAG, "Cannot validate the user in firestone");
-//
-//                                }
-//
-//                            }else {
-//
-//                                // if sign in fails, display a message to the user
-//                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-////                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//
-//        } catch (Exception e){
-//            errorLoginTxt.setVisibility(View.VISIBLE);
-//            errorLoginTxt.setText("Please enter your mail and password.");
-//            return;
-//        }
+                                } catch (Exception e){
+                                    Log.d(TAG, "Cannot validate the user in firestone");
+
+                                }
+
+                            }else {
+
+                                // if sign in fails, display a message to the user
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+        } catch (Exception e){
+            errorLoginTxt.setVisibility(View.VISIBLE);
+            errorLoginTxt.setText("Please enter your mail and password.");
+            return;
+        }
     }
 
     // handle sign in with google
@@ -249,10 +210,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
             // you can store user data to SharedPreference
             AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-//            firebaseAuthWithGoogle(credential);
+            firebaseAuthWithGoogle(credential);
         }else{
             // Google Sign In failed, update UI appropriately
-            Log.e(TAG, "Login Unsuccessful. "+result);
+            Log.e(TAG, "Login Unsuccessful. "+result.getStatus());
 //            Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT).show();
         }
     }
@@ -276,11 +237,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                         // Create the user
 //                            Client client = new Client(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
 
-                        //TODO: Switch to fireStore
-//                            databaseReference.child("users").child(user.getName()).setValue(user.toMap());
+                        //TODO: Choose which one to set the document id
+                        addClientToFireStore(userFirebase.getDisplayName() );
 
                         // update the UI
-//                            updateUI(client);
+                            updateUI();
                     }else{
                         Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
                         task.getException().printStackTrace();
@@ -293,15 +254,30 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    private void addClientToFireStore(String displayedName) {
+        // create Client
+        String fullName = displayedName;
+        Client c = new Client();
+        c.setEmail(emailText.getText().toString().trim());
+        c.setFullName(fullName);
+
+        userCollection.document(emailText.getText().toString().trim())
+                .set(c.toMap())
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Successfully added client to FireStore: " + c.toString());
+                    updateUI();
+                })
+                .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + c.toString()));
+    }
+
     // update UI
-    private void updateUI(Client client) {
+    private void updateUI() {
 
 
 //        Intent intent = new Intent(LogInActivity.this, MapsActivity.class);
 
-//        intent.putExtra("user",user );
-//        setResult(RESULT_OK, intent);
-//        finish();
+        Log.d(TAG, "logIn: Successfully");
+        finish();
     }
 
     @Override

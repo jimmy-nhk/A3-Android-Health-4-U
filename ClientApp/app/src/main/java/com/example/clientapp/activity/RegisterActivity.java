@@ -131,7 +131,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         userCollection.document(username)
                 .set(c.toMap())
-                .addOnSuccessListener(unused -> Log.d(TAG, "Successfully added client to FireStore: " + c.toString()))
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Successfully added client to FireStore: " + c.toString());
+                    updateUI(c);
+                })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + c.toString()));
     }
 
