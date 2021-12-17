@@ -1,7 +1,18 @@
-package com.example.clientapp.activity;
+package com.example.vendorapp.activity;
 
-import com.example.clientapp.R;
-import com.example.clientapp.model.Client;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.vendorapp.R;
+import com.example.vendorapp.model.Vendor;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -19,17 +30,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +50,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore fireStore ;
     private CollectionReference userCollection;
-    private static final String CLIENT_COLLECTION = "clients";
-
-    private FirebaseAuth.AuthStateListener authStateListener;
+    private static final String CLIENT_COLLECTION = "vendors";
     private GoogleApiClient googleApiClient;
-    private List<Client> clientList;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private List<Vendor> vendorList;
 
 
     String idToken;
@@ -64,7 +63,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
+        setContentView(R.layout.activity_login);
         Log.d(TAG, "hello");
         // init services
         attachComponents();
@@ -107,7 +106,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             }
         };
 
-        clientList = new ArrayList<>();
+        vendorList = new ArrayList<>();
 
         // load users
         userCollection.addSnapshotListener((value, error) -> {
@@ -119,7 +118,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
         GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.web_client_id))//you can also use R.string.default_web_client_id
+                .requestIdToken(getString(R.string.web_client_id))//you can also use R.string.default_web_vendor_id
                 .requestEmail()
                 .build();
 
@@ -127,7 +126,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
-
         // sign in gg btn
         signInGoogleButton.setOnClickListener(view -> {
             Log.d(TAG, "Before going into google");
@@ -166,7 +164,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
 
-                                Client client;
+                                Vendor vendor;
                                 Log.d(TAG, userFirebase.getEmail() + " mail1");
 
                                 try {
@@ -233,13 +231,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
 
                         // Create the user
-//                            Client client = new Client(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
+//                            Vendor vendor = new Vendor(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
 
                         //TODO: Choose which one to set the document id
-                        addClientToFireStore(userFirebase.getDisplayName() );
+                        addVendorToFireStore(userFirebase.getDisplayName() );
 
                         // update the UI
-                            updateUI();
+                        updateUI();
                     }else{
                         Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
                         task.getException().printStackTrace();
@@ -252,29 +250,29 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-    private void addClientToFireStore(String displayedName) {
-        // create Client
+    private void addVendorToFireStore(String displayedName) {
+        // create Vendor
         String fullName = displayedName;
-        Client c = new Client();
+        Vendor c = new Vendor();
         c.setEmail(emailText.getText().toString().trim());
         c.setFullName(fullName);
 
         userCollection.document(emailText.getText().toString().trim())
                 .set(c.toMap())
                 .addOnSuccessListener(unused -> {
-                    Log.d(TAG, "Successfully added client to FireStore: " + c.toString());
+                    Log.d(TAG, "Successfully added vendor to FireStore: " + c.toString());
                     updateUI();
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + c.toString()));
+                .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + c.toString()));
     }
 
     // update UI
     private void updateUI() {
 
 
-        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-        Log.d(TAG, "logIn: Successfully");
-        startActivity(intent);
+//        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+//        Log.d(TAG, "logIn: Successfully");
+//        startActivity(intent);
 
     }
 
@@ -285,8 +283,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         // check if from google
         if (requestCode == GOOGLE_SUCCESSFULLY_SIGN_IN){
 
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+//            // The Task returned from this call is always completed, no need to attach
+//            // a listener.
 //            GoogleSignInResult result = null;
 //            if (data != null) {
 //                result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);

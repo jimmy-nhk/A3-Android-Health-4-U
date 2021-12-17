@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VendorApp">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.LogInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,5 +19,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>
