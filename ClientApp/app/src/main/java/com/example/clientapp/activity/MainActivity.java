@@ -2,6 +2,7 @@ package com.example.clientapp.activity;
 import com.example.clientapp.R;
 import com.example.clientapp.fragment.FoodListFragment;
 import com.example.clientapp.fragment.HomeFragment;
+import com.example.clientapp.fragment.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity{
             switch (item.getItemId()) {
                 case R.id.homePageNav:
                     fragment = new HomeFragment();
+                    loadFragment(fragment);
+                    return true;
+                case R.id.profileNav:
+                    fragment = new ProfileFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.itemsNav:
