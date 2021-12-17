@@ -8,14 +8,14 @@ import java.util.Map;
 
 public class Item implements Parcelable {
 
-    private String name;
+    private String name = "";
     //FIXME: @ALL need quantity ?
-    private int quantity;
-    private String image;
-    private String vendorName;
-    private String category;
-    private String date;
-    private double price;
+    private int quantity = 0;
+    private String image ="";
+    private String vendorName="";
+    private String category="";
+    private String date="";
+    private double price=0;
     //TODO: need discount ?
 
 
