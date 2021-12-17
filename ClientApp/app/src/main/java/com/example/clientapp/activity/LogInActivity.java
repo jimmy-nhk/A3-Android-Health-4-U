@@ -157,7 +157,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // validate in case it cannot sign in with authentication
         try {
-            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+//            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+            firebaseAuth.signInWithEmailAndPassword("1@gmail.com", "123456")
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -275,10 +276,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI() {
 
 
-//        Intent intent = new Intent(LogInActivity.this, MapsActivity.class);
-
+        Intent intent = new Intent(LogInActivity.this, HomepageActivity.class);
         Log.d(TAG, "logIn: Successfully");
-        finish();
+        startActivity(intent);
+
     }
 
     @Override

@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/homePageNav"
-        android:icon="@drawable/home_nav"
         android:title="Home"/>
+<!--        android:icon="@drawable/home_nav"-->
+
+
     <item android:id="@+id/itemsNav"
-        android:icon="@drawable/items_nav"
         android:title="Food" />
+
+    <!--        android:icon="@drawable/items_nav"-->
     <item android:id="@+id/cartNav"
-        android:icon="@drawable/cart_nav"
         android:title="Cart" />
+
+    <!--        android:icon="@drawable/cart_nav"-->
 </menu>
