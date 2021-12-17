@@ -20,20 +20,20 @@ import com.example.clientapp.model.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodListFragment extends Fragment {
+public class ItemListFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Item> itemList;
     private ItemRecyclerViewAdapter mAdapter;
-    private static final String TAG = FoodListFragment.class.getSimpleName();
+    private static final String TAG = ItemListFragment.class.getSimpleName();
 
 
-    public FoodListFragment(){
+    public ItemListFragment(){
 
         Log.d(TAG, "FoodListFragment: onCreate");
     }
 
-    public static FoodListFragment newInstance(String param1, String param2) {
-        FoodListFragment fragment = new FoodListFragment();
+    public static ItemListFragment newInstance(String param1, String param2) {
+        ItemListFragment fragment = new ItemListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

@@ -55,28 +55,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         signUpBtn.setOnClickListener(v -> {
             Log.d(TAG, "signUpBtn");
-
-//            // validate name
-//            if (!isUsernameUnique(usernameText.getText().toString())){
-////                usernameText.setError("Username already existed");
-//                Log.d(TAG, "Username already exists");
-//                return;
-//            }
-//
-//            // validate mail
-//            if (!isEmailUnique(emailText.getText().toString())){
-////                emailText.setError("Email already existed");
-//                Log.d(TAG, "Email already exists");
-//                return;
-//            }
-//
-//            // validate the password
-//            if (!isPasswordValid(passwordText.getText().toString(), confirmPasswordText.getText().toString())){
-//                Log.d(TAG, "Password does not match or less than 6 characters ");
-//                return;
-//            }
             String username = usernameText.getText().toString().trim();
-            String fullName = "fullname";
+            String fullName = fullNameText.getText().toString().trim();
             String email = emailText.getText().toString().trim();
             String phone = "123456789";
             String dob = "123456789";

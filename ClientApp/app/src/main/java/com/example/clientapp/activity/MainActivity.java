@@ -1,6 +1,6 @@
 package com.example.clientapp.activity;
 import com.example.clientapp.R;
-import com.example.clientapp.fragment.FoodListFragment;
+import com.example.clientapp.fragment.ItemListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity{
                     loadFragment(fragment);
                     return true;
                 case R.id.itemsNav:
-                    fragment = new FoodListFragment();
+                    fragment = new ItemListFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.cartNav:
