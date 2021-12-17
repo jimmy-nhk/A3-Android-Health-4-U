@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:id="@+id/coordinator_layout"
     android:layout_height="match_parent"
-    tools:context=".activity.HomepageActivity">
+    tools:context=".activity.MainActivity">
 
     <FrameLayout
         android:id="@+id/fragment_container"

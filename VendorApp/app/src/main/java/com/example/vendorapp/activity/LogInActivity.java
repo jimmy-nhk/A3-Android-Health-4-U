@@ -1,5 +1,6 @@
 package com.example.vendorapp.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Vendor;
@@ -35,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     public final static int REGISTER_CODE = 101;
 
@@ -48,7 +50,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "LogInActivity";
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore fireStore ;
+    private FirebaseFirestore fireStore;
     private CollectionReference userCollection;
     private static final String CLIENT_COLLECTION = "vendors";
     private GoogleApiClient googleApiClient;
@@ -64,11 +66,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Log.d(TAG, "hello");
+        Log.d(TAG, "on Login Activity Create");
         // init services
         attachComponents();
         initService();
-
+        requestPermission();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             firebaseUser.getEmail();
@@ -78,7 +80,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     // init services
-    public void initService(){
+    public void initService() {
 
         // init firebase services
         firebaseAuth = FirebaseAuth.getInstance();
@@ -117,26 +119,26 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id))//you can also use R.string.default_web_vendor_id
                 .requestEmail()
                 .build();
 
-        googleApiClient=new GoogleApiClient.Builder(this)
+        googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         // sign in gg btn
         signInGoogleButton.setOnClickListener(view -> {
             Log.d(TAG, "Before going into google");
             Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
+            startActivityForResult(intent, GOOGLE_SUCCESSFULLY_SIGN_IN);
         });
 
     }
 
     // attach components with xml
-    public void attachComponents(){
+    public void attachComponents() {
         passwordText = findViewById(R.id.passwordTxt);
         emailText = findViewById(R.id.editEmailLogInTxt);
         errorLoginTxt = findViewById(R.id.errorLoginTxt);
@@ -156,7 +158,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
                                 // Sign in success, update UI with signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
@@ -173,12 +175,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                                     updateUI();
 
 
-                                } catch (Exception e){
+                                } catch (Exception e) {
                                     Log.d(TAG, "Cannot validate the user in firestone");
 
                                 }
 
-                            }else {
+                            } else {
 
                                 // if sign in fails, display a message to the user
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -187,7 +189,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                         }
                     });
 
-        } catch (Exception e){
+        } catch (Exception e) {
             errorLoginTxt.setVisibility(View.VISIBLE);
             errorLoginTxt.setText("Please enter your mail and password.");
             return;
@@ -195,10 +197,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     // handle sign in with google
-    private void handleSignInResult(GoogleSignInResult result){
+    private void handleSignInResult(GoogleSignInResult result) {
 
         // Check if the result is successful
-        if(result.isSuccess()){
+        if (result.isSuccess()) {
             // get the account
             GoogleSignInAccount account = result.getSignInAccount();
             idToken = account != null ? account.getIdToken() : null;
@@ -207,26 +209,26 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             // you can store user data to SharedPreference
             AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
             firebaseAuthWithGoogle(credential);
-        }else{
+        } else {
             // Google Sign In failed, update UI appropriately
-            Log.e(TAG, "Login Unsuccessful. "+result.getStatus());
+            Log.e(TAG, "Login Unsuccessful. " + result.getStatus());
 //            Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT).show();
         }
     }
 
     // firebaseAuth with GG
-    private void firebaseAuthWithGoogle(AuthCredential credential){
+    private void firebaseAuthWithGoogle(AuthCredential credential) {
 
         // sign in with gg
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
 //                            Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                         // get the current logged in user
                         FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-                        Log.d(TAG,userFirebase.getDisplayName() + " name" );
+                        Log.d(TAG, userFirebase.getDisplayName() + " name");
                         Log.d(TAG, Objects.requireNonNull(userFirebase).getEmail() + " email");
 
 
@@ -234,11 +236,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //                            Vendor vendor = new Vendor(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
 
                         //TODO: Choose which one to set the document id
-                        addVendorToFireStore(userFirebase.getDisplayName() );
+                        addVendorToFireStore(userFirebase.getDisplayName());
 
                         // update the UI
                         updateUI();
-                    }else{
+                    } else {
                         Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
                         task.getException().printStackTrace();
                         errorLoginTxt.setVisibility(View.VISIBLE);
@@ -270,18 +272,25 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI() {
 
 
-//        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-//        Log.d(TAG, "logIn: Successfully");
-//        startActivity(intent);
+        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+        Log.d(TAG, "logIn: Successfully");
+        startActivity(intent);
 
     }
+    private void requestPermission() {
+        //Request for permission if needed
+        ActivityCompat.requestPermissions(LogInActivity.this, new String[]{
+                        Manifest.permission.INTERNET},
 
+                99);
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // check if from google
-        if (requestCode == GOOGLE_SUCCESSFULLY_SIGN_IN){
+        if (requestCode == GOOGLE_SUCCESSFULLY_SIGN_IN) {
 
 //            // The Task returned from this call is always completed, no need to attach
 //            // a listener.
@@ -304,8 +313,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void signUpActivity(View view) {
-        Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
-        startActivityForResult(intent, REGISTER_CODE);
+        try {
+            Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
+            startActivityForResult(intent, REGISTER_CODE);
+        } catch (Exception e){
+            Log.d(TAG, "Cannot change to SignUp Activity");
+        }
     }
 
     @Override

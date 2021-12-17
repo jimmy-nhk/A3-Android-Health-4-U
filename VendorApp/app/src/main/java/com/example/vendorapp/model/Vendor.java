@@ -17,38 +17,33 @@ public class Vendor implements Parcelable {
     private String email;
     private String phone;
     private String address;
-    private String dob;
-    private double weight;
-    private double height;
-    private double bmi;
+    private int rating;
+    private int totalSale;
     private String image;
 
-    public static final String CLIENT_FULLNAME ="name";
-    public static final String CLIENT_EMAIL ="email";
-    public static final String CLIENT_USERNAME ="username";
-    public static final String CLIENT_PHONE ="phone";
-    public static final String CLIENT_ADDRESS ="address";
-    public static final String CLIENT_DOB ="DOB";
-    public static final String CLIENT_WEIGHT ="weight";
-    public static final String CLIENT_HEIGHT ="height";
-    public static final String CLIENT_BMI ="bmi";
-    public static final String CLIENT_IMAGE ="image";
+    public static final String CLIENT_FULLNAME = "name";
+    public static final String CLIENT_EMAIL = "email";
+    public static final String CLIENT_USERNAME = "username";
+    public static final String CLIENT_PHONE = "phone";
+    public static final String CLIENT_ADDRESS = "address";
+    public static final String CLIENT_RATING = "rating";
+    public static final String CLIENT_TOTALSALE = "totalsale";
+    public static final String CLIENT_IMAGE = "image";
 
 
     public Vendor() {
 
     }
 
-    public Vendor(String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image) {
+    public Vendor(String fullName, String username, String email, String phone, String address, int rating, int totalSale, String image) {
         this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.address = address;
-        this.dob = dob;
-        this.weight = weight;
-        this.height = height;
-        this.bmi = bmi;
+        this.rating = rating;
+        this.totalSale = totalSale;
+
         this.image = image;
     }
 
@@ -92,36 +87,20 @@ public class Vendor implements Parcelable {
         this.address = address;
     }
 
-    public String getDob() {
-        return dob;
+    public int getRating() {
+        return rating;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
-    public double getWeight() {
-        return weight;
+    public int getTotalSale() {
+        return totalSale;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
-    public double getBmi() {
-        return bmi;
-    }
-
-    public void setBmi(double bmi) {
-        this.bmi = bmi;
+    public void setTotalSale(int totalSale) {
+        this.totalSale = totalSale;
     }
 
     public String getImage() {
@@ -137,12 +116,10 @@ public class Vendor implements Parcelable {
         fullName = in.readString();
         email = in.readString();
         phone = in.readString();
-        dob = in.readString();
         username = in.readString();
         address = in.readString();
-        weight = in.readDouble();
-        height = in.readDouble();
-        bmi = in.readDouble();
+        rating=in.readInt();
+        totalSale=in.readInt();
         image = in.readString();
     }
 
@@ -171,15 +148,26 @@ public class Vendor implements Parcelable {
 
         dest.writeString(fullName);
         dest.writeString(email);
+        dest.writeString(username);
         dest.writeString(phone);
-    }
+        dest.writeString(address);
+        dest.writeInt(rating);
+        dest.writeInt(totalSale);
+        dest.writeString(image );
 
+    }
     @NonNull
     @Override
     public String toString() {
         return "Vendor{" +
-                "name='" + fullName + '\'' +
+                "fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", rating=" + rating +
+                ", totalSale=" + totalSale +
+                ", image='" + image + '\'' +
                 '}';
     }
 
@@ -189,11 +177,9 @@ public class Vendor implements Parcelable {
         result.put(CLIENT_FULLNAME, fullName);
         result.put(CLIENT_EMAIL, email);
         result.put(CLIENT_PHONE, phone);
-        result.put(CLIENT_DOB, dob);
-        result.put(CLIENT_ADDRESS, phone);
-        result.put(CLIENT_WEIGHT, weight);
-        result.put(CLIENT_HEIGHT, height);
-        result.put(CLIENT_BMI, bmi);
+        result.put(CLIENT_ADDRESS, address);
+        result.put(CLIENT_RATING, rating);
+        result.put(CLIENT_TOTALSALE, totalSale);
         result.put(CLIENT_IMAGE, image);
         return result;
     }

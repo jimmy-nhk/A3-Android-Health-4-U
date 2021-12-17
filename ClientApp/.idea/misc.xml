@@ -5,12 +5,16 @@
       <map>
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable-anydpi/homeNav.xml" value="0.2703125" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable-anydpi/items_nav.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable/avatar_background.xml" value="0.22870370370370371" />
+        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable/avatar_foreground.xml" value="0.22870370370370371" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable/bottom_nav_tab_background.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable/nac_selector.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable/nav_selector.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/activity_homepage.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/activity_log_in.xml" value="0.19074074074074074" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_food_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_profile.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/item_cardview.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/menu/menu.xml" value="0.13020833333333334" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4101123595505618" />

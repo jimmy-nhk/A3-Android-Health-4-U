@@ -1,8 +1,10 @@
 package com.example.vendorapp.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,9 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.vendorapp.R;
+import com.example.vendorapp.fragment.FoodListFragment;
+import com.example.vendorapp.fragment.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity{
+    private static final String TAG = "MainActivity";
 
     private BottomNavigationView bottomNavigationView;
     @Override
@@ -44,19 +49,19 @@ public class MainActivity extends AppCompatActivity{
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
 
-//            switch (item.getItemId()) {
-//                case R.id.homePageNav:
-//                    fragment = new HomeFragment();
-//                    loadFragment(fragment);
-//                    return true;
-//                case R.id.itemsNav:
-//                    fragment = new FoodListFragment();
-//                    loadFragment(fragment);
-//                    return true;
-//                case R.id.cartNav:
-//                    return true;
-//
-//            }
+            switch (item.getItemId()) {
+                case R.id.homePageNav:
+                    fragment = new HomeFragment();
+                    loadFragment(fragment);
+                    return true;
+                case R.id.itemsNav:
+                    fragment = new FoodListFragment();
+                    loadFragment(fragment);
+                    return true;
+                case R.id.orderNav:
+                    return true;
+
+            }
             return false;
         }
     };
@@ -69,6 +74,15 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
+    public void addItemOnClick(View view) {
+
+        try {
+            Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+            startActivityForResult(intent, R.integer.intentMainAdditem);
+        } catch (Exception e){
+            Log.d(TAG, "Cannot change to Add Item Activity");
+        }
+    }
 }
 
 class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {
