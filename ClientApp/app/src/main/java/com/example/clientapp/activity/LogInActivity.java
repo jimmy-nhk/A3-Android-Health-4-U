@@ -17,11 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +32,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -276,7 +272,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI() {
 
 
-        Intent intent = new Intent(LogInActivity.this, HomepageActivity.class);
+        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
         Log.d(TAG, "logIn: Successfully");
         startActivity(intent);
 
@@ -310,7 +306,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void signUpActivity(View view) {
-        Intent intent = new Intent(LogInActivity.this, RegisterActivity.class);
+        Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
         startActivityForResult(intent, REGISTER_CODE);
     }
 

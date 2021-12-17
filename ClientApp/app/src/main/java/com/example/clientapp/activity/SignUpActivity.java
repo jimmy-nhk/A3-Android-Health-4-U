@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
     // Constants
     private final String emailRegex = "^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
             + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$";
@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_sign_up);
 
         //Init necessary components
         getViews();
@@ -147,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //update ui
     private void updateUI(Client client) {
-        Intent intent = new Intent(RegisterActivity.this , LogInActivity.class);
+        Intent intent = new Intent(SignUpActivity.this , LogInActivity.class);
         intent.putExtra("email" , client.getEmail());
         setResult(RESULT_OK , intent);
         finish();
