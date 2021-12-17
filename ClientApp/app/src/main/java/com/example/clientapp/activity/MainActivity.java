@@ -1,6 +1,7 @@
 package com.example.clientapp.activity;
 import com.example.clientapp.R;
 import com.example.clientapp.fragment.FoodListFragment;
+import com.example.clientapp.fragment.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-public class HomepageActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity{
 
     private BottomNavigationView bottomNavigationView;
     @Override
@@ -46,6 +47,8 @@ public class HomepageActivity extends AppCompatActivity{
 
             switch (item.getItemId()) {
                 case R.id.homePageNav:
+                    fragment = new HomeFragment();
+                    loadFragment(fragment);
                     return true;
                 case R.id.itemsNav:
                     fragment = new FoodListFragment();
