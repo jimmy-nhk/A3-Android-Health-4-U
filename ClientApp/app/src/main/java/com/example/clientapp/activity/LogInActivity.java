@@ -129,11 +129,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 .build();
 
         // sign in gg btn
-        signInGoogleButton.setOnClickListener(view -> {
-            Log.d(TAG, "Before going into google");
-            Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
-        });
+//        signInGoogleButton.setOnClickListener(view -> {
+//
+//        });
 
     }
 
@@ -143,10 +141,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         emailText = findViewById(R.id.editEmailLogInTxt);
         errorLoginTxt = findViewById(R.id.errorLoginTxt);
         errorLoginTxt.setVisibility(View.INVISIBLE);
-        signInGoogleButton = findViewById(R.id.signInWithGoogle);
-
-        TextView textView = (TextView) signInGoogleButton.getChildAt(0);
-        textView.setText("Sign in with Google");
+//        signInGoogleButton = findViewById(R.id.signInWithGoogle);
+//
+//        TextView textView = (TextView) signInGoogleButton.getChildAt(0);
+//        textView.setText("Sign in with Google");
     }
 
     public void normalLogIn(View view) {
@@ -313,5 +311,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void signInWithGoogleBtnClick(View view) {
+        Log.d(TAG, "Before going into google");
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
     }
 }
