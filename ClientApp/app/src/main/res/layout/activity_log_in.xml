@@ -1,128 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.LogInActivity"
-    >
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="40dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue_phantom"
+        android:textStyle="bold"
+        android:text="Welcome,"
+        android:textColor="@color/blue_phantom"
+        android:textAlignment="textStart"
+        android:textSize="30sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:backgroundTint="@color/blue_phantom"
         android:textStyle="bold"
-        android:text="Covid Application"
-        android:textAlignment="center"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.136" />
+        android:textColor="#AEAEAE"
+        android:text="Sign in to continue!"
+        android:textAlignment="textStart"
+        android:textSize="20sp"/>
 
 
     <EditText
         android:id="@+id/editEmailLogInTxt"
-        android:layout_width="276dp"
-        android:layout_height="76dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:inputType="textEmailAddress"
         android:hint="email"
-        android:maxLength="50"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.253" />
+        android:maxLength="50" />
 
     <EditText
         android:id="@+id/passwordTxt"
-        android:layout_width="276dp"
-        android:layout_height="76dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:maxLength="20"
-
         android:hint="password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/signInWithGoogle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.285"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.531" />
+        android:inputType="textPassword"/>
 
     <TextView
         android:id="@+id/errorLoginTxt"
-        android:layout_width="276dp"
-        android:layout_height="50dp"
-        android:text="Cannot found the account. Please try again."
-        android:backgroundTint="@color/red"
-        android:textColor="@color/red"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.643" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Cannot find the account. Please try again."
+        android:backgroundTint="@color/red"
+        android:textColor="@color/red"
+        android:layout_marginStart="3dp"/>
+
+
+    <Button
+        android:id="@+id/logInBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/blue_phantom"
+        android:onClick="normalLogIn"
+        android:text="Sign In"
+        android:textSize="16sp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"/>
+
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.732"
-        tools:layout_editor_absoluteX="0dp">
-
-        <Button
-            android:id="@+id/logInBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
-            android:layout_weight="4"
-            android:backgroundTint="@color/blue_phantom"
-            android:text="Log In"
-            android:onClick="normalLogIn"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+        android:gravity="center_vertical">
+        <View
+            android:layout_width="147dp"
+            android:layout_height="1.5dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/darker_gray"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40px"
-            android:layout_weight="2"
-            android:height="80px"
-            android:textSize="40px"
+            android:textSize="14sp"
+            android:text="OR"/>
 
-            />
-
-        <Button
-            android:id="@+id/signUpBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="50px"
-            android:layout_weight="4"
-            android:backgroundTint="@color/blue_phantom"
-            android:text="Sign Up"
-            android:textColor="@color/white"
-            android:onClick="signUpActivity"
-            android:textStyle="bold" />
+        <View
+            android:layout_width="147dp"
+            android:layout_height="1.5dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/darker_gray"/>
 
     </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!--    <com.google.android.gms.common.SignInButton-->
+    <!--        android:layout_marginTop="60dp"-->
+    <!--        android:id="@+id/signInWithGoogle"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content" />-->
+
+    <com.shobhitpuri.custombuttons.GoogleSignInButton
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:isDarkTheme="false"
+        android:textSize="16sp"
+        android:onClick="signInWithGoogleBtnClick"/>
+
+    <LinearLayout
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Doesn't have an account yet?"/>
+        <TextView
+            android:layout_marginStart="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up_underline"
+            android:textColor="@color/blue_phantom"
+            android:clickable="true"
+            android:onClick="signUpActivity"/>
+    </LinearLayout>
+
+</LinearLayout>
