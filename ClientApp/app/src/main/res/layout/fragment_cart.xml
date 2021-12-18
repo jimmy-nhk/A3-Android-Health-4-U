@@ -17,7 +17,7 @@
             android:id="@+id/btnOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="order"
+            android:onClick="onOrderBtnClick"
             android:text="Order"/>
 
         <androidx.recyclerview.widget.RecyclerView

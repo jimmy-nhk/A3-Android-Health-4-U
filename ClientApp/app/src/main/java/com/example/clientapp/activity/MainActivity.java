@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -54,30 +55,26 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+            = item -> {
+                Fragment fragment;
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment fragment;
+                switch (item.getItemId()) {
+                    case R.id.homePageNav:
+                        fragment = new HomeFragment();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.itemsNav:
+                        fragment = new FoodListFragment();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.cartNav:
+                        fragment = new CartFragment();
+                        loadFragment(fragment);
+                        return true;
 
-            switch (item.getItemId()) {
-                case R.id.homePageNav:
-                    fragment = new HomeFragment();
-                    loadFragment(fragment);
-                    return true;
-                case R.id.itemsNav:
-                    fragment = new FoodListFragment();
-                    loadFragment(fragment);
-                    return true;
-                case R.id.cartNav:
-                    fragment = new CartFragment();
-                    loadFragment(fragment);
-                    return true;
-
-            }
-            return false;
-        }
-    };
+                }
+                return false;
+            };
 
     private void loadFragment(Fragment fragment) {
         // load fragment
@@ -87,15 +84,17 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
-    // order btn
-    public void order(View view) {
-        List<Item> cartList = viewModel.getListItem();
-    }
-
-
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("username", "kb");
+        fragment.setArguments(bundle);
         loadFragment(fragment);
+    }
+
+    // order btn
+    public void onOrderBtnClick(View view) {
+        List<Item> cartList = viewModel.getListItem();
 
     }
 }
