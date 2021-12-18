@@ -1,8 +1,10 @@
 package com.example.clientapp.activity;
 import com.example.clientapp.R;
+import com.example.clientapp.fragment.CartFragment;
 import com.example.clientapp.fragment.FoodListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
+import com.example.clientapp.helper.ItemViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,11 +24,19 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity{
 
+    // the item model list
+    private ItemViewModel viewModel;
+
     private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+        viewModel.getSelectedItem().observe(this, item -> {
+            // Perform an action with the latest item data
+        });
 
 
 
@@ -60,6 +71,8 @@ public class MainActivity extends AppCompatActivity{
                     loadFragment(fragment);
                     return true;
                 case R.id.cartNav:
+                    fragment = new CartFragment();
+                    loadFragment(fragment);
                     return true;
 
             }

@@ -2,10 +2,8 @@ package com.example.vendorapp.activity;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
-import com.example.vendorapp.model.Vendor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -72,6 +70,10 @@ public class AddItemActivity extends AppCompatActivity {
         // load items
         itemCollection.addSnapshotListener((value, error) -> {
 
+            // clear again
+            itemList.clear();
+
+            // iterate through the list
             for (QueryDocumentSnapshot doc : value) {
                 itemList.add(doc.toObject(Item.class));
             }
@@ -94,7 +96,7 @@ public class AddItemActivity extends AppCompatActivity {
         addedImageListview = findViewById(R.id.addedImageListview);
     }
 
-    public void addAdditemOnClick(View view) {
+    public void addAddItemOnClick(View view) {
         // Add item on ADD button clicked
         //Validation
         if (!validate())
@@ -126,14 +128,14 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     //cancel button - finish activity
-    public void cancelAdditemOnClick(View view) {
+    public void cancelAddItemOnClick(View view) {
         //Finish activity on CANCEL button clicked
         try {
             Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
             setResult(RESULT_CANCELED, intent);
             finish();
         } catch (Exception e) {
-            Log.d(TAG, "Cannot finish AdditemActivity");
+            Log.d(TAG, "Cannot finish AddItemActivity");
         }
     }
 
@@ -148,12 +150,12 @@ public class AddItemActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadImageAdditemOnClick(View view) {
-        SelectImage();
+    public void uploadImageAddItemOnClick(View view) {
+        selectImage();
     }
 
     // Select Image method
-    private void SelectImage() {
+    private void selectImage() {
 
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();

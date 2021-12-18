@@ -23,12 +23,14 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     private List<Item> itemList;
     private Context context;
     private LayoutInflater mLayoutInflater;
+    private ItemViewModel viewModel;
 
-    public ItemRecyclerViewAdapter(Context context, List<Item> datas ) {
+    public ItemRecyclerViewAdapter(Context context, List<Item> datas , ItemViewModel viewModel ) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
         this.context = context;
         this.itemList = datas;
         this.mLayoutInflater = LayoutInflater.from(context);
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -53,6 +55,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         int itemPosition = parent.getChildLayoutPosition(v);
 
         Item item = this.itemList.get(itemPosition);
+
+        viewModel.addItem(item);
+
 
         Toast.makeText(this.context, item.getName(), Toast.LENGTH_LONG).show();
     }

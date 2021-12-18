@@ -7,29 +7,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Item implements Parcelable {
-    private int id=0;
+    private int id = 0;
     private String name = "";
     //FIXME: @ALL need quantity ?
     private int quantity = 0;
-    private String image ="";
-    private String description="";
-    private int vendorID=0;
-    private String category="";
-    private String expireDate="";
-    private double price=0;
+    private String image = "";
+    private String description = "";
+    private int vendorID = 0;
+    private String category = "";
+    private String expireDate = "";
+    private double price = 0;
+    private double calories;
     //TODO: need discount ?
 
 
     protected Item(Parcel in) {
-        int id= in.readInt();
+        int id = in.readInt();
         name = in.readString();
         quantity = in.readInt();
         image = in.readString();
-        description=in.readString();
+        description = in.readString();
         vendorID = in.readInt();
         category = in.readString();
         expireDate = in.readString();
         price = in.readDouble();
+        calories = in.readDouble();
     }
 
     @Override
@@ -43,11 +45,12 @@ public class Item implements Parcelable {
         dest.writeString(category);
         dest.writeString(expireDate);
         dest.writeDouble(price);
+        dest.writeDouble(calories);
     }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("id",id);
+        result.put("id", id);
         result.put("name", name);
         result.put("quantity", quantity);
         result.put("image", image);
@@ -56,14 +59,15 @@ public class Item implements Parcelable {
         result.put("category", category);
         result.put("expireDate", expireDate);
         result.put("price", price);
+        result.put("calories", calories);
         return result;
     }
 
     public Item() {
     }
 
-    public Item(int id,String name, int quantity, String image, String description, int vendorID, String category) {
-        this.id=id;
+    public Item(int id, String name, int quantity, String image, String description, int vendorID, String category) {
+        this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.image = image;
