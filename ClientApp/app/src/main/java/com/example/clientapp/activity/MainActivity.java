@@ -65,10 +65,6 @@ public class MainActivity extends AppCompatActivity{
                     fragment = new HomeFragment();
                     loadFragment(fragment);
                     return true;
-                case R.id.profileNav:
-                    fragment = new ProfileFragment();
-                    loadFragment(fragment);
-                    return true;
                 case R.id.itemsNav:
                     fragment = new FoodListFragment();
                     loadFragment(fragment);
@@ -93,9 +89,13 @@ public class MainActivity extends AppCompatActivity{
 
     // order btn
     public void order(View view) {
-
         List<Item> cartList = viewModel.getListItem();
+    }
 
+
+    public void onProfileBtnClick(View view) {
+        Fragment fragment = new ProfileFragment();
+        loadFragment(fragment);
 
     }
 }

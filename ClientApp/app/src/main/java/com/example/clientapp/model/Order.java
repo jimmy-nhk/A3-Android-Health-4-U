@@ -3,11 +3,11 @@ package com.example.clientapp.model;
 import java.util.List;
 
 public class Order {
-
     private int id;
     private String date;
     private boolean isProcessed;
     private List<Item> itemList;
+    private List<Integer> quantity;
 
     public Order() {
     }
@@ -59,6 +59,4 @@ public class Order {
     public void setQuantity(List<Integer> quantity) {
         this.quantity = quantity;
     }
-
-    private List<Integer> quantity;
 }

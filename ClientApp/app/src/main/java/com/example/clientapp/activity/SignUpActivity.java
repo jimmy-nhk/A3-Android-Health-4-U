@@ -2,9 +2,12 @@ package com.example.clientapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +21,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 
+import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -30,9 +38,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     // Views
     private EditText emailText, usernameText, passwordText, confirmPasswordText
-            , fullNameText, phoneText, dobText;
+            , fullNameText, phoneText, dobText, weightText, heightText;
     private TextView errorTxt;
     private Button signUpBtn;
+    private final Calendar calendar = Calendar.getInstance();
+    private String fullName, username, phone, email, dob, weightStr, heightStr;
+    private double weight, height;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -54,36 +65,20 @@ public class SignUpActivity extends AppCompatActivity {
         loadClientData();
 
         signUpBtn.setOnClickListener(v -> {
-            Log.d(TAG, "signUpBtn");
-
-//            // validate name
-//            if (!isUsernameUnique(usernameText.getText().toString())){
-////                usernameText.setError("Username already existed");
-//                Log.d(TAG, "Username already exists");
-//                return;
-//            }
-//
-//            // validate mail
-//            if (!isEmailUnique(emailText.getText().toString())){
-////                emailText.setError("Email already existed");
-//                Log.d(TAG, "Email already exists");
-//                return;
-//            }
-//
-//            // validate the password
-//            if (!isPasswordValid(passwordText.getText().toString(), confirmPasswordText.getText().toString())){
-//                Log.d(TAG, "Password does not match or less than 6 characters ");
-//                return;
-//            }
-            String username = usernameText.getText().toString().trim();
-            String fullName = "fullname";
-            String email = emailText.getText().toString().trim();
-            String phone = "123456789";
-            String dob = "123456789";
+            username = usernameText.getText().toString().trim();
+            fullName = fullNameText.getText().toString().trim();
+            email = emailText.getText().toString().trim();
+            phone = phoneText.getText().toString().trim();
+            dob = dobText.getText().toString().trim();
+            weightStr = weightText.getText().toString().trim();
+            heightStr = heightText.getText().toString().trim();
             String password = passwordText.getText().toString().trim();
             String confirmPassword = confirmPasswordText.getText().toString().trim();
-            if (validateInput(username, email, password, confirmPassword, fullName, phone, dob))
-                addClientToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
+            Log.d(TAG, "weight=" + weightStr);
+            Log.d(TAG, "height=" + heightStr);
+            if (validateInput(username, email, password, confirmPassword, fullName, phone, dob, weightStr, heightStr)) {
+                addClientToAuthentication(email, password);
+            }
         });
 
     }
@@ -131,10 +126,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void addClientToFireStore() {
         // create Client
-        String username = usernameText.getText().toString().trim();
         Client c = new Client();
-        c.setEmail(emailText.getText().toString().trim());
-        c.setUsername(usernameText.getText().toString().trim());
+        c.setEmail(email);
+        c.setUsername(username);
+        c.setFullName(fullName);
+        c.setDob(dob);
+        c.setPhone(phone);
+        c.setHeight(height);
+        c.setWeight(weight);
 
         userCollection.document(username)
                 .set(c.toMap())
@@ -156,7 +155,7 @@ public class SignUpActivity extends AppCompatActivity {
     // Validate client's fullname
     private boolean isFullNameValid(String fullName) {
         if (fullName.isEmpty()) {
-            passwordText.setError("Name cannot be empty");
+            fullNameText.setError("Full name cannot be empty");
             return false;
         }
         return true;
@@ -166,25 +165,77 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean isPhoneValid(String phone) {
         if (phone.isEmpty()) {
             String EMPTY_PHONE = "Phone cannot be empty. Please try again!";
-            fullNameText.setError(EMPTY_PHONE);
+            phoneText.setError(EMPTY_PHONE);
             return false;
-        } else if (phone.length() != 9) {
+        } else if (countDigits(phone) < 9) {
             String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
                     "of your phone number!";
-            fullNameText.setError(INVALID_PHONE);
+            phoneText.setError(INVALID_PHONE);
             return false;
         }
 
         return true;
     }
 
+    private int countDigits(String stringToSearch) {
+        Pattern digitRegex = Pattern.compile("\\d");
+        Matcher countEmailMatcher = digitRegex.matcher(stringToSearch);
+
+        int count = 0;
+        while (countEmailMatcher.find()) {
+            count++;
+        }
+
+        return count;
+    }
+
+    // Validate client's weight
+    private boolean isWeightValid(String weightStr) {
+//        if (weightStr.isEmpty()) {
+//            phoneText.setError("Weight cannot be empty. Please try again!");
+//            return false;
+//        }
+
+        if (!weightStr.isEmpty()) {
+            double weight = Double.parseDouble(weightStr);
+            if (weight == 0.0) {
+                weightText.setError("Weight cannot be 0. Please try again!");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Validate client's height
+    private boolean isHeightValid(String heightStr) {
+//        if (heightStr.isEmpty()) {
+//            heightText.setError("Weight cannot be empty. Please try again!");
+//            return false;
+//        }
+
+        if (!heightStr.isEmpty()) {
+            double height = Double.parseDouble(heightStr);
+            if (weight == 0.0) {
+            }
+                heightText.setError("Weight cannot be 0. Please try again!");
+                return false;
+            }
+        return true;
+    }
+
     // Validate client's dob
     private boolean isDobValid(String dob) {
         if (dob.isEmpty()) {
-            String EMPTY_DOB = "Date of birth cannot be empty. Please try again!";
-            dobText.setError(EMPTY_DOB);
+            dobText.setError("Date of birth cannot be empty. Please try again!");
             return false;
         }
+
+        if (2021 - Integer.parseInt(dob.substring(dob.length() - 4)) < 13) {
+            dobText.setError("You should be at least 13 to use this app");
+            return false;
+        }
+
         return true;
     }
 
@@ -272,17 +323,23 @@ public class SignUpActivity extends AppCompatActivity {
                                   String confirmPassword,
                                   String fullName,
                                   String phone,
-                                  String dob) {
+                                  String dob,
+                                  String weightStr,
+                                  String heightStr) {
 //        boolean isValid = true;
 
-        return isUsernameValid(username)
-                && isFullNameValid(fullName)
-                && isDobValid(dob)
-                && isPhoneValid(phone)
+        Log.d(TAG, "isWeightValid=" + isWeightValid(weightStr));
+        Log.d(TAG, "isHeightValid=" + isHeightValid(heightStr));
+        Log.d(TAG, "isPasswordValid=" + isPasswordValid(password, confirmPassword));
+
+        return isFullNameValid(fullName)
+                && isUsernameValid(username)
                 && isEmailValid(email)
+                && isPhoneValid(phone)
+                && isDobValid(dob)
+                && isWeightValid(weightStr)
+                && isHeightValid(heightStr)
                 && isPasswordValid(password, confirmPassword);
-
-
 //        if (phone.length() < 4 && isValid) {
 //            warningMsg = EMPTY_PHONE;
 //            isValid = false;
@@ -363,12 +420,45 @@ public class SignUpActivity extends AppCompatActivity {
         errorTxt = findViewById(R.id.errorTxt);
         errorTxt.setVisibility(View.INVISIBLE);
 
+        fullNameText = findViewById(R.id.editFullName);
+        dobText = findViewById(R.id.editDob);
+        weightText = findViewById(R.id.editWeight);
+        heightText = findViewById(R.id.editHeight);
+        phoneText = findViewById(R.id.editPhone);
         emailText = findViewById(R.id.editEmail);
         usernameText = findViewById(R.id.editUserName);
         passwordText = findViewById(R.id.editPassword);
         confirmPasswordText = findViewById(R.id.editConfirmPassword);
         signUpBtn = findViewById(R.id.signUpBtn);
+
+        initDatePicker();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initDatePicker() {
+        DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateDobLabel();
+        };
+
+//        dobText.setOnTouchListener((v, event) -> {
+//            new DatePickerDialog(this, date, calendar
+//                    .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+//                    calendar.get(Calendar.DAY_OF_MONTH)).show();
+//            return true;
+//        });
+
+        dobText.setOnClickListener(v -> new DatePickerDialog(SignUpActivity.this, date, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show());
+    }
+
+    private void updateDobLabel() {
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        dobText.setText(sdf.format(calendar.getTime()));
     }
 }
-
-//TODO: add datepicker @Phuc
