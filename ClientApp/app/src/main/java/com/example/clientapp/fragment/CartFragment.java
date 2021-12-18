@@ -66,7 +66,7 @@ public class CartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_food_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
         itemList = new ArrayList<>(); //Reset value of item List
 
@@ -95,6 +95,7 @@ public class CartFragment extends Fragment {
             recyclerView.setAdapter(mAdapter);
         });
     }
+
 
     private void initService(View view) {
 

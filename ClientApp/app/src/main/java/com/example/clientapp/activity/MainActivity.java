@@ -5,6 +5,7 @@ import com.example.clientapp.fragment.FoodListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
 import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.model.Item;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -88,6 +91,13 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
+    // order btn
+    public void order(View view) {
+
+        List<Item> cartList = viewModel.getListItem();
+
+
+    }
 }
 
 class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {
