@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity{
                 orderSize = value.size();
 
             } catch (Exception e){
-                orderSize = 0;
+                orderSize = 1;
             }
 
         });
