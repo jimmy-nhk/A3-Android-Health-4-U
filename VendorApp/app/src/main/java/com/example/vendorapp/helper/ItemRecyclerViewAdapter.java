@@ -3,6 +3,8 @@ package com.example.vendorapp.helper;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +27,12 @@ import java.util.List;
 
 public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
+    private static final String TAG = "ItemRecycleViewAdapter";
     private List<Item> itemList;
     private Context context;
     private LayoutInflater mLayoutInflater;
+    private
+    URL imageURL = null;
 
     public ItemRecyclerViewAdapter(Context context, List<Item> datas) {
         Log.d("ItemRecyclerViewAdapter", "constructor");
@@ -72,14 +77,23 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         holder.price.setText(item.getPrice() + "");
         holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
-
         try {
-            URL newurl = null;
-            newurl = new URL(item.getImage());
-            Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-            holder.image.setImageBitmap(mIcon_val);
-        } catch ( Exception exception){
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        imageURL = new URL(item.getImage());
+                        Bitmap mIcon_val = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+                        holder.image.setImageBitmap(mIcon_val);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+            });
+            thread.start();
+        } catch (Exception e) {
             holder.image.setImageResource(R.drawable.food);
+            e.printStackTrace();
         }
         //TODO: Image and Button
 
@@ -91,7 +105,6 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         return itemList.size();
     }
 }
-
 class ItemViewHolder extends RecyclerView.ViewHolder {
 
     ImageView image;

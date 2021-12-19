@@ -145,8 +145,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void onLogInBtnClick(View view) {
-        email = emailText.getText().toString().trim();
-        password = passwordText.getText().toString().trim();
+//        email = emailText.getText().toString().trim();
+//        password = passwordText.getText().toString().trim();
+        email = "afc.luan2508@gmail.com";
+        password = "222222";
         username = "";
 
         if (!email.contains("@")) {

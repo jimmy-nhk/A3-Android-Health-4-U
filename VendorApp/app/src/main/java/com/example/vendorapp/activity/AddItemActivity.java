@@ -186,10 +186,10 @@ public class AddItemActivity extends AppCompatActivity {
         if (filePath != null) {
 
             // Code for showing progressDialog while uploading
-//            ProgressDialog progressDialog
-//                    = new ProgressDialog(this);
-//            progressDialog.setTitle("Uploading...");
-//            progressDialog.show();
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Adding item...");
+            progressDialog.show();
 
             // Defining the child of storageReference
             StorageReference ref
@@ -216,14 +216,11 @@ public class AddItemActivity extends AppCompatActivity {
                                                     String fileLink = task.getResult().toString();
                                                     // Call function to upload item to DB
                                                     uploadItemToDB(fileLink);
+
+                                                    // Image uploaded successfully, turn off the process dialog
+                                                    progressDialog.dismiss();
                                                 }
                                             });
-                                    // Image uploaded successfully
-                                    // Dismiss dialog
-//                                    progressDialog.dismiss();
-//                                    Toast.makeText(AddItemActivity.this,
-//                                                    "Image Uploaded!!",
-//                                                    Toast.LENGTH_SHORT).show();
                                 }
                             })
 
@@ -232,10 +229,7 @@ public class AddItemActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
 
                             // Error, Image not uploaded
-//                            progressDialog.dismiss();
-//                            Toast.makeText(AddItemActivity.this,
-//                                            "Failed " + e.getMessage(),
-//                                            Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     })
                     .addOnProgressListener(
@@ -250,9 +244,9 @@ public class AddItemActivity extends AppCompatActivity {
                                             = (100.0
                                             * taskSnapshot.getBytesTransferred()
                                             / taskSnapshot.getTotalByteCount());
-//                                    progressDialog.setMessage(
-//                                            "Uploaded "
-//                                                    + (int) progress + "%");
+                                    progressDialog.setMessage(
+                                            "Added "
+                                                    + (int) progress + "%");
                                 }
                             });
         }

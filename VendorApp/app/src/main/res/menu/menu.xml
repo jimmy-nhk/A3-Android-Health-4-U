@@ -13,6 +13,6 @@
     <item
         android:id="@+id/orderNav"
         android:icon="@drawable/order_nav"
-        android:title="Cart" />
+        android:title="Orders" />
 
 </menu>
