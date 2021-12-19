@@ -161,8 +161,9 @@ public class MainActivity extends AppCompatActivity{
                 i += occurrences - 1;
 
             }
+
             //TODO: add date checkout
-            order = new Order(orderSize, "date", false, itemOrder, quantity , list.get(0).getVendorID());
+            order = new Order(orderSize, "date", false, itemOrder, quantity , list.get(0).getVendorID(), client.getId());
 
             Order finalOrder = order;
             orderCollection.document(order.getId() + "")

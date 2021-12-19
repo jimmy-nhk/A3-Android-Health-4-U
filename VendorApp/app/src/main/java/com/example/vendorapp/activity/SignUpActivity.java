@@ -8,14 +8,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Vendor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +36,13 @@ public class SignUpActivity extends AppCompatActivity {
             , fullNameText, phoneText, dobText;
     private TextView errorTxt;
     private Button signUpBtn;
+    private int vendorSize ;
+
 
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore fireStore ;
-    private CollectionReference userCollection;
+    private CollectionReference vendorCollection;
 
     // Data
     private List<Vendor> vendorList;
@@ -51,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
         getViews();
         initService();
         loadVendorData();
+        loadSizeClient();
 
         signUpBtn.setOnClickListener(v -> {
             Log.d(TAG, "signUpBtn");
@@ -89,7 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     // load the Vendor data
     private void loadVendorData() {
-        userCollection.addSnapshotListener((value, error) -> {
+        vendorCollection.addSnapshotListener((value, error) -> {
             if (error != null) {
                 Log.w(TAG, "Listen failed.", error);
                 return;
@@ -132,16 +139,28 @@ public class SignUpActivity extends AppCompatActivity {
         // create Vendor
         String username = usernameText.getText().toString().trim();
         Vendor c = new Vendor();
+        c.setId(vendorSize);
         c.setEmail(emailText.getText().toString().trim());
         c.setUsername(usernameText.getText().toString().trim());
 
-        userCollection.document(username)
+        vendorCollection.document(username)
                 .set(c.toMap())
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "Successfully added vendor to FireStore: " + c.toString());
                     updateUI(c);
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + c.toString()));
+    }
+
+    private void loadSizeClient(){
+
+        vendorCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                vendorSize = value.size();
+            }
+        });
     }
 
     //update ui
@@ -348,7 +367,7 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         fireStore = FirebaseFirestore.getInstance();
         String CLIENT_COLLECTION = "vendors";
-        userCollection = fireStore.collection(CLIENT_COLLECTION);
+        vendorCollection = fireStore.collection(CLIENT_COLLECTION);
         // init realtime db
 //        firebaseDatabase = FirebaseDatabase.getInstance("https://a2-android-56cbb-default-rtdb.asia-southeast1.firebasedatabase.app/");
 //        databaseReference = firebaseDatabase.getReference();

@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class Vendor implements Parcelable {
 
+    private int id;
     private String fullName;
     private String username;
     private String email;
@@ -21,14 +22,14 @@ public class Vendor implements Parcelable {
     private int totalSale;
     private String image;
 
-    public static final String CLIENT_FULLNAME = "name";
-    public static final String CLIENT_EMAIL = "email";
-    public static final String CLIENT_USERNAME = "username";
-    public static final String CLIENT_PHONE = "phone";
-    public static final String CLIENT_ADDRESS = "address";
-    public static final String CLIENT_RATING = "rating";
-    public static final String CLIENT_TOTALSALE = "totalsale";
-    public static final String CLIENT_IMAGE = "image";
+    public static final String VENDOR_FULLNAME = "fullName";
+    public static final String VENDOR_EMAIL = "email";
+    public static final String VENDOR_USERNAME = "username";
+    public static final String VENDOR_PHONE = "phone";
+    public static final String VENDOR_ADDRESS = "address";
+    public static final String VENDOR_RATING = "rating";
+    public static final String VENDOR_TOTALSALE = "totalSale";
+    public static final String VENDOR_IMAGE = "image";
 
 
     public Vendor() {
@@ -45,6 +46,14 @@ public class Vendor implements Parcelable {
         this.totalSale = totalSale;
 
         this.image = image;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -112,11 +121,28 @@ public class Vendor implements Parcelable {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeString(fullName);
+        dest.writeString(email);
+        dest.writeString(username);
+        dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeInt(rating);
+        dest.writeInt(totalSale);
+        dest.writeString(image );
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     protected Vendor(Parcel in) {
+        id = in.readInt();
         fullName = in.readString();
         email = in.readString();
-        phone = in.readString();
         username = in.readString();
+        phone = in.readString();
         address = in.readString();
         rating=in.readInt();
         totalSale=in.readInt();
@@ -142,20 +168,7 @@ public class Vendor implements Parcelable {
         return 0;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeString(fullName);
-        dest.writeString(email);
-        dest.writeString(username);
-        dest.writeString(phone);
-        dest.writeString(address);
-        dest.writeInt(rating);
-        dest.writeInt(totalSale);
-        dest.writeString(image );
-
-    }
     @NonNull
     @Override
     public String toString() {
@@ -173,14 +186,14 @@ public class Vendor implements Parcelable {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put(CLIENT_USERNAME, username);
-        result.put(CLIENT_FULLNAME, fullName);
-        result.put(CLIENT_EMAIL, email);
-        result.put(CLIENT_PHONE, phone);
-        result.put(CLIENT_ADDRESS, address);
-        result.put(CLIENT_RATING, rating);
-        result.put(CLIENT_TOTALSALE, totalSale);
-        result.put(CLIENT_IMAGE, image);
+        result.put(VENDOR_USERNAME, username);
+        result.put(VENDOR_FULLNAME, fullName);
+        result.put(VENDOR_EMAIL, email);
+        result.put(VENDOR_PHONE, phone);
+        result.put(VENDOR_ADDRESS, address);
+        result.put(VENDOR_RATING, rating);
+        result.put(VENDOR_TOTALSALE, totalSale);
+        result.put(VENDOR_IMAGE, image);
         return result;
     }
 }

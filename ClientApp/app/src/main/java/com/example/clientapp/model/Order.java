@@ -10,8 +10,8 @@ public class Order {
     private boolean isProcessed;
     private List<Item> itemList;
     private List<Integer> quantity;
-    private int vendorID;
-    private String clientId;
+    private int vendorId;
+    private int clientId;
 
 
     public Map<String, Object> toMap() {
@@ -21,7 +21,7 @@ public class Order {
         result.put("isProcessed", isProcessed);
         result.put("itemList", itemList);
         result.put("quantity", quantity);
-        result.put("vendorID", vendorID);
+        result.put("vendorID", vendorId);
         result.put("clientID", clientId);
         return result;
     }
@@ -35,19 +35,19 @@ public class Order {
         this.isProcessed = isProcessed;
         this.itemList = itemList;
         this.quantity = quantity;
-        this.vendorID = vendorId;
+        this.vendorId = vendorId;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
 
     }
 
-    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID, String clientId) {
+    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID, int clientId) {
         this.id = id;
         this.date = date;
         this.isProcessed = isProcessed;
         this.itemList = itemList;
         this.quantity = quantity;
-        this.vendorID = vendorID;
+        this.vendorId = vendorID;
         this.clientId = clientId;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
@@ -93,19 +93,19 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public int getVendorID() {
-        return vendorID;
+    public int getVendorId() {
+        return vendorId;
     }
 
-    public void setVendorID(int vendorID) {
-        this.vendorID = vendorID;
+    public void setVendorId(int vendorID) {
+        this.vendorId = vendorID;
     }
 
-    public String getClientId() {
+    public int getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
+    public void setClientId(int clientId) {
         this.clientId = clientId;
     }
 
