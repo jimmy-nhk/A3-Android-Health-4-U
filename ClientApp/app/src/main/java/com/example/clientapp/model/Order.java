@@ -11,6 +11,7 @@ public class Order {
     private List<Item> itemList;
     private List<Integer> quantity;
     private int vendorID;
+    private String clientId;
 
 
     public Map<String, Object> toMap() {
@@ -21,6 +22,7 @@ public class Order {
         result.put("itemList", itemList);
         result.put("quantity", quantity);
         result.put("vendorID", vendorID);
+        result.put("clientID", clientId);
         return result;
     }
 
@@ -37,6 +39,18 @@ public class Order {
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
 
+    }
+
+    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID, String clientId) {
+        this.id = id;
+        this.date = date;
+        this.isProcessed = isProcessed;
+        this.itemList = itemList;
+        this.quantity = quantity;
+        this.vendorID = vendorID;
+        this.clientId = clientId;
+        System.out.println("InConstructor: " + itemList.size());
+        System.out.println("InConstructor: " + quantity.size());
     }
 
     public int getId() {
@@ -85,6 +99,14 @@ public class Order {
 
     public void setVendorID(int vendorID) {
         this.vendorID = vendorID;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     @Override

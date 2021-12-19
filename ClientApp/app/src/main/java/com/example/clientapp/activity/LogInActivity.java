@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -55,7 +56,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth.AuthStateListener authStateListener;
     private GoogleApiClient googleApiClient;
     private List<Client> clientList;
-
+    private Client client;
 
     String idToken;
 
@@ -65,7 +66,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-        Log.d(TAG, "hello");
         // init services
         attachComponents();
         initService();
@@ -151,39 +151,25 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // validate in case it cannot sign in with authentication
         try {
-//            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-            firebaseAuth.signInWithEmailAndPassword("1@gmail.com", "123456")
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-
-                                // Sign in success, update UI with signed-in user's information
-                                Log.d(TAG, "signInWithEmail:success");
+            firebaseAuth.signInWithEmailAndPassword("c1@gmail.com", "111111")
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
 //                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
+                            FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
 
-                                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+                            Log.d(TAG, userFirebase.getEmail() + " mail1");
 
-                                Client client;
-                                Log.d(TAG, userFirebase.getEmail() + " mail1");
-
-                                try {
-
-                                    // update UI (send intent)
-                                    updateUI();
-
-
-                                } catch (Exception e){
-                                    Log.d(TAG, "Cannot validate the user in firestone");
-
-                                }
-
-                            }else {
-
-                                // if sign in fails, display a message to the user
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                            try {
+                                getFirebaseClientByEmail(userFirebase.getEmail());
+                            } catch (Exception e){
+                                Log.d(TAG, "Cannot validate the user in firestore");
                             }
+                        } else {
+                            // if sign in fails, display a message to the user
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -250,6 +236,27 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    private void getFirebaseClientByEmail(String email) {
+        fireStore.collection("clients")
+                .whereEqualTo("email", email)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    if (value != null) {
+                        DocumentSnapshot doc = value.getDocuments().get(0);
+                        if (doc != null) {
+                            client = doc.toObject(Client.class);
+                            Log.d(TAG, "Query Client by email="+client.toString());
+
+                            updateUI();
+                        }
+                    }
+                });
+    }
+
     private void addClientToFireStore(String displayedName) {
         // create Client
         String fullName = displayedName;
@@ -268,12 +275,11 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // update UI
     private void updateUI() {
-
-
         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-        Log.d(TAG, "logIn: Successfully");
+        intent.putExtra("client", client);
+        Log.d(TAG, "updateUI, client=" + client.toString());
         startActivity(intent);
-
+        finish();
     }
 
     @Override

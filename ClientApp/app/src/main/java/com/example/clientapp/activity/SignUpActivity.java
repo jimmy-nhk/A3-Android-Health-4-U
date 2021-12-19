@@ -1,5 +1,6 @@
 package com.example.clientapp.activity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -17,8 +18,11 @@ import com.example.clientapp.R;
 import com.example.clientapp.model.Client;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.text.SimpleDateFormat;
@@ -44,6 +48,7 @@ public class SignUpActivity extends AppCompatActivity {
     private final Calendar calendar = Calendar.getInstance();
     private String fullName, username, phone, email, dob, weightStr, heightStr;
     private double weight, height;
+    private int clientSize ;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -63,6 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
         getViews();
         initService();
         loadClientData();
+        loadSizeClient();
 
         signUpBtn.setOnClickListener(v -> {
             username = usernameText.getText().toString().trim();
@@ -124,9 +130,11 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    // add client to db
     private void addClientToFireStore() {
         // create Client
         Client c = new Client();
+        c.setId(clientSize);
         c.setEmail(email);
         c.setUsername(username);
         c.setFullName(fullName);
@@ -142,6 +150,19 @@ public class SignUpActivity extends AppCompatActivity {
                     updateUI(c);
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + c.toString()));
+    }
+
+
+
+    private void loadSizeClient(){
+
+        userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                 clientSize = value.size();
+            }
+        });
     }
 
     //update ui
@@ -411,6 +432,7 @@ public class SignUpActivity extends AppCompatActivity {
 //        firebaseDatabase = FirebaseDatabase.getInstance("https://a2-android-56cbb-default-rtdb.asia-southeast1.firebasedatabase.app/");
 //        databaseReference = firebaseDatabase.getReference();
         clientList = new ArrayList<>();
+
 
 
     }

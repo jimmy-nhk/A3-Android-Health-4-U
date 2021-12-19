@@ -3,6 +3,7 @@ package com.example.clientapp.model;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 public class Client implements Parcelable {
 
+    private int id;
     private String fullName;
     private String username;
     private String email;
@@ -23,12 +25,48 @@ public class Client implements Parcelable {
     private double bmi;
     private String image;
 
-    public static final String CLIENT_FULLNAME ="name";
-    public static final String CLIENT_EMAIL ="email";
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(fullName);
+        dest.writeString(email);
+        dest.writeString(username);
+        dest.writeString(phone);
+        dest.writeString(dob);
+        dest.writeString(address);
+        dest.writeDouble(weight);
+        dest.writeDouble(height);
+        dest.writeDouble(bmi);
+        dest.writeString(image);
+
+        Log.d("Client", "writeToParcel: " + this.toString());
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    protected Client(Parcel in) {
+        id = in.readInt();
+        fullName = in.readString();
+        email = in.readString();
+        username = in.readString();
+        phone = in.readString();
+        dob = in.readString();
+        address = in.readString();
+        weight = in.readDouble();
+        height = in.readDouble();
+        bmi = in.readDouble();
+        image = in.readString();
+
+        Log.d("Client", "parcelObject: " + this.toString());
+    }
+
+    public static final String CLIENT_FULLNAME ="fullName";
     public static final String CLIENT_USERNAME ="username";
+    public static final String CLIENT_EMAIL ="email";
     public static final String CLIENT_PHONE ="phone";
     public static final String CLIENT_ADDRESS ="address";
-    public static final String CLIENT_DOB ="DOB";
+    public static final String CLIENT_DOB ="dob";
     public static final String CLIENT_WEIGHT ="weight";
     public static final String CLIENT_HEIGHT ="height";
     public static final String CLIENT_BMI ="bmi";
@@ -50,6 +88,14 @@ public class Client implements Parcelable {
         this.height = height;
         this.bmi = bmi;
         this.image = image;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -132,19 +178,7 @@ public class Client implements Parcelable {
         this.image = image;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    protected Client(Parcel in) {
-        fullName = in.readString();
-        email = in.readString();
-        phone = in.readString();
-        dob = in.readString();
-        username = in.readString();
-        address = in.readString();
-        weight = in.readDouble();
-        height = in.readDouble();
-        bmi = in.readDouble();
-        image = in.readString();
-    }
+
 
 
     public static final Creator<Client> CREATOR = new Creator<Client>() {
@@ -165,21 +199,21 @@ public class Client implements Parcelable {
         return 0;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeString(fullName);
-        dest.writeString(email);
-        dest.writeString(phone);
-    }
-
-    @NonNull
     @Override
     public String toString() {
         return "Client{" +
-                "name='" + fullName + '\'' +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", dob='" + dob + '\'' +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", bmi=" + bmi +
+                ", image='" + image + '\'' +
                 '}';
     }
 
@@ -190,7 +224,9 @@ public class Client implements Parcelable {
         result.put(CLIENT_EMAIL, email);
         result.put(CLIENT_PHONE, phone);
         result.put(CLIENT_DOB, dob);
+
         result.put(CLIENT_ADDRESS, phone);
+
         result.put(CLIENT_WEIGHT, weight);
         result.put(CLIENT_HEIGHT, height);
         result.put(CLIENT_BMI, bmi);
