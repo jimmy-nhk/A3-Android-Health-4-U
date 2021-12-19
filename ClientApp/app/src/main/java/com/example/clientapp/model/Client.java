@@ -23,12 +23,12 @@ public class Client implements Parcelable {
     private double bmi;
     private String image;
 
-    public static final String CLIENT_FULLNAME ="name";
-    public static final String CLIENT_EMAIL ="email";
+    public static final String CLIENT_FULLNAME ="fullName";
     public static final String CLIENT_USERNAME ="username";
+    public static final String CLIENT_EMAIL ="email";
     public static final String CLIENT_PHONE ="phone";
     public static final String CLIENT_ADDRESS ="address";
-    public static final String CLIENT_DOB ="DOB";
+    public static final String CLIENT_DOB ="dob";
     public static final String CLIENT_WEIGHT ="weight";
     public static final String CLIENT_HEIGHT ="height";
     public static final String CLIENT_BMI ="bmi";
@@ -168,18 +168,18 @@ public class Client implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeString(fullName);
         dest.writeString(email);
-        dest.writeString(phone);
+        dest.writeString(username);
     }
 
     @NonNull
     @Override
     public String toString() {
         return "Client{" +
-                "name='" + fullName + '\'' +
+                "fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 
@@ -190,7 +190,9 @@ public class Client implements Parcelable {
         result.put(CLIENT_EMAIL, email);
         result.put(CLIENT_PHONE, phone);
         result.put(CLIENT_DOB, dob);
+
         result.put(CLIENT_ADDRESS, phone);
+
         result.put(CLIENT_WEIGHT, weight);
         result.put(CLIENT_HEIGHT, height);
         result.put(CLIENT_BMI, bmi);

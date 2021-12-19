@@ -6,6 +6,7 @@ import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
 import com.example.clientapp.helper.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -36,12 +38,19 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity{
+    private final String ORDER_COLLECTION = "orders";
+    private final String TAG = MainActivity.class.getSimpleName();
 
     // the item model list
     private ItemViewModel viewModel;
-    private final static String TAG = MainActivity.class.getSimpleName();
 
+    private FirebaseFirestore fireStore;
+    private CollectionReference orderCollection;
     private BottomNavigationView bottomNavigationView;
+
+    private int orderSize;
+    private Client client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +62,7 @@ public class MainActivity extends AppCompatActivity{
             // Perform an action with the latest item data
         });
 
-
-
         bottomNavigationView = findViewById(R.id.bottom_navigation_container);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // attaching bottom sheet behaviour - hide / show on scroll
@@ -66,6 +72,12 @@ public class MainActivity extends AppCompatActivity{
 
         // init home fragment
         loadFragment(new HomeFragment());
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            client = intent.getParcelableExtra("client");
+            Log.d(TAG, "onCreate: client=" + client);
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -100,9 +112,12 @@ public class MainActivity extends AppCompatActivity{
 
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("username", "kb");
-        fragment.setArguments(bundle);
+        if (client != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("client", client);
+            Log.d(TAG, "onProfileBtnClick: client=" + client);
+            fragment.setArguments(bundle);
+        }
         loadFragment(fragment);
     }
 
@@ -166,11 +181,6 @@ public class MainActivity extends AppCompatActivity{
         }
 
     }
-
-    private FirebaseFirestore fireStore;
-    private CollectionReference orderCollection;
-    private int orderSize;
-    private final String ORDER_COLLECTION = "orders";
 
     private void loadOrderList() {
         // init fireStore db

@@ -86,6 +86,10 @@ public class ProfileFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            client = getArguments().getParcelable("client");
+            username = client.getUsername();
+
+            Log.d(TAG, "client=" + client);
         }
     }
 
@@ -94,15 +98,9 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        if (getArguments() != null) {
-            username = getArguments().getString("username");
-        }
-
         getViews(view);
         initService(view);
 //        getUserInfo();
-
-
 
         // Inflate the layout for this fragment
         return view;
