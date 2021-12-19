@@ -112,29 +112,30 @@ public class AddItemActivity extends AppCompatActivity {
             return;
         uploadImage();
 
-        }
+    }
 
-        public void uploadItemToDB(String imageURL){
-            // create Item
-            int itemId = itemList.size() + 1;
-            Item item = new Item();
-            item.setId(itemId);
-            item.setName(nameTxt.getText().toString().trim());
-            item.setCategory(categoryTxt.getText().toString().trim());
-            item.setDescription(descriptionTxt.getText().toString().trim());
-            item.setImage(imageURL);
-            item.setExpireDate(expireDateTxt.getText().toString().trim());
-            item.setVendorID(1);
-            item.setQuantity(Integer.parseInt(quantityTxt.getText().toString().trim()));
-            itemCollection.document(itemId + "")
-                    .set(item.toMap())
-                    .addOnSuccessListener(unused -> {
-                        Log.d(TAG, "Successfully added item to FireStore: " + item.toString());
-                        updateUI(item);
-                    })
-                    .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + item.toString()));
+    public void uploadItemToDB(String imageURL) {
+        // create Item
+        int itemId = itemList.size() + 1;
+        Item item = new Item();
+        item.setId(itemId);
+        item.setName(nameTxt.getText().toString().trim());
+        item.setCategory(categoryTxt.getText().toString().trim());
+        item.setDescription(descriptionTxt.getText().toString().trim());
+        item.setImage(imageURL);
+        item.setExpireDate(expireDateTxt.getText().toString().trim());
+        item.setVendorID(1);
+        item.setQuantity(Integer.parseInt(quantityTxt.getText().toString().trim()));
+        itemCollection.document(itemId + "")
+                .set(item.toMap())
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Successfully added item to FireStore: " + item.toString());
+                    updateUI(item);
+                })
+                .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + item.toString()));
 
-        }
+    }
+
     private boolean validate() {
         return true;
     }
@@ -194,7 +195,7 @@ public class AddItemActivity extends AppCompatActivity {
             StorageReference ref
                     = storageReference
                     .child(
-                            "images/"
+                            "items/"
                                     + UUID.randomUUID().toString());
 
             // adding listeners on upload
@@ -206,7 +207,17 @@ public class AddItemActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot) {
+                                    taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
+                                            new OnCompleteListener<Uri>() {
 
+                                                @Override
+                                                public void onComplete(@NonNull Task<Uri> task) {
+                                                    //Get image link from uploadded iamge to firestore
+                                                    String fileLink = task.getResult().toString();
+                                                    // Call function to upload item to DB
+                                                    uploadItemToDB(fileLink);
+                                                }
+                                            });
                                     // Image uploaded successfully
                                     // Dismiss dialog
 //                                    progressDialog.dismiss();
@@ -250,10 +261,10 @@ public class AddItemActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==PICK_IMAGE_REQUEST&& resultCode==RESULT_OK&& data!=null && data.getData()!=null){
-            filePath=data.getData();
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
             try {
-                Bitmap bitmapImg= MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
 
             } catch (IOException e) {
                 e.printStackTrace();
