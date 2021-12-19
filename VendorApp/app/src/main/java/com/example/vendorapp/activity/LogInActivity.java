@@ -27,8 +27,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +152,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (!email.contains("@")) {
             username = email;
             logInWithUsername(username);
-//            Log.d(TAG, "onLogInBtnClick email=" + email);
         } else {
             logInWithEmail(email, password);
         }
@@ -168,11 +169,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
                             try {
                                 FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+                                // If log in by email, get Vendor from Firebase first then update UI
+                                // after complete
                                 if (userFirebase != null && username.isEmpty()) {
                                     getFirebaseVendorByEmail(userFirebase.getEmail());
-//                                    Log.d(TAG, userFirebase.getEmail());
                                 }
-                                // update UI (send intent)
+
+                                // If log in by username, update UI here
                                 updateUI();
                             } catch (Exception e) {
                                 Log.d(TAG, "Cannot validate the user in firestone");
@@ -222,11 +225,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                     }
 
                     if (value != null) {
-                        for (QueryDocumentSnapshot doc : value) {
-                            if (doc != null) {
-                                vendor = doc.toObject(Vendor.class);
-//                                Log.d(TAG, "vendor by email="+vendor.toString());
-                            }
+                        DocumentSnapshot doc = value.getDocuments().get(0);
+                        if (doc != null) {
+                            vendor = doc.toObject(Vendor.class);
+                            Log.d(TAG, "Query Vendor by email="+vendor.toString());
+
+                            updateUI();
                         }
                     }
                 });
@@ -309,7 +313,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateUI() {
         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
         intent.putExtra("vendor", vendor);
-        Log.d(TAG, "logIn: Successfully");
+        Log.d(TAG, "LoginActivity, send parcel to MainActivity: updateUI=" + vendor.toString());
         startActivity(intent);
     }
 
