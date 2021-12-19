@@ -96,7 +96,7 @@
             android:layout_weight="4"
             android:backgroundTint="@color/blue_phantom"
             android:text="Log In"
-            android:onClick="normalLogIn"
+            android:onClick="onLogInBtnClick"
             android:textColor="@color/white"
             android:textStyle="bold" />
 

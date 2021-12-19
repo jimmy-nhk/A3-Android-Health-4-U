@@ -22,10 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -38,28 +35,27 @@ import java.util.List;
 import java.util.Objects;
 
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-
     public final static int REGISTER_CODE = 101;
+    private static final int GOOGLE_SUCCESSFULLY_SIGN_IN = 1;
+    private static final String TAG = "LogInActivity";
+    private static final String VENDOR_COLLECTION = "vendors";
 
     private EditText emailText;
     private EditText passwordText;
     private TextView errorLoginTxt;
 
-    private static final int GOOGLE_SUCCESSFULLY_SIGN_IN = 1;
-
-    private static final String TAG = "LogInActivity";
-
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore fireStore;
     private CollectionReference userCollection;
-    private static final String CLIENT_COLLECTION = "vendors";
+
     private GoogleApiClient googleApiClient;
     private FirebaseAuth.AuthStateListener authStateListener;
     private List<Vendor> vendorList;
+    private Vendor vendor;
+    private String email, password, username;
 
-
+    // Google sign-in
     String idToken;
-
     private SignInButton signInGoogleButton;
 
     @Override
@@ -75,8 +71,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (firebaseUser != null) {
             firebaseUser.getEmail();
         }
-
-
     }
 
     // init services
@@ -87,9 +81,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
-        userCollection = fireStore.collection(CLIENT_COLLECTION);
+        userCollection = fireStore.collection(VENDOR_COLLECTION);
         FirebaseAuth.getInstance().signOut();
-
 
         //this is where we start the Auth state Listener to listen for whether the user is signed in or not
         authStateListener = firebaseAuth -> {
@@ -112,10 +105,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // load users
         userCollection.addSnapshotListener((value, error) -> {
-
-            for (QueryDocumentSnapshot doc : value) {
-
-                Log.d(TAG, "onEvent: " + doc.get("name"));
+            if (value != null) {
+                for (QueryDocumentSnapshot doc : value) {
+                    Log.d(TAG, "onEvent: " + doc.get("name"));
+                }
             }
         });
 
@@ -149,43 +142,45 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         textView.setText("Sign in with Google");
     }
 
-    public void normalLogIn(View view) {
+    public void onLogInBtnClick(View view) {
+        email = emailText.getText().toString().trim();
+        password = passwordText.getText().toString().trim();
+        username = "";
 
+        if (!email.contains("@")) {
+            username = email;
+            logInWithUsername(username);
+//            Log.d(TAG, "onLogInBtnClick email=" + email);
+        } else {
+            logInWithEmail(email, password);
+        }
+    }
+
+    private void logInWithEmail(String email, String password) {
         // validate in case it cannot sign in with authentication
         try {
-//            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-            firebaseAuth.signInWithEmailAndPassword("1@gmail.com", "123456")
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-
-                                // Sign in success, update UI with signed-in user's information
-                                Log.d(TAG, "signInWithEmail:success");
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
 //                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
 
+                            try {
                                 FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-
-                                Vendor vendor;
-                                Log.d(TAG, userFirebase.getEmail() + " mail1");
-
-                                try {
-
-                                    // update UI (send intent)
-                                    updateUI();
-
-
-                                } catch (Exception e) {
-                                    Log.d(TAG, "Cannot validate the user in firestone");
-
+                                if (userFirebase != null && username.isEmpty()) {
+                                    getFirebaseVendorByEmail(userFirebase.getEmail());
+//                                    Log.d(TAG, userFirebase.getEmail());
                                 }
-
-                            } else {
-
-                                // if sign in fails, display a message to the user
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                                // update UI (send intent)
+                                updateUI();
+                            } catch (Exception e) {
+                                Log.d(TAG, "Cannot validate the user in firestone");
                             }
+                        } else {
+                            // if sign in fails, display a message to the user
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -194,6 +189,47 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             errorLoginTxt.setText("Please enter your mail and password.");
             return;
         }
+    }
+
+    private void logInWithUsername(String username) {
+        fireStore.collection("vendors")
+                .document(username)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    if (value != null) {
+                        vendor = value.toObject(Vendor.class);
+                        if (vendor != null) {
+                            email = vendor.getEmail();
+                            logInWithEmail(email, password);
+                        }
+//                        Log.d(TAG, "vendor by username="+vendor.toString());
+//                        Log.d(TAG, "getFirebaseVendorByUsername email="+email);
+                    }
+                });
+    }
+
+    private void getFirebaseVendorByEmail(String email) {
+        fireStore.collection("vendors")
+                .whereEqualTo("email", email)
+                .addSnapshotListener((value, e) -> {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    if (value != null) {
+                        for (QueryDocumentSnapshot doc : value) {
+                            if (doc != null) {
+                                vendor = doc.toObject(Vendor.class);
+//                                Log.d(TAG, "vendor by email="+vendor.toString());
+                            }
+                        }
+                    }
+                });
     }
 
     // handle sign in with google
@@ -227,19 +263,21 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //                            Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                         // get the current logged in user
-                        FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
-                        Log.d(TAG, userFirebase.getDisplayName() + " name");
-                        Log.d(TAG, Objects.requireNonNull(userFirebase).getEmail() + " email");
-
+                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+//                        Log.d(TAG, userFirebase.getDisplayName() + " name");
+//                        Log.d(TAG, Objects.requireNonNull(userFirebase).getEmail() + " email");
 
                         // Create the user
-//                            Vendor vendor = new Vendor(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
+//                        Vendor vendor = new Vendor(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
 
-                        //TODO: Choose which one to set the document id
-                        addVendorToFireStore(userFirebase.getDisplayName());
+                        if (currentUser != null) {
+                            email = currentUser.getEmail();
+                            //TODO: Choose which one to set the document id
+                            addVendorToFireStore(currentUser.getDisplayName(), email);
 
-                        // update the UI
-                        updateUI();
+                            // update the UI
+                            updateUI();
+                        }
                     } else {
                         Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
                         task.getException().printStackTrace();
@@ -252,14 +290,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-    private void addVendorToFireStore(String displayedName) {
+    private void addVendorToFireStore(String email, String displayedName) {
         // create Vendor
-        String fullName = displayedName;
         Vendor c = new Vendor();
-        c.setEmail(emailText.getText().toString().trim());
-        c.setFullName(fullName);
+        c.setEmail(email);
+        c.setFullName(displayedName);
 
-        userCollection.document(emailText.getText().toString().trim())
+        userCollection.document(email)
                 .set(c.toMap())
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "Successfully added vendor to FireStore: " + c.toString());
@@ -270,13 +307,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // update UI
     private void updateUI() {
-
-
         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+        intent.putExtra("vendor", vendor);
         Log.d(TAG, "logIn: Successfully");
         startActivity(intent);
-
     }
+
     private void requestPermission() {
         //Request for permission if needed
         ActivityCompat.requestPermissions(LogInActivity.this, new String[]{
@@ -285,6 +321,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 99);
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

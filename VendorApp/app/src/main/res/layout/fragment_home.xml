@@ -13,4 +13,10 @@
         android:textSize="50sp"
         android:text="HOME" />
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:onClick="onProfileBtnClick"/>
 </FrameLayout>

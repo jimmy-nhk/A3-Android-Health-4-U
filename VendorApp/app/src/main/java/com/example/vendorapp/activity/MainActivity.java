@@ -19,10 +19,13 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.vendorapp.R;
 import com.example.vendorapp.fragment.FoodListFragment;
 import com.example.vendorapp.fragment.HomeFragment;
+import com.example.vendorapp.fragment.ProfileFragment;
+import com.example.vendorapp.model.Vendor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
+    private Vendor vendor;
 
     private BottomNavigationView bottomNavigationView;
     @Override
@@ -30,41 +33,41 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-
-
         bottomNavigationView = findViewById(R.id.bottom_navigation_container);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // attaching bottom sheet behaviour - hide / show on scroll
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
+        // init home fragment
+        loadFragment(new HomeFragment());
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            vendor = (Vendor) intent.getParcelableExtra("vendor");
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+            = item -> {
+                Fragment fragment;
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment fragment;
+                switch (item.getItemId()) {
+                    case R.id.homePageNav:
+                        fragment = new HomeFragment();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.itemsNav:
+                        fragment = new FoodListFragment();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.orderNav:
+                        return true;
 
-            switch (item.getItemId()) {
-                case R.id.homePageNav:
-                    fragment = new HomeFragment();
-                    loadFragment(fragment);
-                    return true;
-                case R.id.itemsNav:
-                    fragment = new FoodListFragment();
-                    loadFragment(fragment);
-                    return true;
-                case R.id.orderNav:
-                    return true;
-
-            }
-            return false;
-        }
-    };
+                }
+                return false;
+            };
 
     private void loadFragment(Fragment fragment) {
         // load fragment
@@ -82,6 +85,16 @@ public class MainActivity extends AppCompatActivity{
         } catch (Exception e){
             Log.d(TAG, "Cannot change to Add Item Activity");
         }
+    }
+
+    public void onProfileBtnClick(View view) {
+        Fragment fragment = new ProfileFragment();
+        if (vendor != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("vendor", vendor);
+            fragment.setArguments(bundle);
+        }
+        loadFragment(fragment);
     }
 }
 

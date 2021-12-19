@@ -363,11 +363,9 @@ public class SignUpActivity extends AppCompatActivity {
         errorTxt.setVisibility(View.INVISIBLE);
 
         emailText = findViewById(R.id.editEmail);
-        usernameText = findViewById(R.id.editUserName);
+        usernameText = findViewById(R.id.editUsername);
         passwordText = findViewById(R.id.editPassword);
         confirmPasswordText = findViewById(R.id.editConfirmPassword);
         signUpBtn = findViewById(R.id.signUpBtn);
     }
 }
-
-//TODO: add datepicker @Phuc
