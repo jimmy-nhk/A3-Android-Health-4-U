@@ -4,13 +4,23 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.clientapp.R;
+import com.example.clientapp.model.Client;
+import com.example.clientapp.helper.ItemRecyclerViewAdapter;
+import com.google.android.gms.common.api.Api;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +33,7 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "ProfileFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -43,6 +54,9 @@ public class ProfileFragment extends Fragment {
     private String dob;
     private double weight;
     private double height;
+
+    private FirebaseFirestore fireStore;
+    private Client client;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -80,9 +94,48 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        getViews(view);
-        getUserInfo();
+        if (getArguments() != null) {
+            username = getArguments().getString("username");
+        }
 
+        getViews(view);
+        initService(view);
+//        getUserInfo();
+
+
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    private void initService(View view) {
+        // init fireStore db
+        fireStore = FirebaseFirestore.getInstance();
+        DocumentReference docRef = fireStore.collection("clients").document(username);
+
+        // load items
+        docRef.addSnapshotListener((value, error) -> {
+            if (value != null) {
+                Log.d(TAG, "value != null");
+                Client c = value.toObject(Client.class);
+
+                Log.d(TAG, "c != null=" + (c != null));
+                if (c != null) {
+                    fullName = c.getFullName();
+                    username = c.getUsername();
+                    email = c.getEmail();
+                    phone = c.getPhone();
+                    dob = c.getDob();
+                    weight = c.getWeight();
+                    height = c.getHeight();
+
+                    displayUserInfo();
+                }
+            }
+        });
+    }
+
+    private void displayUserInfo() {
         fullNameTextView.setText(fullName);
         usernameTextView.setText(username);
         emailTextView.setText(email);
@@ -90,19 +143,6 @@ public class ProfileFragment extends Fragment {
         dobTextView.setText(dob);
         weightTextView.setText(String.valueOf(weight));
         heightTextView.setText(String.valueOf(height));
-
-        // Inflate the layout for this fragment
-        return view;
-    }
-
-    private void getUserInfo() {
-        fullName = "full name";
-        username = "username";
-        email = "email";
-        phone = "123798";
-        dob = "4839290";
-        weight = 50;
-        height = 150;
     }
 
     private void getViews(View view) {

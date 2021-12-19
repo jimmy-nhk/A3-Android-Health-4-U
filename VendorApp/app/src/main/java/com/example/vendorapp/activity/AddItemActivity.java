@@ -79,6 +79,10 @@ public class AddItemActivity extends AppCompatActivity {
         // load items
         itemCollection.addSnapshotListener((value, error) -> {
 
+            // clear again
+            itemList.clear();
+
+            // iterate through the list
             for (QueryDocumentSnapshot doc : value) {
                 itemList.add(doc.toObject(Item.class));
             }
@@ -202,13 +206,6 @@ public class AddItemActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot) {
-                                    taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
-                                            task -> {
-                                                String fileLink = task.getResult().toString();
-
-                                                //next work with URL
-                                                uploadItemToDB(fileLink);
-                                            });
 
                                     // Image uploaded successfully
                                     // Dismiss dialog

@@ -23,12 +23,14 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     private List<Item> itemList;
     private Context context;
     private LayoutInflater mLayoutInflater;
+    private ItemViewModel viewModel;
 
-    public ItemRecyclerViewAdapter(Context context, List<Item> datas ) {
+    public ItemRecyclerViewAdapter(Context context, List<Item> datas , ItemViewModel viewModel ) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
         this.context = context;
         this.itemList = datas;
         this.mLayoutInflater = LayoutInflater.from(context);
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -54,6 +56,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         Item item = this.itemList.get(itemPosition);
 
+        viewModel.addItem(item);
+
+
         Toast.makeText(this.context, item.getName(), Toast.LENGTH_LONG).show();
     }
 
@@ -66,7 +71,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         holder.name.setText(item.getName());
         holder.price.setText(item.getPrice() +"");
-        holder.vendorName.setText(item.getVendorName());
+        holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
 
         //TODO: Image and Button
