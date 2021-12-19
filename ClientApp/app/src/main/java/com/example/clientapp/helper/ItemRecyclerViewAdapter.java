@@ -71,7 +71,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         holder.name.setText(item.getName());
         holder.price.setText(item.getPrice() +"");
-        holder.vendorName.setText(item.getVendorName());
+        holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
 
         //TODO: Image and Button

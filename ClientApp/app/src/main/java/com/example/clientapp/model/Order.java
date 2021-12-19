@@ -1,6 +1,8 @@
 package com.example.clientapp.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Order {
     private int id;
@@ -8,16 +10,33 @@ public class Order {
     private boolean isProcessed;
     private List<Item> itemList;
     private List<Integer> quantity;
+    private int vendorID;
+
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("id", id);
+        result.put("date", date);
+        result.put("isProcessed", isProcessed);
+        result.put("itemList", itemList);
+        result.put("quantity", quantity);
+        result.put("vendorID", vendorID);
+        return result;
+    }
 
     public Order() {
     }
 
-    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity) {
+    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorId) {
         this.id = id;
         this.date = date;
         this.isProcessed = isProcessed;
         this.itemList = itemList;
         this.quantity = quantity;
+        this.vendorID = vendorId;
+        System.out.println("InConstructor: " + itemList.size());
+        System.out.println("InConstructor: " + quantity.size());
+
     }
 
     public int getId() {
@@ -58,5 +77,24 @@ public class Order {
 
     public void setQuantity(List<Integer> quantity) {
         this.quantity = quantity;
+    }
+
+    public int getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(int vendorID) {
+        this.vendorID = vendorID;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", date='" + date + '\'' +
+                ", isProcessed=" + isProcessed +
+                ", itemList=" + itemList +
+                ", quantity=" + quantity +
+                '}';
     }
 }

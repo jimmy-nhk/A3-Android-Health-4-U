@@ -3,80 +3,101 @@ package com.example.clientapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Item implements Parcelable {
-
+public class Item implements Parcelable, Comparable<Item> {
+    private int id = 0;
     private String name = "";
     //FIXME: @ALL need quantity ?
     private int quantity = 0;
-    private String image ="";
-    private String vendorName="";
-    private String category="";
-    private String date="";
-    private double price=0;
+    private String image = "";
+    private String description = "";
+    private int vendorID = 0;
+    private String category = "";
+    private String expireDate = "";
+    private double price = 0;
+    private double calories;
     //TODO: need discount ?
 
 
     protected Item(Parcel in) {
+        id = in.readInt();
         name = in.readString();
         quantity = in.readInt();
         image = in.readString();
-        vendorName = in.readString();
+        description = in.readString();
+        vendorID = in.readInt();
         category = in.readString();
-        date = in.readString();
+        expireDate = in.readString();
         price = in.readDouble();
+        calories = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(name);
         dest.writeInt(quantity);
         dest.writeString(image);
-        dest.writeString(vendorName);
+        dest.writeString(description);
+        dest.writeInt(vendorID);
         dest.writeString(category);
-        dest.writeString(date);
+        dest.writeString(expireDate);
         dest.writeDouble(price);
+        dest.writeDouble(calories);
     }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("id", id);
         result.put("name", name);
         result.put("quantity", quantity);
         result.put("image", image);
-        result.put("vendorName", vendorName);
+        result.put("description", description);
+        result.put("vendorID", vendorID);
         result.put("category", category);
-        result.put("date", date);
+        result.put("expireDate", expireDate);
         result.put("price", price);
+        result.put("calories", calories);
         return result;
     }
 
     public Item() {
     }
 
-    public Item(String name, int quantity, String image, String vendorName, String category) {
+    public Item(int id, String name, int quantity, String image, String description, int vendorID, String category) {
+        this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.image = image;
-        this.vendorName = vendorName;
+        this.description = description;
+        this.vendorID = vendorID;
         this.category = category;
     }
 
-    public Item(String name, String vendorName, String category, double price) {
+    public Item(String name, int vendorID, String category, double price) {
         this.name = name;
         this.price = price;
-        this.vendorName = vendorName;
+        this.vendorID = vendorID;
         this.category = category;
     }
 
-
-    public String getDate() {
-        return date;
+    public int getId() {
+        return id;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(String expireDate) {
+        this.expireDate = expireDate;
     }
 
     public double getPrice() {
@@ -129,12 +150,20 @@ public class Item implements Parcelable {
         this.image = image;
     }
 
-    public String getVendorName() {
-        return vendorName;
+    public String getDescription() {
+        return description;
     }
 
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(int vendorID) {
+        this.vendorID = vendorID;
     }
 
     public String getCategory() {
@@ -146,4 +175,25 @@ public class Item implements Parcelable {
     }
 
 
+    @Override
+    public int compareTo(Item o) {
+        if (this.price - o.price == 0) {
+            return 0;
+        }
+        if (this.price - o.price > 0) {
+            return 1;
+        }
+        return -1;
+    }
+
+//    @Override
+//    public int compare(Item o1, Item o2) {
+//        if (o1.price - o2.price == 0) {
+//            return 0;
+//        }
+//        if (o1.price - o2.price > 0) {
+//            return 1;
+//        }
+//        return -1;
+//    }
 }

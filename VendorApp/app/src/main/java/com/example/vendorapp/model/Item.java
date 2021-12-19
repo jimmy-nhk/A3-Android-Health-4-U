@@ -22,7 +22,7 @@ public class Item implements Parcelable {
 
 
     protected Item(Parcel in) {
-        int id = in.readInt();
+        id = in.readInt();
         name = in.readString();
         quantity = in.readInt();
         image = in.readString();

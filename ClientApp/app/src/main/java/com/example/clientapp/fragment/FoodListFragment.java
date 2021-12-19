@@ -88,17 +88,13 @@ public class FoodListFragment extends Fragment {
         itemCollection.addSnapshotListener((value, error) -> {
 
             // clear to list
-            itemList.clear();
+            itemList = new ArrayList<>();
 
             //reverse way (newest show first)
             for (int i = value.size() - 1 ; i >= 0; i--){
 
                 itemList.add(value.getDocuments().get(i).toObject(Item.class));
             }
-
-//            for (QueryDocumentSnapshot doc : value) {
-//                itemList.add(doc.toObject(Item.class));
-//            }
 
             recyclerView = view.findViewById(R.id.recycler_view);
 

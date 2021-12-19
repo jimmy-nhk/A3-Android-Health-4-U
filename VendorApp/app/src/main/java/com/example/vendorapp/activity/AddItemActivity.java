@@ -2,8 +2,12 @@ package com.example.vendorapp.activity;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
+import com.example.vendorapp.model.Vendor;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -12,15 +16,20 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -96,46 +105,49 @@ public class AddItemActivity extends AppCompatActivity {
         addedImageListview = findViewById(R.id.addedImageListview);
     }
 
-    public void addAddItemOnClick(View view) {
+    public void addAdditemOnClick(View view) {
         // Add item on ADD button clicked
         //Validation
         if (!validate())
             return;
         uploadImage();
 
-        // create Item
-        int itemId = itemList.size() + 1;
-        Item item = new Item();
-        item.setId(itemId);
-        item.setName(nameTxt.getText().toString().trim());
-        item.setCategory(categoryTxt.getText().toString().trim());
-        item.setDescription(descriptionTxt.getText().toString().trim());
-        item.setImage("");
-        item.setExpireDate(expireDateTxt.getText().toString().trim());
-        item.setVendorID(1);
-        item.setQuantity(Integer.parseInt(quantityTxt.getText().toString().trim()));
-        itemCollection.document(itemId + "")
-                .set(item.toMap())
-                .addOnSuccessListener(unused -> {
-                    Log.d(TAG, "Successfully added item to FireStore: " + item.toString());
-                    updateUI(item);
-                })
-                .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + item.toString()));
-    }
+        }
 
+        public void uploadItemToDB(String imageURL){
+            // create Item
+            int itemId = itemList.size() + 1;
+            Item item = new Item();
+            item.setId(itemId);
+            item.setName(nameTxt.getText().toString().trim());
+            item.setCategory(categoryTxt.getText().toString().trim());
+            item.setDescription(descriptionTxt.getText().toString().trim());
+            item.setImage(imageURL);
+            item.setExpireDate(expireDateTxt.getText().toString().trim());
+            item.setVendorID(1);
+            item.setQuantity(Integer.parseInt(quantityTxt.getText().toString().trim()));
+            itemCollection.document(itemId + "")
+                    .set(item.toMap())
+                    .addOnSuccessListener(unused -> {
+                        Log.d(TAG, "Successfully added item to FireStore: " + item.toString());
+                        updateUI(item);
+                    })
+                    .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + item.toString()));
+
+        }
     private boolean validate() {
         return true;
     }
 
     //cancel button - finish activity
-    public void cancelAddItemOnClick(View view) {
+    public void cancelAdditemOnClick(View view) {
         //Finish activity on CANCEL button clicked
         try {
             Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
             setResult(RESULT_CANCELED, intent);
             finish();
         } catch (Exception e) {
-            Log.d(TAG, "Cannot finish AddItemActivity");
+            Log.d(TAG, "Cannot finish AdditemActivity");
         }
     }
 
@@ -150,12 +162,12 @@ public class AddItemActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadImageAddItemOnClick(View view) {
-        selectImage();
+    public void uploadImageAdditemOnClick(View view) {
+        SelectImage();
     }
 
     // Select Image method
-    private void selectImage() {
+    private void SelectImage() {
 
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
@@ -173,10 +185,10 @@ public class AddItemActivity extends AppCompatActivity {
         if (filePath != null) {
 
             // Code for showing progressDialog while uploading
-            ProgressDialog progressDialog
-                    = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+//            ProgressDialog progressDialog
+//                    = new ProgressDialog(this);
+//            progressDialog.setTitle("Uploading...");
+//            progressDialog.show();
 
             // Defining the child of storageReference
             StorageReference ref
@@ -197,10 +209,10 @@ public class AddItemActivity extends AppCompatActivity {
 
                                     // Image uploaded successfully
                                     // Dismiss dialog
-                                    progressDialog.dismiss();
-                                    Toast.makeText(AddItemActivity.this,
-                                                    "Image Uploaded!!",
-                                                    Toast.LENGTH_SHORT).show();
+//                                    progressDialog.dismiss();
+//                                    Toast.makeText(AddItemActivity.this,
+//                                                    "Image Uploaded!!",
+//                                                    Toast.LENGTH_SHORT).show();
                                 }
                             })
 
@@ -209,10 +221,10 @@ public class AddItemActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
 
                             // Error, Image not uploaded
-                            progressDialog.dismiss();
-                            Toast.makeText(AddItemActivity.this,
-                                            "Failed " + e.getMessage(),
-                                            Toast.LENGTH_SHORT).show();
+//                            progressDialog.dismiss();
+//                            Toast.makeText(AddItemActivity.this,
+//                                            "Failed " + e.getMessage(),
+//                                            Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(
@@ -227,12 +239,25 @@ public class AddItemActivity extends AppCompatActivity {
                                             = (100.0
                                             * taskSnapshot.getBytesTransferred()
                                             / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage(
-                                            "Uploaded "
-                                                    + (int) progress + "%");
+//                                    progressDialog.setMessage(
+//                                            "Uploaded "
+//                                                    + (int) progress + "%");
                                 }
                             });
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==PICK_IMAGE_REQUEST&& resultCode==RESULT_OK&& data!=null && data.getData()!=null){
+            filePath=data.getData();
+            try {
+                Bitmap bitmapImg= MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
