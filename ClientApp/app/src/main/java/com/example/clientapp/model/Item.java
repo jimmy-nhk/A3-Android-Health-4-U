@@ -174,6 +174,21 @@ public class Item implements Parcelable, Comparable<Item> {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", image='" + image + '\'' +
+                ", description='" + description + '\'' +
+                ", vendorID=" + vendorID +
+                ", category='" + category + '\'' +
+                ", expireDate='" + expireDate + '\'' +
+                ", price=" + price +
+                ", calories=" + calories +
+                '}';
+    }
 
     @Override
     public int compareTo(Item o) {

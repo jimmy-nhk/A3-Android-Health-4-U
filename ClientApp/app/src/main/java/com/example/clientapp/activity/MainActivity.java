@@ -1,10 +1,9 @@
 package com.example.clientapp.activity;
 import com.example.clientapp.R;
 import com.example.clientapp.fragment.CartFragment;
-import com.example.clientapp.fragment.FoodListFragment;
+import com.example.clientapp.fragment.ItemListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
-import com.example.clientapp.helper.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
@@ -19,8 +18,6 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity{
@@ -90,7 +86,7 @@ public class MainActivity extends AppCompatActivity{
                         loadFragment(fragment);
                         return true;
                     case R.id.itemsNav:
-                        fragment = new FoodListFragment();
+                        fragment = new ItemListFragment();
                         loadFragment(fragment);
                         return true;
                     case R.id.cartNav:

@@ -25,11 +25,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodListFragment extends Fragment {
+public class ItemListFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Item> itemList;
     private ItemRecyclerViewAdapter mAdapter;
-    private static final String TAG = FoodListFragment.class.getSimpleName();
+    private static final String TAG = ItemListFragment.class.getSimpleName();
     private static final String ITEM_COLLECTION = "items";
     private FirebaseFirestore fireStore;
     private CollectionReference itemCollection;
@@ -37,13 +37,13 @@ public class FoodListFragment extends Fragment {
     private ItemViewModel viewModel;
 
 
-    public FoodListFragment(){
+    public ItemListFragment(){
 
         Log.d(TAG, "FoodListFragment: onCreate");
     }
 
-    public static FoodListFragment newInstance(String param1, String param2) {
-        FoodListFragment fragment = new FoodListFragment();
+    public static ItemListFragment newInstance(String param1, String param2) {
+        ItemListFragment fragment = new ItemListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -66,7 +66,7 @@ public class FoodListFragment extends Fragment {
 
 
 
-        View view = inflater.inflate(R.layout.fragment_food_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         //TODO: TESTING. Remember to turn on
 //        initService(view);
 
