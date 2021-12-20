@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clientapp.R;
+import com.example.clientapp.helper.CartItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
 import com.example.clientapp.model.Item;
@@ -32,7 +34,7 @@ public class CartFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private List<Item> itemList;
-    private ItemRecyclerViewAdapter mAdapter;
+    private CartItemRecyclerViewAdapter mAdapter;
 
     private ItemViewModel viewModel;
 
@@ -81,10 +83,13 @@ public class CartFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(getViewLifecycleOwner(), itemList -> {
+
             // Update the selected filters UI
-
-            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
-
+//            for (Item i:
+//                 itemList) {
+//                Log.d("CartFragment: ", i.toString());
+//            }
+            mAdapter = new CartItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
 
             // linear styles
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
