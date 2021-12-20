@@ -105,7 +105,7 @@ public class AddItemActivity extends AppCompatActivity {
         addedImageListview = findViewById(R.id.addedImageListview);
     }
 
-    public void addAdditemOnClick(View view) {
+    public void addAddItemOnClick(View view) {
         // Add item on ADD button clicked
         //Validation
         if (!validate())
@@ -141,7 +141,7 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     //cancel button - finish activity
-    public void cancelAdditemOnClick(View view) {
+    public void cancelAddItemOnClick(View view) {
         //Finish activity on CANCEL button clicked
         try {
             Intent intent = new Intent(AddItemActivity.this, MainActivity.class);

@@ -3,4 +3,6 @@
     <string name="web_client_id">AIzaSyAUpHZwlTRdXa-axvoI0T1cLXjrJwBHUzs</string>
     <integer name="intentLoginMain">1</integer>
     <integer name="intentMainAdditem">2</integer>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -18,26 +18,25 @@ import com.example.vendorapp.helper.ItemRecyclerViewAdapter;
 import com.example.vendorapp.model.Item;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodListFragment extends Fragment {
+public class ItemListFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Item> itemList;
     private ItemRecyclerViewAdapter mAdapter;
-    private static final String TAG = FoodListFragment.class.getSimpleName();
+    private static final String TAG = ItemListFragment.class.getSimpleName();
     private static final String ITEM_COLLECTION = "items";
     private FirebaseFirestore fireStore;
     private CollectionReference itemCollection;
-    public FoodListFragment(){
+    public ItemListFragment(){
 
         Log.d(TAG, "FoodListFragment: onCreate");
     }
 
-    public static FoodListFragment newInstance(String param1, String param2) {
-        FoodListFragment fragment = new FoodListFragment();
+    public static ItemListFragment newInstance(String param1, String param2) {
+        ItemListFragment fragment = new ItemListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

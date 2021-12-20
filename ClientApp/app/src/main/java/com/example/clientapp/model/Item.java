@@ -10,7 +10,6 @@ import java.util.Map;
 public class Item implements Parcelable, Comparable<Item> {
     private int id = 0;
     private String name = "";
-    //FIXME: @ALL need quantity ?
     private int quantity = 0;
     private String image = "";
     private String description = "";

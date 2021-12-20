@@ -43,7 +43,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         recyclerViewItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleRecyclerItemClick( (RecyclerView)parent, v);
+
+                //TODO: Show Info intent of the item
+//                handleRecyclerItemClick( (RecyclerView)parent, v);
             }
         });
         return new ItemViewHolder(recyclerViewItem);
@@ -67,17 +69,31 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         Log.d("ItemRecyclerViewAdapter" , "render");
 
-        Item item =  this.itemList.get(position);
+        Item item =  itemList.get(position);
 
         holder.name.setText(item.getName());
         holder.price.setText(item.getPrice() +"");
         holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
 
+
+        // init final position for on click
+        int finalPosition = position;
+        holder.addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Item item = itemList.get(finalPosition);
+
+                viewModel.addItem(item);
+            }
+        });
+
         //TODO: Image and Button
         holder.image.setImageResource(R.drawable.avatar_foreground);
 
     }
+
 
     @Override
     public int getItemCount() {

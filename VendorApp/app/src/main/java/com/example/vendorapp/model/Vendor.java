@@ -22,6 +22,8 @@ public class Vendor implements Parcelable {
     private int totalSale;
     private String image;
 
+
+    public static final String VENDOR_ID = "id";
     public static final String VENDOR_FULLNAME = "fullName";
     public static final String VENDOR_EMAIL = "email";
     public static final String VENDOR_USERNAME = "username";
@@ -169,11 +171,11 @@ public class Vendor implements Parcelable {
     }
 
 
-    @NonNull
     @Override
     public String toString() {
         return "Vendor{" +
-                "fullName='" + fullName + '\'' +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
@@ -186,6 +188,7 @@ public class Vendor implements Parcelable {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put(VENDOR_ID, id);
         result.put(VENDOR_USERNAME, username);
         result.put(VENDOR_FULLNAME, fullName);
         result.put(VENDOR_EMAIL, email);

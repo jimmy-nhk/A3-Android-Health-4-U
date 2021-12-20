@@ -34,10 +34,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     private
     URL imageURL = null;
 
-    public ItemRecyclerViewAdapter(Context context, List<Item> datas) {
+    public ItemRecyclerViewAdapter(Context context, List<Item> data) {
         Log.d("ItemRecyclerViewAdapter", "constructor");
         this.context = context;
-        this.itemList = datas;
+        this.itemList = data;
         this.mLayoutInflater = LayoutInflater.from(context);
     }
 

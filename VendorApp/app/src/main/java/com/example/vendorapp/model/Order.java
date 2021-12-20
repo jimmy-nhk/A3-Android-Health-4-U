@@ -1,4 +1,4 @@
-package com.example.clientapp.model;
+package com.example.vendorapp.model;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,6 @@ public class Order {
     private List<Integer> quantity;
     private int vendorID;
     private int clientID;
-
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -29,13 +28,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID) {
+    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorId) {
         this.id = id;
         this.date = date;
         this.isProcessed = isProcessed;
         this.itemList = itemList;
         this.quantity = quantity;
-        this.vendorID = vendorID;
+        this.vendorID = vendorId;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
 
@@ -109,6 +108,7 @@ public class Order {
         this.clientID = clientID;
     }
 
+
     @Override
     public String toString() {
         return "Order{" +
@@ -118,7 +118,7 @@ public class Order {
                 ", itemList=" + itemList +
                 ", quantity=" + quantity +
                 ", vendorID=" + vendorID +
-                ", clientID=" + clientID +
+                ", clientId=" + clientID +
                 '}';
     }
 }

@@ -16,6 +16,11 @@
         android:icon="@drawable/cart_nav"
         android:title="Cart" />
 
+    <item
+        android:id="@+id/OrderNav"
+        android:icon="@drawable/cart_nav"
+        android:title="Order" />
+
 
 
 </menu>

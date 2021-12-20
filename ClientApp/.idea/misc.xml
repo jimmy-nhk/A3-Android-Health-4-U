@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable-anydpi/homeNav.xml" value="0.2703125" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable-anydpi/items_nav.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/drawable/bottom_nav_tab_background.xml" value="0.14635416666666667" />
@@ -31,7 +32,7 @@
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_food_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/item_cardview.xml" value="0.39791666666666664" />
+        <entry key="app/src/main/res/layout/item_cardview.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.2552083333333333" />
       </map>
     </option>

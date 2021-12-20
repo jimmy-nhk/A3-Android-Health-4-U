@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
@@ -17,8 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.fragment.FoodListFragment;
+import com.example.vendorapp.fragment.ItemListFragment;
 import com.example.vendorapp.fragment.HomeFragment;
+import com.example.vendorapp.fragment.OrderListFragment;
 import com.example.vendorapp.fragment.ProfileFragment;
 import com.example.vendorapp.model.Vendor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -59,10 +58,12 @@ public class MainActivity extends AppCompatActivity{
                         loadFragment(fragment);
                         return true;
                     case R.id.itemsNav:
-                        fragment = new FoodListFragment();
+                        fragment = new ItemListFragment();
                         loadFragment(fragment);
                         return true;
                     case R.id.orderNav:
+                        fragment = new OrderListFragment(vendor.getId());
+                        loadFragment(fragment);
                         return true;
 
                 }

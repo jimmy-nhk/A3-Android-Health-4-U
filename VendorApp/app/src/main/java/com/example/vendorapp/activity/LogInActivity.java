@@ -147,8 +147,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     public void onLogInBtnClick(View view) {
 //        email = emailText.getText().toString().trim();
 //        password = passwordText.getText().toString().trim();
-        email = "afc.luan2508@gmail.com";
-        password = "222222";
+//        email = "afc.luan2508@gmail.com";
+//        password = "222222";
+//        username = "";
+
+        email = "c1@gmail.com";
+        password = "111111";
         username = "";
 
         if (!email.contains("@")) {
@@ -162,6 +166,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void logInWithEmail(String email, String password) {
         // validate in case it cannot sign in with authentication
         try {
+            Log.d(TAG, "signInWithEmail: email: " + email);
+            Log.d(TAG, "signInWithEmail: password: " + password);
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
@@ -177,10 +183,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                                     getFirebaseVendorByEmail(userFirebase.getEmail());
                                 }
 
-                                // If log in by username, update UI here
                                 updateUI();
+
                             } catch (Exception e) {
-                                Log.d(TAG, "Cannot validate the user in firestone");
+                                e.printStackTrace();
+                                Log.d(TAG, "" + e.getMessage());
+                                Log.d(TAG, "Cannot validate the user in fireStore");
                             }
                         } else {
                             // if sign in fails, display a message to the user
@@ -218,6 +226,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void getFirebaseVendorByEmail(String email) {
+
+        Log.d(TAG, "getFirebaseVendorByEmail: " );
         fireStore.collection("vendors")
                 .whereEqualTo("email", email)
                 .addSnapshotListener((value, e) -> {

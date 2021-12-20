@@ -98,10 +98,10 @@ class CartItemViewHolder extends RecyclerView.ViewHolder {
         price = itemView.findViewById(R.id.itemPrice);
         deleteBtn = itemView.findViewById(R.id.deleteItem);
 
-        deleteBtn.setOnClickListener(v -> handleDeleteCartItem(itemView));
+        deleteBtn.setOnClickListener(v -> handleDeleteCartItem());
     }
 
-    private void handleDeleteCartItem(View itemView) {
+    private void handleDeleteCartItem() {
         int position = getAdapterPosition();
         adapter.removeItemAt(position);
     }
