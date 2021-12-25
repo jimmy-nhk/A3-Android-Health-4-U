@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity{
                 // add to the list
                 itemOrder.add(list.get(i));
                 quantity.add(occurrences);
-                price = list.get(i).getPrice() * occurrences;
+                price += list.get(i).getPrice() * occurrences;
 
                 // skip to occurrence
                 i += occurrences - 1;
@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity{
             // re-init the variables
             itemOrder = new ArrayList<>();
             quantity = new ArrayList<>();
+            price = 0;
             orderSize++;
         }
 

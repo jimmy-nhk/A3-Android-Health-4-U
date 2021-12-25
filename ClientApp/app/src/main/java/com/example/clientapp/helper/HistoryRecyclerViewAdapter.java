@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.model.Cart;
+import com.example.clientapp.model.Item;
+import com.example.clientapp.model.Order;
 
 import java.util.List;
 
@@ -51,8 +53,16 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         // take the cart
         Cart cart = cartList.get(position);
 
+        List<Order> orderList = cart.getOrderList();
+
+        String idString = "";
+        for (Order order: orderList){
+            String id = idString + " " + String.valueOf(order.getId());
+            idString = id;
+        }
+
         // set the value to the xml file
-        holder.historyId.setText("CartId: " + cart.getId() + "");
+        holder.historyId.setText("OrderIdList: " + idString );
         holder.historyDate.setText("Date: " + cart.getDate());
         holder.cartPrice.setText("Total Price: " + cart.getPrice() + "$");
 
