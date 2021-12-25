@@ -64,25 +64,14 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
         Order order = this.orderList.get(position);
 
-        // calculate price
-        List<Item> itemList = order.getItemList();
-        List<Integer> quantity = order.getQuantity();
-        int price = 0;
-
-        for (int i = 0 ; i < itemList.size(); i++){
-
-            // calculate price
-            price += itemList.get(i).getPrice() * quantity.get(i);
-
-        }
-
-
         // TODO: Fix order name
         holder.name.setText("OrderID: "+ order.getId() + "");
 
-        // quantity
-        holder.price.setText("Price: "+price + "$");
+        // price
+        holder.price.setText("Price: "+ order.getPrice() + "$");
+        // name
         holder.vendorName.setText("vendor name"+order.getVendorID() + "");
+        //date
         holder.category.setText("Date: "+ order.getDate()+ "");
 
 //        try {

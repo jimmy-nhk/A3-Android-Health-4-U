@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ItemListFragment extends Fragment {
@@ -90,11 +91,27 @@ public class ItemListFragment extends Fragment {
             // clear to list
             itemList = new ArrayList<>();
 
-            //reverse way (newest show first)
-            for (int i = value.size() - 1 ; i >= 0; i--){
+            // validate no value in the list
+            if (value.isEmpty()){
+                return;
+            }
+
+
+            for (int i = 0 ; i < value.size(); i++){
 
                 itemList.add(value.getDocuments().get(i).toObject(Item.class));
             }
+
+            // sort again
+            itemList.sort((o1, o2) -> {
+                // reverse sort
+                if (o1.getId() < o2.getId()){
+                    return 1; // normal will return -1
+                } else if (o1.getId() > o2.getId()){
+                    return -1; // reverse
+                }
+                return 0;
+            });
 
             recyclerView = view.findViewById(R.id.recycler_view);
 

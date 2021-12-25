@@ -12,14 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp">
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,50 +22,44 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/historyDate"
+                    android:layout_width="120dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="History date" />
+
+                <TextView
+                    android:id="@+id/historyId"
+                    android:layout_width="120dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="30dp"
+                    android:text="History Id" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="10dp">
+                android:layout_marginRight="20dp"
+                >
 
                 <TextView
-                    android:id="@+id/itemName"
-                    android:layout_width="120dp"
-                    android:layout_height="20dp"
-                    android:text="Item name" />
-
-                <TextView
-                    android:id="@+id/itemVendorName"
+                    android:id="@+id/cartPrice"
                     android:layout_width="120dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="10dp"
-                    android:text="Vendor Name" />
-
-                <TextView
-                    android:id="@+id/clientName"
-                    android:layout_width="120dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Client Name" />
-
-
-                <TextView
-                    android:id="@+id/itemCategory"
-                    android:layout_width="120dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Category" />
-
-                <TextView
-                    android:id="@+id/itemPrice"
-                    android:layout_width="120dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="10$" />
+                    android:text="Total Price: 10$" />
             </LinearLayout>
 
             <Button
-                android:id="@+id/deleteItem"
+                android:id="@+id/detailBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete"
+                android:text="Detail"
+                android:layout_marginLeft="10dp"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/red" />
         </LinearLayout>

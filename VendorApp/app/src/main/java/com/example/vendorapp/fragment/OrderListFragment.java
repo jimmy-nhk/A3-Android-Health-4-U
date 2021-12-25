@@ -111,6 +111,16 @@ public class OrderListFragment extends Fragment {
                         orderList.add(order);
                     }
 
+                    orderList.sort((o1, o2) -> {
+                        // reverse sort
+                        if (o1.getId() < o2.getId()){
+                            return 1; // normal will return -1
+                        } else if (o1.getId() > o2.getId()){
+                            return -1; // reverse
+                        }
+                        return 0;
+                    });
+
                     recyclerView = view.findViewById(R.id.recycler_view);
 
                     mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orderList);

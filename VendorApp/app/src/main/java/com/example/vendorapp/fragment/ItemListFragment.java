@@ -84,6 +84,17 @@ public class ItemListFragment extends Fragment {
                 itemList.add(value.getDocuments().get(i).toObject(Item.class));
             }
 
+            // sort again
+            itemList.sort((o1, o2) -> {
+                // reverse sort
+                if (o1.getId() < o2.getId()){
+                    return 1; // normal will return -1
+                } else if (o1.getId() > o2.getId()){
+                    return -1; // reverse
+                }
+                return 0;
+            });
+
             recyclerView = view.findViewById(R.id.recycler_view);
 
             mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList);

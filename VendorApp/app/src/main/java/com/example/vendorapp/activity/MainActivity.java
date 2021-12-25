@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
+    // add item on click
     public void addItemOnClick(View view) {
 
         try {

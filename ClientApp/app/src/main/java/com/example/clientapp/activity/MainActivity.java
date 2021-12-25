@@ -1,6 +1,7 @@
 package com.example.clientapp.activity;
 import com.example.clientapp.R;
 import com.example.clientapp.fragment.CartFragment;
+import com.example.clientapp.fragment.HistoryFragment;
 import com.example.clientapp.fragment.ItemListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
@@ -27,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,7 +95,10 @@ public class MainActivity extends AppCompatActivity{
                         fragment = new CartFragment();
                         loadFragment(fragment);
                         return true;
-
+                    case R.id.historyNav:
+                        fragment = new HistoryFragment(client.getId());
+                        loadFragment(fragment);
+                        return true;
                 }
                 return false;
             };
@@ -142,6 +147,7 @@ public class MainActivity extends AppCompatActivity{
         Order order;
         int occurrences;
 
+        double price = 0;
         // iterate through the list of the cart
         for (List<Item> list: multimap.values()){
 
@@ -152,6 +158,7 @@ public class MainActivity extends AppCompatActivity{
                 // add to the list
                 itemOrder.add(list.get(i));
                 quantity.add(occurrences);
+                price = list.get(i).getPrice() * occurrences;
 
                 // skip to occurrence
                 i += occurrences - 1;
@@ -159,8 +166,9 @@ public class MainActivity extends AppCompatActivity{
             }
 
             //TODO: add date checkout
-            order = new Order(orderSize, "date", false, itemOrder, quantity , list.get(0).getVendorID(), client.getId());
+            order = new Order(orderSize, filterDate(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
 
+            Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
             Order finalOrder = order;
             orderCollection.document(order.getId() + "")
                 .set(order.toMap())
@@ -177,6 +185,33 @@ public class MainActivity extends AppCompatActivity{
             orderSize++;
         }
 
+    }
+
+    // filter the string date
+    public String filterDate (String rawString){
+
+        // initialize the new string
+        char [] filterString = new char[rawString.length()];
+
+
+        // iterate through each character in the string
+        for (int i = 0 ; i < rawString.length(); i++){
+
+            // check if the character is T then replace it with T
+            if (rawString.charAt(i) == 'T'){
+                filterString[i] = ' ';
+                continue;
+            }
+
+            // check if the character is :
+            if(rawString.charAt(i) == '.'){
+                return String.valueOf(filterString).trim();
+            }
+
+            filterString[i] = rawString.charAt(i);
+        }
+
+        return null;
     }
 
     private void loadOrderList() {

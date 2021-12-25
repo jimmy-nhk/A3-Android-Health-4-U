@@ -12,6 +12,7 @@ public class Order {
     private List<Integer> quantity;
     private int vendorID;
     private int clientID;
+    private double price;
 
 
     public Map<String, Object> toMap() {
@@ -23,6 +24,7 @@ public class Order {
         result.put("quantity", quantity);
         result.put("vendorID", vendorID);
         result.put("clientID", clientID);
+        result.put("price", price);
         return result;
     }
 
@@ -41,7 +43,7 @@ public class Order {
 
     }
 
-    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID, int clientID) {
+    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID, int clientID, double price) {
         this.id = id;
         this.date = date;
         this.isProcessed = isProcessed;
@@ -49,6 +51,7 @@ public class Order {
         this.quantity = quantity;
         this.vendorID = vendorID;
         this.clientID = clientID;
+        this.price = price;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
     }
@@ -119,6 +122,17 @@ public class Order {
                 ", quantity=" + quantity +
                 ", vendorID=" + vendorID +
                 ", clientID=" + clientID +
+                ", price=" + price +
                 '}';
+
+
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

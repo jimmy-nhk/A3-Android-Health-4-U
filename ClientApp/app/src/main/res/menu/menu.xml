@@ -17,9 +17,9 @@
         android:title="Cart" />
 
     <item
-        android:id="@+id/OrderNav"
+        android:id="@+id/historyNav"
         android:icon="@drawable/cart_nav"
-        android:title="Order" />
+        android:title="History" />
 
 
 

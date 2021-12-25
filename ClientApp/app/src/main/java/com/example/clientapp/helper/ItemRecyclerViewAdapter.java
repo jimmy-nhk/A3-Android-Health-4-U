@@ -71,10 +71,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         Item item =  itemList.get(position);
 
-        holder.name.setText(item.getName());
-        holder.price.setText(item.getPrice() +"");
-        holder.vendorName.setText(item.getVendorID() + "");
-        holder.category.setText(item.getCategory());
+        holder.name.setText("Name: "+item.getName() + " id: " + item.getId());
+        holder.price.setText("Price: "+item.getPrice() +"");
+        holder.vendorName.setText("VendorID: "+item.getVendorID() + "");
+        holder.category.setText("Category: "+item.getCategory());
 
 
         // init final position for on click
