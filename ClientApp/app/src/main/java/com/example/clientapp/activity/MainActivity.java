@@ -175,6 +175,10 @@ public class MainActivity extends AppCompatActivity{
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "Successfully added Order to FireStore: " + finalOrder.toString());
 
+                    // reset the cart
+                    viewModel.resetMutableItemList();
+
+                    //TODO: add notification here (use broadcast)
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add order to FireStore: " + finalOrder.toString()));
 

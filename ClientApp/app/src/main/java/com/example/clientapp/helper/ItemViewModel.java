@@ -41,6 +41,10 @@ public class ItemViewModel extends ViewModel {
         Log.d(ItemViewModel.class.getSimpleName(), "addItem: listSize: " + itemList.size());
     }
 
+    public void resetMutableItemList(){
+        mutableItemList.setValue(new ArrayList<>());
+    }
+
     public LiveData<List<Item>> getSelectedItem() {
         return mutableItemList;
     }
