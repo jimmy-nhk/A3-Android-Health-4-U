@@ -92,15 +92,13 @@ public class ItemListFragment extends Fragment {
             itemList = new ArrayList<>();
 
             // validate no value in the list
-            if (value.isEmpty()){
+            if (value == null || value.isEmpty()){
                 return;
             }
 
-
-            for (int i = 0 ; i < value.size(); i++){
-
+            // Cast to item object and add to item list
+            for (int i = 0 ; i < value.size(); i++)
                 itemList.add(value.getDocuments().get(i).toObject(Item.class));
-            }
 
             // sort again
             itemList.sort((o1, o2) -> {
@@ -113,10 +111,11 @@ public class ItemListFragment extends Fragment {
                 return 0;
             });
 
+            // Get recycler view
             recyclerView = view.findViewById(R.id.recycler_view);
 
+            // Initialize list adapter
             mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
-
 
             // linear styles
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
