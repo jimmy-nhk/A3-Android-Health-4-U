@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddItemActivity extends AppCompatActivity {
+    private static final int vendorID = 1;
     private EditText nameTxt, descriptionTxt, categoryTxt, priceTxt, quantityTxt, caloriesTxt, expireDateTxt;
     private ListView addedImageListview;
 
@@ -124,8 +125,9 @@ public class AddItemActivity extends AppCompatActivity {
         item.setDescription(descriptionTxt.getText().toString().trim());
         item.setImage(imageURL);
         item.setExpireDate(expireDateTxt.getText().toString().trim());
-        item.setVendorID(1);
+        item.setVendorID(vendorID);
         item.setQuantity(Integer.parseInt(quantityTxt.getText().toString().trim()));
+        item.setPrice(Double.parseDouble(priceTxt.getText().toString().trim()));
         itemCollection.document(itemId + "")
                 .set(item.toMap())
                 .addOnSuccessListener(unused -> {
