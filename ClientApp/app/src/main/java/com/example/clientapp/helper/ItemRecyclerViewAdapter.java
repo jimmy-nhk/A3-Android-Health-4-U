@@ -43,9 +43,8 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         View recyclerViewItem = mLayoutInflater.inflate(R.layout.item_cardview, parent, false);
 
         Log.d("ItemRecyclerViewAdapter" , "Here");
-        recyclerViewItem.setOnClickListener(v -> {
-            handleRecyclerItemClick((RecyclerView) parent, v);
-        });
+        // Set item on click listener
+        recyclerViewItem.setOnClickListener(v -> handleRecyclerItemClick((RecyclerView) parent, v));
         return new ItemViewHolder(recyclerViewItem);
     }
 

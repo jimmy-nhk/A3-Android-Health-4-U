@@ -3,14 +3,16 @@ package com.example.clientapp.fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.clientapp.R;
+import com.example.clientapp.activity.MainActivity;
 import com.example.clientapp.model.Item;
 
 public class ItemDetailsFragment extends Fragment {
@@ -21,6 +23,7 @@ public class ItemDetailsFragment extends Fragment {
 
     // Views
     TextView itemNameTxt;
+    TextView storeNameTxt;
 
     private String mParam1;
     private String mParam2;
@@ -63,11 +66,36 @@ public class ItemDetailsFragment extends Fragment {
         return view;
     }
 
+    // On store name click => go to Store profile page
+    private void handleStoreClick() {
+        // Put vendorID in bundle to send to StoreDetails fragment
+        Bundle bundle = new Bundle();
+        bundle.putInt("vendorID", item.getVendorID());
+
+        // Get fragment
+        Fragment fragment = new StoreDetailsFragment();
+        fragment.setArguments(bundle);
+
+        // Go to item detail fragment
+        FragmentTransaction transaction;
+        if (getActivity() != null) {
+            transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
+
     private void displayItemDetail() {
         itemNameTxt.setText(item.toString());
+        storeNameTxt.setText(("Click here to go to Store profile: " + (item.getVendorID())));
     }
 
     private void getViews(View view) {
         itemNameTxt = view.findViewById(R.id.itemNameText);
+        storeNameTxt = view.findViewById(R.id.storeNameText);
+
+        // Set store on click listener
+        storeNameTxt.setOnClickListener(v -> handleStoreClick());
     }
 }
