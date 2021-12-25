@@ -1,6 +1,7 @@
 package com.example.clientapp.helper;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.clientapp.R;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.clientapp.activity.MainActivity;
+import com.example.clientapp.fragment.ItemDetailsFragment;
 import com.example.clientapp.model.Item;
 
 import java.util.List;
@@ -25,10 +29,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     private LayoutInflater mLayoutInflater;
     private ItemViewModel viewModel;
 
-    public ItemRecyclerViewAdapter(Context context, List<Item> datas , ItemViewModel viewModel ) {
+    public ItemRecyclerViewAdapter(Context context, List<Item> data, ItemViewModel viewModel) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
         this.context = context;
-        this.itemList = datas;
+        this.itemList = data;
         this.mLayoutInflater = LayoutInflater.from(context);
         this.viewModel = viewModel;
     }
@@ -36,64 +40,57 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View recyclerViewItem = mLayoutInflater.inflate(R.layout.item_cardview, parent, false);
 
         Log.d("ItemRecyclerViewAdapter" , "Here");
-        recyclerViewItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //TODO: Show Info intent of the item
-//                handleRecyclerItemClick( (RecyclerView)parent, v);
-            }
+        recyclerViewItem.setOnClickListener(v -> {
+            handleRecyclerItemClick((RecyclerView) parent, v);
         });
         return new ItemViewHolder(recyclerViewItem);
-        
     }
 
     // handle recycle item click
     private void handleRecyclerItemClick(RecyclerView parent, View v) {
+        // Get item
         int itemPosition = parent.getChildLayoutPosition(v);
-
         Item item = this.itemList.get(itemPosition);
 
-        viewModel.addItem(item);
+        // Put item in bundle to send to ItemDetails fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("item", item);
 
+        // Get fragment
+        Fragment fragment = new ItemDetailsFragment();
+        fragment.setArguments(bundle);
 
-        Toast.makeText(this.context, item.getName(), Toast.LENGTH_LONG).show();
+        // Go to item detail fragment
+        MainActivity mainActivity = (MainActivity) context;
+        FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-
         Log.d("ItemRecyclerViewAdapter" , "render");
-
         Item item =  itemList.get(position);
 
-        holder.name.setText("Name: "+item.getName() + " id: " + item.getId());
-        holder.price.setText("Price: "+item.getPrice() +"");
-        holder.vendorName.setText("VendorID: "+item.getVendorID() + "");
-        holder.category.setText("Category: "+item.getCategory());
-
+        holder.name.setText(("Name: " + item.getName() + " id: " + item.getId()));
+        holder.price.setText(("Price: " + item.getPrice() + ""));
+        holder.vendorName.setText(("VendorID: " + item.getVendorID() + ""));
+        holder.category.setText(("Category: " + item.getCategory()));
 
         // init final position for on click
-        int finalPosition = position;
-        holder.addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Item item = itemList.get(finalPosition);
-
-                viewModel.addItem(item);
-            }
+//        int finalPosition = position;
+        holder.addBtn.setOnClickListener(v -> {
+            Item item1 = itemList.get(position);
+            viewModel.addItem(item1);
         });
 
         //TODO: Image and Button
         holder.image.setImageResource(R.drawable.avatar_foreground);
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -102,7 +99,6 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 }
 
 class ItemViewHolder extends RecyclerView.ViewHolder {
-
     ImageView image;
     TextView name;
     TextView vendorName;

@@ -15,7 +15,6 @@ import com.example.clientapp.model.Item;
 
 public class ItemDetailsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -23,7 +22,6 @@ public class ItemDetailsFragment extends Fragment {
     // Views
     TextView itemNameTxt;
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private Item item;
@@ -32,7 +30,6 @@ public class ItemDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ItemDetailsFragment newInstance(String param1, String param2) {
         ItemDetailsFragment fragment = new ItemDetailsFragment();
         Bundle args = new Bundle();
