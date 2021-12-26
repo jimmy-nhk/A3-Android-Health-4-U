@@ -37,6 +37,13 @@
             android:inputType="textEmailAddress"
             android:maxLength="50"
             android:hint="Email" />
+        <EditText
+            android:id="@+id/editStorename"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:inputType="textEmailAddress"
+            android:maxLength="50"
+            android:hint="Store Name" />
 
         <EditText
             android:id="@+id/editPassword"

@@ -32,8 +32,8 @@ public class SignUpActivity extends AppCompatActivity {
     private final String TAG ="RegisterActivity";
 
     // Views
-    private EditText emailText, usernameText, passwordText, confirmPasswordText
-            , fullNameText, phoneText, dobText;
+    private EditText emailText, usernameText, passwordText, confirmPasswordText,storenameText
+            , fullNameText, phoneText, dobText, addressText;
     private TextView errorTxt;
     private Button signUpBtn;
     private int vendorSize ;
@@ -83,12 +83,13 @@ public class SignUpActivity extends AppCompatActivity {
 //            }
             String username = usernameText.getText().toString().trim();
             String fullName = "fullname";
+            String storeName = storenameText.getText().toString().trim();
             String email = emailText.getText().toString().trim();
             String phone = "123456789";
             String dob = "123456789";
             String password = passwordText.getText().toString().trim();
             String confirmPassword = confirmPasswordText.getText().toString().trim();
-            if (validateInput(username, email, password, confirmPassword, fullName, phone, dob))
+            if (validateInput(username,storeName, email, password, confirmPassword, fullName, phone, dob))
                 addVendorToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
         });
 
@@ -142,6 +143,8 @@ public class SignUpActivity extends AppCompatActivity {
         c.setId(vendorSize);
         c.setEmail(emailText.getText().toString().trim());
         c.setUsername(usernameText.getText().toString().trim());
+        c.setStoreName(storenameText.getText().toString().trim());
+//        c.setFullName(fullNameText.getText().toString().trim());
 
         vendorCollection.document(username)
                 .set(c.toMap())
@@ -229,6 +232,28 @@ public class SignUpActivity extends AppCompatActivity {
         return true;
     }
 
+    // Validate vendor's storeName
+    private boolean isStoreNameValid(String storeName) {
+        if (storeName.isEmpty()) {
+            storenameText.setError("storeName cannot be empty");
+            return false;
+        }
+
+        if (!isStoreNameUnique(storeName)) {
+            usernameText.setError("This storeName was already used by another account");
+            return false;
+        }
+
+        return true;
+    }
+    // Check if storeName is unique
+    private boolean isStoreNameUnique(String storeName){
+        for (Vendor vendor: vendorList) {
+            if (storeName.equals(vendor.getStoreName())) return false;
+        }
+        return true;
+    }
+
     // Check if username is unique
     private boolean isEmailValid(String email) {
         if (email.isEmpty()) {
@@ -285,6 +310,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean validateInput(String username,
+                                  String storeName,
                                   String email,
                                   String password,
                                   String confirmPassword,
@@ -294,6 +320,7 @@ public class SignUpActivity extends AppCompatActivity {
 //        boolean isValid = true;
 
         return isUsernameValid(username)
+                && isStoreNameValid(storeName)
                 && isFullNameValid(fullName)
                 && isDobValid(dob)
                 && isPhoneValid(phone)
@@ -382,6 +409,7 @@ public class SignUpActivity extends AppCompatActivity {
         errorTxt.setVisibility(View.INVISIBLE);
 
         emailText = findViewById(R.id.editEmail);
+        storenameText=findViewById(R.id.editStorename);
         usernameText = findViewById(R.id.editUsername);
         passwordText = findViewById(R.id.editPassword);
         confirmPasswordText = findViewById(R.id.editConfirmPassword);

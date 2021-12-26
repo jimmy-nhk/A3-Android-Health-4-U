@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="200sp"
             android:adjustViewBounds="true"
+            android:src="@drawable/bun"
             android:scaleType="centerCrop" />
 
         <androidx.core.widget.NestedScrollView
@@ -62,7 +63,7 @@
                             android:layout_width="0sp"
                             android:layout_height="wrap_content"
                             android:layout_weight="4"
-                            android:text="Saler"
+                            android:text="Seller"
                             android:textSize="14sp" />
 
                         <TextView

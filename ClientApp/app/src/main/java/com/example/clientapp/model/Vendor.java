@@ -1,10 +1,9 @@
-package com.example.vendorapp.model;
+package com.example.clientapp.model;
 
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class Vendor implements Parcelable {
 
     }
 
-    public Vendor(String storeName,String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image) {
+    public Vendor(String storeName, String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image) {
         this.storeName = storeName;
         this.fullName = fullName;
         this.userName = userName;
