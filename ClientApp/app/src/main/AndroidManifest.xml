@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClientApp">
         <activity
+            android:name=".activity.SignUpStep2Activity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SignUpActivity"
+            android:name=".activity.SignUpStep1Activity"
             android:exported="false" />
         <activity
             android:name=".activity.LogInActivity"

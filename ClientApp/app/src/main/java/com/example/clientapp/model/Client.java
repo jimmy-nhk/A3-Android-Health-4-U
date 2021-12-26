@@ -12,6 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Client implements Parcelable {
+    public static final String CLIENT_FULLNAME ="fullName";
+    public static final String CLIENT_USERNAME ="username";
+    public static final String CLIENT_EMAIL ="email";
+    public static final String CLIENT_PHONE ="phone";
+    public static final String CLIENT_ADDRESS ="address";
+    public static final String CLIENT_DOB ="dob";
+    public static final String CLIENT_WEIGHT ="weight";
+    public static final String CLIENT_HEIGHT ="height";
+    public static final String CLIENT_BMI ="bmi";
+    public static final String CLIENT_IMAGE ="image";
 
     private int id;
     private String fullName;
@@ -25,23 +35,28 @@ public class Client implements Parcelable {
     private double bmi;
     private String image;
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(fullName);
-        dest.writeString(email);
-        dest.writeString(username);
-        dest.writeString(phone);
-        dest.writeString(dob);
-        dest.writeString(address);
-        dest.writeDouble(weight);
-        dest.writeDouble(height);
-        dest.writeDouble(bmi);
-        dest.writeString(image);
+    public Client() {
 
-        Log.d("Client", "writeToParcel: " + this.toString());
+    }
 
+    public Client(String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image) {
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.dob = dob;
+        this.weight = weight;
+        this.height = height;
+        this.bmi = bmi;
+        this.image = image;
+    }
+
+    public Client(int id, String fullName, String username, String email) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -59,35 +74,6 @@ public class Client implements Parcelable {
         image = in.readString();
 
         Log.d("Client", "parcelObject: " + this.toString());
-    }
-
-    public static final String CLIENT_FULLNAME ="fullName";
-    public static final String CLIENT_USERNAME ="username";
-    public static final String CLIENT_EMAIL ="email";
-    public static final String CLIENT_PHONE ="phone";
-    public static final String CLIENT_ADDRESS ="address";
-    public static final String CLIENT_DOB ="dob";
-    public static final String CLIENT_WEIGHT ="weight";
-    public static final String CLIENT_HEIGHT ="height";
-    public static final String CLIENT_BMI ="bmi";
-    public static final String CLIENT_IMAGE ="image";
-
-
-    public Client() {
-
-    }
-
-    public Client(String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image) {
-        this.fullName = fullName;
-        this.username = username;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.dob = dob;
-        this.weight = weight;
-        this.height = height;
-        this.bmi = bmi;
-        this.image = image;
     }
 
     public int getId() {
@@ -178,8 +164,23 @@ public class Client implements Parcelable {
         this.image = image;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(fullName);
+        dest.writeString(email);
+        dest.writeString(username);
+        dest.writeString(phone);
+        dest.writeString(dob);
+        dest.writeString(address);
+        dest.writeDouble(weight);
+        dest.writeDouble(height);
+        dest.writeDouble(bmi);
+        dest.writeString(image);
 
-
+        Log.d("Client", "writeToParcel: " + this.toString());
+    }
 
     public static final Creator<Client> CREATOR = new Creator<Client>() {
         @RequiresApi(api = Build.VERSION_CODES.Q)

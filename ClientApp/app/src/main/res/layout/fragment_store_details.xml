@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="200sp"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bun" />
+            android:scaleType="centerCrop" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
