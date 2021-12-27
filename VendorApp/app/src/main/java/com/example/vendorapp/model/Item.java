@@ -173,5 +173,11 @@ public class Item implements Parcelable {
         this.category = category;
     }
 
+    public double getCalories() {
+        return calories;
+    }
 
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
 }
