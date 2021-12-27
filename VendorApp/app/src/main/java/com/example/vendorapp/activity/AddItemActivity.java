@@ -2,12 +2,10 @@ package com.example.vendorapp.activity;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
-import com.example.vendorapp.model.Vendor;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -16,7 +14,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -32,17 +29,21 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final int vendorID = 1;
     private EditText nameTxt, descriptionTxt, categoryTxt, priceTxt, quantityTxt, caloriesTxt, expireDateTxt;
     private ListView addedImageListview;
+    private String category;
 
     private static final String TAG = "AddItemActivity";
     private static final String ITEM_COLLECTION = "items";
@@ -65,7 +66,7 @@ public class AddItemActivity extends AppCompatActivity {
         Log.d(TAG, "on Login AddItemActivity Create");
 
         // init services
-        attachComponents();
+        getViews();
         initService();
     }
 
@@ -95,15 +96,25 @@ public class AddItemActivity extends AppCompatActivity {
         storageReference = storage.getReference();
     }
 
-    private void attachComponents() {
+    private void getViews() {
         nameTxt = findViewById(R.id.nameAdditemTxt);
-        categoryTxt = findViewById(R.id.categoryAdditemTxt);
+//        categoryTxt = findViewById(R.id.categoryAdditemTxt);
         descriptionTxt = findViewById(R.id.descriptionAdditemTxt);
         priceTxt = findViewById(R.id.priceAdditemTxt);
         quantityTxt = findViewById(R.id.quantityAdditemTxt);
-        caloriesTxt = findViewById(R.id.caloriesAdditemTxt);
+        caloriesTxt = findViewById(R.id.caloriesAddItemTxt);
         expireDateTxt = findViewById(R.id.expireDateAdditemTxt);
         addedImageListview = findViewById(R.id.addedImageListview);
+
+        Spinner spinner = findViewById(R.id.categorySpinner);
+        spinner.setOnItemSelectedListener(this);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
     }
 
     public void addAddItemOnClick(View view) {
@@ -121,13 +132,15 @@ public class AddItemActivity extends AppCompatActivity {
         Item item = new Item();
         item.setId(itemId);
         item.setName(nameTxt.getText().toString().trim());
-        item.setCategory(categoryTxt.getText().toString().trim());
+//        item.setCategory(categoryTxt.getText().toString().trim());
+        item.setCategory(category);
         item.setDescription(descriptionTxt.getText().toString().trim());
         item.setImage(imageURL);
         item.setExpireDate(expireDateTxt.getText().toString().trim());
         item.setVendorID(vendorID);
         item.setQuantity(Integer.parseInt(quantityTxt.getText().toString().trim()));
         item.setPrice(Double.parseDouble(priceTxt.getText().toString().trim()));
+        item.setCalories(Double.parseDouble(caloriesTxt.getText().toString().trim()));
         itemCollection.document(itemId + "")
                 .set(item.toMap())
                 .addOnSuccessListener(unused -> {
@@ -165,12 +178,12 @@ public class AddItemActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadImageAdditemOnClick(View view) {
-        SelectImage();
+    public void uploadImageAddItemOnClick(View view) {
+        selectImage();
     }
 
     // Select Image method
-    private void SelectImage() {
+    private void selectImage() {
 
         // Defining Implicit Intent to mobile gallery
         Intent intent = new Intent();
@@ -266,5 +279,16 @@ public class AddItemActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        category = parent.getItemAtPosition(position).toString();
+        Toast.makeText(this, category, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        category = "Rice";
     }
 }
