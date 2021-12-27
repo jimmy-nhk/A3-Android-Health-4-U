@@ -251,7 +251,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
 
     private void updateUI() {
         Intent intent = new Intent(this , LogInActivity.class);
-        intent.putExtra("clientID" , client.getId());
+        intent.putExtra("client" , client);
         setResult(RESULT_OK , intent);
         finish();
     }
