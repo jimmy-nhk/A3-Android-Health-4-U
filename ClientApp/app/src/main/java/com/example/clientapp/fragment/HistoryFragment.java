@@ -106,9 +106,13 @@ public class HistoryFragment extends Fragment {
 
             // clear to list
             cartList = new ArrayList<>();
-            
+
+            // init necessary variable for doing logic
             int countCart = 0;
-            Cart currentCart;
+            Cart currentCart = new Cart();
+            int countProcessed;
+            double originalPrice = 0;
+            int countCancel;
 
 
             //scan the value from db
@@ -132,18 +136,50 @@ public class HistoryFragment extends Fragment {
 
                 Log.d(TAG, "loadCart: order: " + orderList.get(i).toString());
 
+
                 String time = filterDate(orderList.get(i).getDate());
                 Log.d(TAG, "loadCart: time: " + time);
 
                 // take the list of order in the same time
                 List<Order> orderByDate = orderList.stream().filter(order -> {
                     Log.d(TAG, "filter: " + order.getDate().trim().equals(time));
+                    Log.d(TAG, "filter: isProcessed: " + order.getIsProcessed());
                     Log.d(TAG, "filter: object " + order.toString() + " orderList size: " + orderList.size());
                     return order.getDate().trim().equals(time) ;
                 }).collect(Collectors.toList());
 
+
                 // create cart object
                 currentCart = new Cart(countCart, time ,orderByDate );
+
+                originalPrice = currentCart.getPrice();
+
+                // init count processed
+                countProcessed = 0;
+                countCancel = 0;
+                for (Order order: orderByDate){
+
+                    // validate if the order is cancel
+                    if (order.getIsCancelled()){
+                        countCancel++;
+                        continue;
+                    }
+
+                    Log.d(TAG, "filter-condition: isProcess: " + order.getIsProcessed());
+                    // check if processed yet ?
+                    if (order.getIsProcessed()){
+                        countProcessed ++;
+                    }
+                }
+                Log.d(TAG, "loadCart: orderByDate size: " +orderByDate.size());
+                Log.d(TAG, "loadCart: countProcessed : " +countProcessed);
+
+
+                // validate if the order is already processed.
+                if ((countProcessed + countCancel) == orderByDate.size()){
+                    currentCart.setIsFinished(true);
+                }
+
                 countCart++;
 
                 // add cart to cartList
@@ -152,10 +188,24 @@ public class HistoryFragment extends Fragment {
                 i += orderByDate.size() - 1;
             }
 
+            //TODO: send notification when the order is cancelled
+
+            if (originalPrice > currentCart.getPrice()){
+
+                //TODO: send noti here
+                Log.d(TAG,"your cart has some orders cancelled: original: "+ originalPrice + " with current: " + currentCart.getPrice());
+            }
+            // reset the list
+            orderList.clear();
+            currentCart = new Cart();
+
             Log.d(TAG, "loadCart: cardList size: " +cartList.size());
 
             // set layout
             setLayout(view);
+
+            // reset
+
         });
     }
 

@@ -7,15 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.model.Cart;
-import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
 
 import java.util.List;
@@ -46,7 +45,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         return new HistoryViewHolder(recyclerViewCart);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 
@@ -66,6 +65,11 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         holder.historyDate.setText("Date: " + cart.getDate());
         holder.cartPrice.setText("Total Price: " + cart.getPrice() + "$");
 
+        //TODO: validate the cancel case
+        holder.isProcessing.setText(cart.getIsFinished() ? "Finished" : "isProcessing");
+        holder.isProcessing.setTextColor(cart.getIsFinished() ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.black));
+
+        //TODO: Show order in the cart
         Log.d("HistoryRecycler" , "onBindViewHolder: load data");
         holder.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +92,7 @@ class HistoryViewHolder extends RecyclerView.ViewHolder {
     TextView historyDate;
     TextView historyId;
     TextView cartPrice;
+    TextView isProcessing;
     Button detailBtn;
 
     public HistoryViewHolder(@NonNull View itemView) {
@@ -97,6 +102,7 @@ class HistoryViewHolder extends RecyclerView.ViewHolder {
         historyId = itemView.findViewById(R.id.historyId);
         cartPrice = itemView.findViewById(R.id.cartPrice);
         detailBtn = itemView.findViewById(R.id.detailBtn);
+        isProcessing = itemView.findViewById(R.id.isProcessingTxt);
 
     }
 

@@ -76,7 +76,7 @@ public class ItemListFragment extends Fragment {
         itemCollection.addSnapshotListener((value, error) -> {
 
             // clear to list
-            itemList.clear();
+            itemList = new ArrayList<>();
 
             //reverse way (newest show first)
             for (int i = value.size() - 1 ; i >= 0; i--){
@@ -99,6 +99,7 @@ public class ItemListFragment extends Fragment {
 
             mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList);
 
+            Log.d(TAG, "initService: itemList size: " + itemList.size());
 
             // linear styles
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

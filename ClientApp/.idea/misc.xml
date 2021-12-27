@@ -37,7 +37,9 @@
         <entry key="app/src/main/res/layout/feed_update_count.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_food_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_item_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/history_cardview.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_cardview.xml" value="0.39791666666666664" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.2552083333333333" />
       </map>

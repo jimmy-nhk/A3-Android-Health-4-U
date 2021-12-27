@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemName" />
 
             <TextView
-                android:id="@+id/itemCategory"
+                android:id="@+id/dateOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -53,13 +53,13 @@
 
 
             <TextView
-                android:id="@+id/itemName"
+                android:id="@+id/orderIdTxt"
                 android:layout_width="120dp"
                 android:layout_height="19dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="5dp"
                 android:text="Item name"
-                app:layout_constraintStart_toEndOf="@+id/itemImage"
-                app:layout_constraintTop_toTopOf="parent" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -72,23 +72,43 @@
                 android:id="@+id/itemPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
                 android:text="10$"
-                app:layout_constraintBottom_toTopOf="@+id/addItem"
+                app:layout_constraintBottom_toTopOf="@+id/processBtn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/addItem" />
+                app:layout_constraintStart_toStartOf="@+id/processBtn" />
+
+            <TextView
+                android:id="@+id/announcementTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Processed"
+
+                app:layout_constraintBottom_toTopOf="@+id/processBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/processBtn" />
+
 
             <Button
-                android:id="@+id/addItem"
+                android:id="@+id/processBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/main_blue"
+                android:text="Process" />
+
+            <Button
+                android:id="@+id/cancelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/main_blue"
-                android:text="Add"
+                android:text="Cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+
         </LinearLayout>
 
 

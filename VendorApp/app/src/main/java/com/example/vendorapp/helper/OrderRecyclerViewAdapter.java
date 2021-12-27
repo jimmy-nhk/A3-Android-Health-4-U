@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.model.Item;
 import com.example.vendorapp.model.Order;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.net.URL;
 import java.util.List;
@@ -29,6 +32,14 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     private LayoutInflater mLayoutInflater;
     private
     URL imageURL = null;
+
+
+
+    // init db
+    private static final String ORDER_COLLECTION = "orders";
+    private FirebaseFirestore fireStore;
+    private CollectionReference orderCollection;
+    private DocumentReference orderRef;
 
     public OrderRecyclerViewAdapter(Context context, List<Order> data) {
 //        Log.d("OrderRecyclerViewAdapter", "constructor");
@@ -44,7 +55,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
     @NonNull
     @Override
-    public OrderViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
+    public OrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         //TODO: switch the xml file
         View recyclerViewOrder = mLayoutInflater.inflate(R.layout.order_cart_view, parent, false);
@@ -56,23 +67,40 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     }
 
 
-
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
 //        Log.d("OrderRecyclerViewAdapter", "render position: " + position);
+        final int GREEN_COLOR = ContextCompat.getColor(context, R.color.green);
+        final int BLACK_COLOR = ContextCompat.getColor(context, R.color.black);
+        final int RED_COLOR = ContextCompat.getColor(context, R.color.red);
 
         Order order = this.orderList.get(position);
 
+
+        // init fireStore db
+        fireStore = FirebaseFirestore.getInstance();
+        orderCollection = fireStore.collection(ORDER_COLLECTION);
+        orderRef = orderCollection.document(String.valueOf(order.getId()));
+
+
         // TODO: Fix order name
-        holder.name.setText("OrderID: "+ order.getId() + "");
+        holder.orderIdText.setText("OrderID: " + order.getId() + "");
 
         // price
-        holder.price.setText("Price: "+ order.getPrice() + "$");
+        holder.price.setText("Price: " + order.getPrice() + "$");
         // name
-        holder.vendorName.setText("vendor name"+order.getVendorID() + "");
+        holder.vendorName.setText("vendor name" + order.getVendorID() + "");
         //date
-        holder.category.setText("Date: "+ order.getDate()+ "");
+        holder.dateOrder.setText("Date: " + order.getDate() + "");
+
+        //TODO: check again the text appearance
+        holder.announcementTxt.setText(order.getIsProcessed() ? "Processed" : order.getIsCancelled() ? "Cancel" :"Not yet process");
+        holder.announcementTxt.setTextColor(order.getIsProcessed() ? GREEN_COLOR :  order.getIsCancelled() ? RED_COLOR :BLACK_COLOR);
+
+        holder.cancelBtn.setVisibility(order.getIsProcessed() ? View.GONE : order.getIsCancelled() ? View.GONE : View.VISIBLE);
+        holder.processBtn.setVisibility(order.getIsProcessed() ? View.GONE : order.getIsCancelled() ? View.GONE : View.VISIBLE);
+
 
 //        try {
 //            Thread thread = new Thread(new Runnable(){
@@ -93,7 +121,54 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 //            e.printStackTrace();
 //        }
         //TODO: Image and Button
+        holder.processBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                order.setIsProcessed(true);
+                orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Order successfully updated!");
+
+                        Log.d(TAG, "processBtn: click: " + order.toString());
+
+                        holder.announcementTxt.setText("Processed!");
+                        holder.announcementTxt.setTextColor( GREEN_COLOR );
+
+                        holder.cancelBtn.setVisibility(View.GONE);
+                        holder.cancelBtn.setEnabled(false);
+                        holder.processBtn.setEnabled(false);
+                        holder.processBtn.setVisibility(View.GONE);
+
+                    }
+                });
+            }
+        });
+
+        holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                order.setIsCancelled(true);
+                order.setPrice(0);
+                orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Order successfully updated!");
+
+                        Log.d(TAG, "cancelBtn: click: " + order.toString());
+
+                        holder.announcementTxt.setText("Cancel!");
+                        holder.announcementTxt.setTextColor( RED_COLOR );
+
+                        holder.cancelBtn.setVisibility(View.GONE);
+                        holder.cancelBtn.setEnabled(false);
+                        holder.processBtn.setEnabled(false);
+                        holder.processBtn.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
 
     }
 
@@ -108,21 +183,25 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 class OrderViewHolder extends RecyclerView.ViewHolder {
 
     ImageView image;
-    TextView name;
+    TextView orderIdText;
     TextView vendorName;
     TextView price;
-    TextView category;
-    Button addBtn;
+    TextView dateOrder;
+    TextView announcementTxt;
+    Button processBtn;
+    Button cancelBtn;
 
     public OrderViewHolder(@NonNull View orderView) {
         super(orderView);
 
         Log.d("OrderRecyclerViewAdapter", "OrderViewHolder: constructor");
         image = orderView.findViewById(R.id.itemImage);
-        name = orderView.findViewById(R.id.itemName);
+        orderIdText = orderView.findViewById(R.id.orderIdTxt);
         vendorName = orderView.findViewById(R.id.itemVendorName);
-        category = orderView.findViewById(R.id.itemCategory);
+        dateOrder = orderView.findViewById(R.id.dateOrder);
+        announcementTxt = orderView.findViewById(R.id.announcementTxt);
         price = orderView.findViewById(R.id.itemPrice);
-        addBtn = orderView.findViewById(R.id.addItem);
+        processBtn = orderView.findViewById(R.id.processBtn);
+        cancelBtn = orderView.findViewById(R.id.cancelBtn);
     }
 }

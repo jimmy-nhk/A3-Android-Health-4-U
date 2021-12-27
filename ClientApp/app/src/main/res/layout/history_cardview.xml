@@ -17,7 +17,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -54,14 +55,29 @@
                     android:text="Total Price: 10$" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/detailBtn"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Detail"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/red" />
+                android:orientation="vertical"
+                android:layout_marginRight="20dp"
+                >
+                <TextView
+                    android:id="@+id/isProcessingTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="isProcessing"/>
+
+                <Button
+                    android:id="@+id/detailBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detail"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/red" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

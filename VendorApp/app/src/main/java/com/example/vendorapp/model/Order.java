@@ -1,5 +1,6 @@
 package com.example.vendorapp.model;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ public class Order {
     private int id;
     private String date;
     private boolean isProcessed;
+    private boolean isCancelled;
     private List<Item> itemList;
     private List<Integer> quantity;
     private int vendorID;
@@ -20,6 +22,7 @@ public class Order {
         result.put("id", id);
         result.put("date", date);
         result.put("isProcessed", isProcessed);
+        result.put("isCancelled", isCancelled);
         result.put("itemList", itemList);
         result.put("quantity", quantity);
         result.put("vendorID", vendorID);
@@ -27,6 +30,7 @@ public class Order {
         result.put("price", price);
         return result;
     }
+
 
     public Order() {
     }
@@ -47,6 +51,7 @@ public class Order {
         this.id = id;
         this.date = date;
         this.isProcessed = isProcessed;
+        isCancelled = false;
         this.itemList = itemList;
         this.quantity = quantity;
         this.vendorID = vendorID;
@@ -54,6 +59,14 @@ public class Order {
         this.price = price;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
+    }
+
+    public boolean getIsCancelled() {
+        return isCancelled;
+    }
+
+    public void setIsCancelled(boolean cancelled) {
+        isCancelled = cancelled;
     }
 
     public int getId() {
@@ -72,11 +85,11 @@ public class Order {
         this.date = date;
     }
 
-    public boolean isProcessed() {
+    public boolean getIsProcessed() {
         return isProcessed;
     }
 
-    public void setProcessed(boolean processed) {
+    public void setIsProcessed(boolean processed) {
         isProcessed = processed;
     }
 
@@ -124,6 +137,8 @@ public class Order {
                 ", clientID=" + clientID +
                 ", price=" + price +
                 '}';
+
+
     }
 
     public double getPrice() {
@@ -134,3 +149,4 @@ public class Order {
         this.price = price;
     }
 }
+
