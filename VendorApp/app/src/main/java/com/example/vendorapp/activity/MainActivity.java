@@ -1,5 +1,13 @@
 package com.example.vendorapp.activity;
 
+//TODO: List of works needing doing
+// Search (query) item
+// HomePage (2 app) -> reminder drinking water
+// Billing Page -> Download Bill
+// Cart Detail Page -> see the list of bought items
+// UI
+
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
