@@ -17,7 +17,7 @@ public class Item implements Parcelable, Comparable<Item> {
     private String category = "";
     private String expireDate = "";
     private double price = 0;
-    private double calories=0;
+    private double calories = 0;
     //TODO: need discount ?
 
 
