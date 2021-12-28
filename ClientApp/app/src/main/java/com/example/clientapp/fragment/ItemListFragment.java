@@ -39,7 +39,6 @@ public class ItemListFragment extends Fragment {
 
 
     public ItemListFragment(){
-
         Log.d(TAG, "FoodListFragment: onCreate");
     }
 
@@ -139,6 +138,4 @@ public class ItemListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-
 }

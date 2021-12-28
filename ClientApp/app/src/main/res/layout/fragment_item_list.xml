@@ -5,25 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ItemListFragment">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:queryHint="Search item...."
+            android:iconifiedByDefault="false"
+            android:queryBackground="@null"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="0dp"
-            />
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
 
