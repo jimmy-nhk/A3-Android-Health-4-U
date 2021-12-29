@@ -28,7 +28,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_view_category, parent, false);
+        View layoutView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_view_category, parent, false);
 
         return new ViewHolder(layoutView);
     }
@@ -36,11 +37,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.categoryBtn.setText(arrayList.get(position));
-        holder.categoryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
-            }
+        holder.categoryBtn.setOnClickListener(v -> {
+            if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
         });
     }
 
@@ -70,9 +68,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         public ViewHolder(View view) {
             super(view);
-
             categoryBtn = view.findViewById(R.id.list_view_category);
         }
-
     }
 }
