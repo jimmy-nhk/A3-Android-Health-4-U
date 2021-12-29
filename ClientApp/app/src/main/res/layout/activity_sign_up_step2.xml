@@ -16,17 +16,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue_phantom"
             android:textStyle="bold"
             android:text="One more step...."
-            android:textColor="@color/blue_phantom"
+            android:textColor="@color/primary_blue_light"
             android:textAlignment="textStart"
             android:textSize="30sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:backgroundTint="@color/blue_phantom"
             android:textStyle="bold"
             android:textColor="#AEAEAE"
             android:text="Provide your background information"
@@ -133,7 +131,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue_phantom"
+            android:backgroundTint="@color/primary_blue"
             android:textColor="@color/white"
             android:layout_marginTop="10dp"
             android:text="Create Account"

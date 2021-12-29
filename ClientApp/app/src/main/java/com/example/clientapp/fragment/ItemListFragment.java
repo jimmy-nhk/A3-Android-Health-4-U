@@ -50,7 +50,6 @@ public class ItemListFragment extends Fragment {
     // Views
     private ItemViewModel viewModel;
 
-
     public ItemListFragment() {
         Log.d(TAG, "FoodListFragment: onCreate");
     }
@@ -61,7 +60,6 @@ public class ItemListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

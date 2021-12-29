@@ -12,17 +12,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/blue_phantom"
         android:textStyle="bold"
         android:text="Welcome,"
-        android:textColor="@color/blue_phantom"
+        android:textColor="@color/primary_blue_light"
         android:textAlignment="textStart"
         android:textSize="30sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:backgroundTint="@color/blue_phantom"
         android:textStyle="bold"
         android:textColor="#AEAEAE"
         android:text="Sign in to continue!"
@@ -62,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/blue_phantom"
+        android:backgroundTint="@color/primary_blue"
         android:onClick="normalLogIn"
         android:text="Sign In"
         android:textSize="16sp"
@@ -124,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_underline"
-            android:textColor="@color/blue_phantom"
+            android:textColor="@color/primary_blue"
             android:clickable="true"
             android:onClick="signUpActivity"/>
     </LinearLayout>

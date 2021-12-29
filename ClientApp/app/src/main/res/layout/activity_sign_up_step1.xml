@@ -16,17 +16,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue_phantom"
             android:textStyle="bold"
             android:text="Welcome,"
-            android:textColor="@color/blue_phantom"
+            android:textColor="@color/primary_blue_light"
             android:textAlignment="textStart"
             android:textSize="30sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:backgroundTint="@color/blue_phantom"
             android:textStyle="bold"
             android:textColor="#AEAEAE"
             android:text="Sign up to get started!"
@@ -144,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bordered_container"
-            android:backgroundTint="@color/blue_phantom"
+            android:backgroundTint="@color/primary_blue"
             android:padding="8dp"
             android:layout_gravity="end"
             android:clickable="true"
