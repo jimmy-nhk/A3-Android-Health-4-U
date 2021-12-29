@@ -227,7 +227,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
 
                                                 @Override
                                                 public void onComplete(@NonNull Task<Uri> task) {
-                                                    //Get image link from uploadded iamge to firestore
+                                                    //Get image link from uploaded iamge to firestore
                                                     String fileLink = task.getResult().toString();
                                                     // Call function to upload item to DB
                                                     uploadItemToDB(fileLink);

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,14 +13,14 @@ import com.example.clientapp.R;
 
 import java.util.ArrayList;
 
-public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.ViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
     ArrayList<String> arrayList;
 
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public categoryAdapter(Context context, ArrayList<String> arrayList) {
+    public CategoryAdapter(Context context, ArrayList<String> arrayList) {
         this.mInflater = LayoutInflater.from(context);
         this.arrayList = arrayList;
     }

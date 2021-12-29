@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.clientapp.R;
 import com.example.clientapp.helper.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
-import com.example.clientapp.helper.categoryAdapter;
+import com.example.clientapp.helper.CategoryAdapter;
 import com.example.clientapp.model.Item;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,7 +40,7 @@ public class ItemListFragment extends Fragment {
     private List<Item> itemList = new ArrayList<>();
     private String selectedCategory="";
     HashMap<String, Integer> categoryList = new HashMap<String, Integer>();
-    private com.example.clientapp.helper.categoryAdapter categoryAdapter;
+    private CategoryAdapter categoryAdapter;
     private ItemRecyclerViewAdapter mAdapter;
     private static final String TAG = ItemListFragment.class.getSimpleName();
     private static final String ITEM_COLLECTION = "items";
@@ -195,8 +195,8 @@ public class ItemListFragment extends Fragment {
             LinearLayoutManager horizontalLayoutManager
                     = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
             categoryRecycleView.setLayoutManager(horizontalLayoutManager);
-            categoryAdapter = new categoryAdapter(view.getContext(), listCategoryValue);
-            categoryAdapter.setClickListener(new categoryAdapter.ItemClickListener() {
+            categoryAdapter = new CategoryAdapter(view.getContext(), listCategoryValue);
+            categoryAdapter.setClickListener(new CategoryAdapter.ItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 
