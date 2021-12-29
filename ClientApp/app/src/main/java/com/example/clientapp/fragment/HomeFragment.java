@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,11 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.clientapp.R;
-import com.example.clientapp.activity.MainActivity;
 import com.example.clientapp.helper.CategoryHomeAdapter;
+import com.example.clientapp.helper.NewStoreRecyclerViewAdapter;
+import com.example.clientapp.model.Item;
+import com.example.clientapp.model.Vendor;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -32,8 +34,18 @@ public class HomeFragment extends Fragment {
     // Views
     private RecyclerView categoryRecycleView;
     private RecyclerView recyclerView;
-    private CategoryHomeAdapter adapter;
+    private CategoryHomeAdapter categoryHomeAdapter;
+    private NewStoreRecyclerViewAdapter newStoresAdapter;
+
+    // List
     private String selectedCategory = "";
+    private Vendor selectedStore;
+    
+    // Firestore
+    private static final String ITEM_COLLECTION = "items";
+    private static final String VENDOR_COLLECTION = "vendors";
+    private FirebaseFirestore fireStore;
+    private CollectionReference storeCollection;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -68,6 +80,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getViews(view);
+        initService(view);
         initCategoryListAdapter(view);
     }
 
@@ -84,39 +97,79 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
         categoryRecycleView.setLayoutManager(horizontalLayoutManager);
-        adapter = new CategoryHomeAdapter(view.getContext(), listCategoryValue);
-        adapter.setClickListener((view1, position) -> {
+        categoryHomeAdapter = new CategoryHomeAdapter(view.getContext(), listCategoryValue);
+        categoryHomeAdapter.setClickListener((view1, position) -> {
             //Set category on Clicked category
             selectedCategory = listCategoryValue.get(position);
-            redirectToItemListFragment(selectedCategory);
+            loadItemListFragment(selectedCategory);
         });
-        categoryRecycleView.setAdapter(adapter);
+        categoryRecycleView.setAdapter(categoryHomeAdapter);
     }
 
-    private void redirectToItemListFragment(String category) {
-//        String backStateName = this.getClass().getName();
-//        FragmentManager fragmentManager = getParentFragmentManager();
-//        boolean fragmentPopped = fragmentManager.popBackStackImmediate (backStateName, 0);
-//        fragmentManager.popBackStackImmediate();
-//        Toast.makeText(getContext(), "fragmentManager.getBackStackEntryCount()=" + fragmentManager.getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
-//        Log.d("HomeFragment", "backstack=" + fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName());
-//        Log.d("HomeFragment", "fragmentPopped=" + fragmentPopped);
+    private void initNewStoreListAdapter(View view) {
+        ArrayList<Vendor> newStoreList = new ArrayList<>();
 
+        //This set list adapter for category
+
+
+        LinearLayoutManager horizontalLayoutManager
+                = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        categoryRecycleView.setLayoutManager(horizontalLayoutManager);
+        newStoresAdapter = new NewStoreRecyclerViewAdapter(view.getContext(), newStoreList);
+        categoryHomeAdapter.setClickListener((view1, position) -> {
+            //Set category on Clicked category
+//            selectedCategory = storeList.get(position);
+//            loadStoreDetailFragment(selectedCategory);
+        });
+        categoryRecycleView.setAdapter(categoryHomeAdapter);
+    }
+
+    private void loadNewStoreList(View view) {
+        try {
+            ArrayList<Vendor> storeList = new ArrayList<>();
+
+            storeCollection.addSnapshotListener((value, error) -> {
+                if (value == null || value.isEmpty())
+                    return;
+
+                int size = value.size();
+                int maxListSize = Math.min(size, 8);
+
+                for (int i = size - 1, j = 0; j < maxListSize; i--, j++)
+                    storeList.add(value.getDocuments().get(i).toObject(Vendor.class));
+
+                // Load
+                initNewStoreListAdapter(view);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void initService(View view) {
+        // init fireStore db
+        fireStore = FirebaseFirestore.getInstance();
+        storeCollection = fireStore.collection(VENDOR_COLLECTION);
+
+        // Load data from Firestore
+        loadNewStoreList(view);
+    }
+
+    private void loadItemListFragment(String category) {
         Fragment fragment = new ItemListFragment();
-        loadFragment(fragment, category);
-    }
-
-    private void loadFragment(Fragment fragment, String category) {
-        // load fragment
-//        FragmentManager fragmentManager = getParentFragmentManager();
-//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//        transaction.show(fragmentManager.findFragmentByTag());
-//        transaction.replace(R.id.fragment_container, fragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-
         Bundle bundle = new Bundle();
         bundle.putString("category", category);
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void loadStoreDetailFragment(Vendor vendor) {
+        Fragment fragment = new StoreDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("vendor", vendor);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);

@@ -137,8 +137,6 @@ public class ItemListFragment extends Fragment {
         String searchValue = searchTxt.getQuery().toString();
         String localCategory = this.selectedCategory;
 
-        Toast.makeText(getContext(), "selectedCategory="+selectedCategory, Toast.LENGTH_SHORT).show();
-
         // Load items from Firestore
         itemCollection.addSnapshotListener((value, error) -> {
             // clear to list
@@ -147,9 +145,8 @@ public class ItemListFragment extends Fragment {
             String currentItemCategory;
 
             // validate if there is no value in the list
-            if (value == null || value.isEmpty()) {
+            if (value == null || value.isEmpty())
                 return;
-            }
 
             // Cast to item object and add to item list
             for (int i = 0; i < value.size(); i++) {
@@ -269,7 +266,7 @@ public class ItemListFragment extends Fragment {
 //        recyclerView.setNestedScrollingEnabled(false);
     }
 
-    // attach components
+    // Attach components
     public void getViews(View view) {
         searchTxt = view.findViewById(R.id.searchView);
         // Get recycler view
