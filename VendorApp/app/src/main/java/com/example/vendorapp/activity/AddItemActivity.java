@@ -1,6 +1,7 @@
 package com.example.vendorapp.activity;
 
 import com.example.vendorapp.R;
+import com.example.vendorapp.helper.MaskWatcher;
 import com.example.vendorapp.model.Item;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,11 +28,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -42,7 +46,8 @@ import java.util.List;
 public class AddItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final int vendorID = 1;
     private EditText nameTxt, descriptionTxt, categoryTxt, priceTxt, quantityTxt, caloriesTxt, expireDateTxt;
-    private ListView addedImageListview;
+    private ImageView addedImageListview;
+    private Button addImageBtn;
     private String category;
 
     private static final String TAG = "AddItemActivity";
@@ -54,6 +59,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
 
     // request code
     private final int PICK_IMAGE_REQUEST = 22;
+
     // instance for firebase storage and StorageReference
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -104,8 +110,10 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
         quantityTxt = findViewById(R.id.quantityAdditemTxt);
         caloriesTxt = findViewById(R.id.caloriesAddItemTxt);
         expireDateTxt = findViewById(R.id.expireDateAdditemTxt);
-        addedImageListview = findViewById(R.id.addedImageListview);
+        addedImageListview = findViewById(R.id.addedImageview);
+        addImageBtn = findViewById(R.id.addImageBtn);
 
+        expireDateTxt.addTextChangedListener(new MaskWatcher("##/##/####"));
         Spinner spinner = findViewById(R.id.categorySpinner);
         spinner.setOnItemSelectedListener(this);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -152,6 +160,77 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private boolean validate() {
+
+        return isItemNameValid()
+                && isItemExpiredDateValid()
+                && isItemCaloriesValid()
+                && isItemPriceValid()
+                && isItemDescriptionValid()
+                && isItemQuantityValid()
+                && isItemImageValid();
+    }
+
+    // Validate item's name
+    private boolean isItemNameValid() {
+        if (nameTxt.getText().toString().isEmpty()) {
+            nameTxt.setError("Item name cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    // Validate item's description
+    private boolean isItemDescriptionValid() {
+        if (descriptionTxt.getText().toString().isEmpty()) {
+            descriptionTxt.setError("Item description cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    // Validate item's price
+    private boolean isItemPriceValid() {
+        if (priceTxt.getText().toString().isEmpty()) {
+            priceTxt.setError("Item price cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    // Validate item's quantity
+    private boolean isItemQuantityValid() {
+        if (quantityTxt.getText().toString().isEmpty()) {
+            quantityTxt.setError("Item quantity cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    // Validate item's calories
+    private boolean isItemCaloriesValid() {
+        if (caloriesTxt.getText().toString().isEmpty()) {
+            caloriesTxt.setError("Item calories cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    // Validate item's expire day
+    private boolean isItemExpiredDateValid() {
+
+        if (expireDateTxt.getText().toString().isEmpty()) {
+            expireDateTxt.setError("Item expire day cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    // Validate item's image day
+    private boolean isItemImageValid() {
+        if (addedImageListview.getVisibility() == View.GONE) {
+            addImageBtn.setError("Item image cannot be empty");
+            return false;
+        }
         return true;
     }
 
@@ -222,25 +301,8 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot) {
-//                                    taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
-//                                            new OnCompleteListener<Uri>() {
-//
-//                                                @Override
-//                                                public void onComplete(@NonNull Task<Uri> task) {
-//                                                    //Get image link from uploaded iamge to firestore
-////                                                    String fileLink = task.getResult().toString();
-//
-////                                                    String path = "\\\\"+task.getResult().getPath();
-////                                                    Toast.makeText(AddItemActivity.this, path, Toast.LENGTH_SHORT).show();
-//                                                    // Call function to upload item to DB
-//                                                    uploadItemToDB(fileLink);
-//
-//                                                    // Image uploaded successfully, turn off the process dialog
-//                                                    progressDialog.dismiss();
-//                                                }
-//                                            });
+                                    // get path to add to item ọbject
                                     String path = taskSnapshot.getStorage().getPath();
-                                    Toast.makeText(AddItemActivity.this, taskSnapshot.getStorage().getPath(), Toast.LENGTH_SHORT).show();
                                     // Call function to upload item to DB
                                     uploadItemToDB(path);
 
@@ -284,6 +346,8 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
             filePath = data.getData();
             try {
                 Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                addedImageListview.setImageBitmap(bitmapImg);
+                addedImageListview.setVisibility(View.VISIBLE);
 
             } catch (IOException e) {
                 e.printStackTrace();

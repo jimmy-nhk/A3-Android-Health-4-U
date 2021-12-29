@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
     tools:context=".activity.AddItemActivity">
 
     <LinearLayout
@@ -71,16 +71,11 @@
                     android:layout_height="wrap_content"
                     android:text="Category" />
 
-<!--                <EditText-->
-<!--                    android:id="@+id/categoryAdditemTxt"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="20dp" />-->
-
                 <Spinner
                     android:id="@+id/categorySpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="270dp"
+                    android:layout_height="35sp"
+                    android:layout_marginStart="20dp" />
 
             </LinearLayout>
 
@@ -101,6 +96,7 @@
                     android:hint="0"
                     android:inputType="numberDecimal" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -148,8 +144,10 @@
 
                 <EditText
                     android:id="@+id/expireDateAdditemTxt"
-                    android:layout_width="250dp"
+                    android:layout_width="270dp"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
+                    android:inputType="date"
                     android:layout_marginStart="20dp" />
             </LinearLayout>
 
@@ -165,22 +163,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <ListView
-                        android:id="@+id/addedImageListview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
+                    <ImageView
+                        android:id="@+id/addedImageview"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:visibility="gone"/>
 
                     <Button
                         android:id="@+id/addImageBtn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_marginHorizontal="10sp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="@color/blue_phantom"
-                        android:text="upload"
                         android:onClick="uploadImageAddItemOnClick"
+                        android:text="upload"
                         android:textColor="@color/white" />
                 </LinearLayout>
             </LinearLayout>
@@ -198,26 +197,26 @@
 
             <Button
                 android:id="@+id/cancelAdditemBtn"
-                android:onClick="cancelAddItemOnClick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="20sp"
                 android:backgroundTint="#8F8F8F"
+                android:onClick="cancelAddItemOnClick"
                 android:text="cancel"
                 android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/addAdditemBtn"
-                android:onClick="addAddItemOnClick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="20sp"
                 android:backgroundTint="@color/blue_phantom"
+                android:onClick="addAddItemOnClick"
 
                 android:text="Add"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
