@@ -50,7 +50,6 @@ public class ItemListFragment extends Fragment {
     // Views
     private ItemViewModel viewModel;
 
-
     public ItemListFragment() {
         Log.d(TAG, "FoodListFragment: onCreate");
     }

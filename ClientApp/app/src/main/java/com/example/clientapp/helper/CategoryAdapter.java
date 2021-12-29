@@ -14,7 +14,6 @@ import com.example.clientapp.R;
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-
     ArrayList<String> arrayList;
 
     private LayoutInflater mInflater;
@@ -29,7 +28,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View layoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_view_category, parent, false);
+                .inflate(R.layout.category_cardview, parent, false);
 
         return new ViewHolder(layoutView);
     }
@@ -41,7 +40,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
         });
     }
-
 
     @Override
     public int getItemCount() {
