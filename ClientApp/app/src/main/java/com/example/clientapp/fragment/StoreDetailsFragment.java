@@ -1,5 +1,6 @@
 package com.example.clientapp.fragment;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,8 @@ import com.example.clientapp.helper.ItemViewModel;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Vendor;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,6 +38,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -182,23 +188,35 @@ public class StoreDetailsFragment extends Fragment {
                             soldQuantityTxt.setText(vendor.getTotalSale()+"");
                             //set image by URL
                             try {
-                                Thread thread = new Thread(new Runnable(){
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            imageURL = new URL(vendor.getImage());
-                                            Bitmap mIcon_val = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-                                            coverImg.setImageBitmap(mIcon_val);
-                                        } catch (Exception e) {
-                                            Log.e(TAG, e.getMessage());
+                                if (vendor.getImage().length() > 0) {
+                                    StorageReference mImageRef =
+                                            FirebaseStorage.getInstance().getReference(vendor.getImage());
+
+                                    final long ONE_MEGABYTE = 1024 * 1024;
+                                    mImageRef.getBytes(ONE_MEGABYTE)
+                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] bytes) {
+                                                    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                    DisplayMetrics dm = new DisplayMetrics();
+                                                    ((Activity) view.getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                                                    coverImg.setMinimumHeight(dm.heightPixels);
+                                                    coverImg.setMinimumWidth(dm.widthPixels);
+                                                    coverImg.setImageBitmap(bm);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            // Handle any errors
                                         }
-                                    }
-                                });
-                                thread.start();
+                                    });
+                                }
                             } catch (Exception e) {
                                 coverImg.setImageResource(R.drawable.bun); //Set something else
                                 e.printStackTrace();
-                            }                            Log.d(TAG,"vendor: "+vendor.toString());
+                            }
+                            Log.d(TAG,"vendor: "+vendor.toString());
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
