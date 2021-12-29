@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
@@ -75,16 +76,25 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
         //TODO: TESTING. Remember to turn on
 //        initService(view);
 
-        Log.d(TAG, "FoodListFragment: onCreateView");
-
+        // Get arguments
+        getArgs();
+//        Log.d(TAG, "FoodListFragment: onCreateView");
 
         return view;
+    }
+
+    private void getArgs() {
+        try {
+            // Get bundle
+            Bundle args = getArguments();
+            selectedCategory = args.getString("category");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //This function check if search view value is changed
@@ -126,6 +136,8 @@ public class ItemListFragment extends Fragment {
         // Init conditions
         String searchValue = searchTxt.getQuery().toString();
         String localCategory = this.selectedCategory;
+
+        Toast.makeText(getContext(), "selectedCategory="+selectedCategory, Toast.LENGTH_SHORT).show();
 
         // Load items from Firestore
         itemCollection.addSnapshotListener((value, error) -> {

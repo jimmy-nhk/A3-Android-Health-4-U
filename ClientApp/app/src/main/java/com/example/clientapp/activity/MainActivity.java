@@ -111,6 +111,16 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
+    @Override
+    public void onBackPressed(){
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
         if (client != null) {

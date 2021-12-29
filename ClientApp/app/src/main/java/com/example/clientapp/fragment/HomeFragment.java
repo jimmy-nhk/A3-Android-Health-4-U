@@ -5,21 +5,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.CategoryAdapter;
+import com.example.clientapp.activity.MainActivity;
 import com.example.clientapp.helper.CategoryHomeAdapter;
-import com.example.clientapp.helper.ItemRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,10 +68,10 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getViews(view);
-        initListAdapter(view);
+        initCategoryListAdapter(view);
     }
 
-    private void initListAdapter(View view) {
+    private void initCategoryListAdapter(View view) {
         //This set list adapter for category
         ArrayList<String> listCategoryValue = new ArrayList<>();
         listCategoryValue.add("Rice");
@@ -87,8 +88,40 @@ public class HomeFragment extends Fragment {
         adapter.setClickListener((view1, position) -> {
             //Set category on Clicked category
             selectedCategory = listCategoryValue.get(position);
+            redirectToItemListFragment(selectedCategory);
         });
         categoryRecycleView.setAdapter(adapter);
+    }
+
+    private void redirectToItemListFragment(String category) {
+//        String backStateName = this.getClass().getName();
+//        FragmentManager fragmentManager = getParentFragmentManager();
+//        boolean fragmentPopped = fragmentManager.popBackStackImmediate (backStateName, 0);
+//        fragmentManager.popBackStackImmediate();
+//        Toast.makeText(getContext(), "fragmentManager.getBackStackEntryCount()=" + fragmentManager.getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
+//        Log.d("HomeFragment", "backstack=" + fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName());
+//        Log.d("HomeFragment", "fragmentPopped=" + fragmentPopped);
+
+        Fragment fragment = new ItemListFragment();
+        loadFragment(fragment, category);
+    }
+
+    private void loadFragment(Fragment fragment, String category) {
+        // load fragment
+//        FragmentManager fragmentManager = getParentFragmentManager();
+//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//        transaction.show(fragmentManager.findFragmentByTag());
+//        transaction.replace(R.id.fragment_container, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("category", category);
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void getViews(View view) {
