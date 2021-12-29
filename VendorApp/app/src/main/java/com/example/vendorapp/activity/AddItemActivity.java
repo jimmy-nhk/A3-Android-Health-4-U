@@ -222,20 +222,30 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot) {
-                                    taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
-                                            new OnCompleteListener<Uri>() {
+//                                    taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(
+//                                            new OnCompleteListener<Uri>() {
+//
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Uri> task) {
+//                                                    //Get image link from uploaded iamge to firestore
+////                                                    String fileLink = task.getResult().toString();
+//
+////                                                    String path = "\\\\"+task.getResult().getPath();
+////                                                    Toast.makeText(AddItemActivity.this, path, Toast.LENGTH_SHORT).show();
+//                                                    // Call function to upload item to DB
+//                                                    uploadItemToDB(fileLink);
+//
+//                                                    // Image uploaded successfully, turn off the process dialog
+//                                                    progressDialog.dismiss();
+//                                                }
+//                                            });
+                                    String path = taskSnapshot.getStorage().getPath();
+                                    Toast.makeText(AddItemActivity.this, taskSnapshot.getStorage().getPath(), Toast.LENGTH_SHORT).show();
+                                    // Call function to upload item to DB
+                                    uploadItemToDB(path);
 
-                                                @Override
-                                                public void onComplete(@NonNull Task<Uri> task) {
-                                                    //Get image link from uploaded iamge to firestore
-                                                    String fileLink = task.getResult().toString();
-                                                    // Call function to upload item to DB
-                                                    uploadItemToDB(fileLink);
-
-                                                    // Image uploaded successfully, turn off the process dialog
-                                                    progressDialog.dismiss();
-                                                }
-                                            });
+                                    // Image uploaded successfully, turn off the process dialog
+                                    progressDialog.dismiss();
                                 }
                             })
 
