@@ -42,7 +42,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View recyclerViewItem = mLayoutInflater.inflate(R.layout.item_cardview, parent, false);
 
-        Log.d("ItemRecyclerViewAdapter" , "Here");
+//        Log.d("ItemRecyclerViewAdapter" , "Here");
         // Set item on click listener
         recyclerViewItem.setOnClickListener(v -> handleRecyclerItemClick((RecyclerView) parent, v));
         return new ItemViewHolder(recyclerViewItem);
@@ -72,7 +72,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Log.d("ItemRecyclerViewAdapter" , "render");
+//        Log.d("ItemRecyclerViewAdapter" , "render");
         Item item =  itemList.get(position);
 
         holder.name.setText(("Name: " + item.getName() + " id: " + item.getId()));

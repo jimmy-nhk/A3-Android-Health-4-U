@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
@@ -36,10 +35,11 @@ public class ItemListFragment extends Fragment {
     private RecyclerView categoryRecycleView;
     private RecyclerView recyclerView;
     private Button cancelBtn;
-    //
+
+    // Service
     private List<Item> itemList = new ArrayList<>();
-    private String selectedCategory="";
-    HashMap<String, Integer> categoryList = new HashMap<String, Integer>();
+    private String selectedCategory = "";
+    HashMap<String, Integer> categoryList = new HashMap<>();
     private CategoryAdapter categoryAdapter;
     private ItemRecyclerViewAdapter mAdapter;
     private static final String TAG = ItemListFragment.class.getSimpleName();
@@ -47,6 +47,7 @@ public class ItemListFragment extends Fragment {
     private FirebaseFirestore fireStore;
     private CollectionReference itemCollection;
 
+    // Views
     private ItemViewModel viewModel;
 
 
@@ -94,14 +95,14 @@ public class ItemListFragment extends Fragment {
         searchTxt.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(view.getContext(), "onQueryTextSubmit", Toast.LENGTH_SHORT).show();
-                fetchItemsToListview(view);
+//                Toast.makeText(view.getContext(), "onQueryTextSubmit", Toast.LENGTH_SHORT).show();
+                fetchItemsToListView(view);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                fetchItemsToListview(view);
+                fetchItemsToListView(view);
                 return false;
             }
         });
@@ -113,33 +114,29 @@ public class ItemListFragment extends Fragment {
         itemCollection = fireStore.collection(ITEM_COLLECTION);
 
         //Fetch item from server
-        fetchItemsToListview(view);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelOnClick(v);
-            }
-        });
+        fetchItemsToListView(view);
+        cancelBtn.setOnClickListener(this::onCancelBtnClick);
     }
-    private void cancelOnClick(View view){
-        selectedCategory="";
-        searchTxt.setQuery("",false);
-        fetchItemsToListview(view);
-    };
 
-    private void fetchItemsToListview(View view) {
-        //Init condition
+    private void onCancelBtnClick(View view){
+        selectedCategory = "";
+        searchTxt.setQuery("",false);
+        fetchItemsToListView(view);
+    }
+
+    private void fetchItemsToListView(View view) {
+        // Init conditions
         String searchValue = searchTxt.getQuery().toString();
         String localCategory = this.selectedCategory;
-        Log.d(TAG,"searchValue "+searchValue);
-        Log.d(TAG,"selectedCategory "+selectedCategory);
-        // load items
-        itemCollection.addSnapshotListener((value, error) -> {
 
+        // Load items from Firestore
+        itemCollection.addSnapshotListener((value, error) -> {
             // clear to list
             itemList = new ArrayList<>();//Reset value of item List
             categoryList= new HashMap<>();
-            // validate no value in the list
+            String currentItemCategory;
+
+            // validate if there is no value in the list
             if (value == null || value.isEmpty()) {
                 return;
             }
@@ -147,75 +144,119 @@ public class ItemListFragment extends Fragment {
             // Cast to item object and add to item list
             for (int i = 0; i < value.size(); i++) {
                 Item item = value.getDocuments().get(i).toObject(Item.class);
-                //add value by conditions
+                // add value by conditions
                 assert item != null;
+                currentItemCategory = item.getCategory();
+
+                // Filter items
+                //----- for reference, please don't delete--------
+//                if ((searchValue.isEmpty() && (item.getCategory()
+//                        .equalsIgnoreCase(localCategory.toLowerCase())
+//                        || localCategory.isEmpty())
+//                || (!searchValue.isEmpty() && item.getName().toLowerCase().contains(searchValue.toLowerCase())
+//                        && item.getCategory().toLowerCase().contains(localCategory.toLowerCase())))) {
+//                    addItemToFilteredList(item);
+//                }
+                // If filter by category or view all
+                if ((searchValue.isEmpty()
+                        && (matchesCategory(currentItemCategory, localCategory) // by category
+                        || localCategory.isEmpty()) // view all
+                        //////////////////////////////////////////////////////////////////////
+                        // If search with keyword
+                        || (!searchValue.isEmpty() && matchesItemName(item.getName(), searchValue)
+                        && containsCategory(currentItemCategory, localCategory)))) {
+                    addItemToFilteredList(item);
+                }
+
+                //----- for reference, please don't delete--------
                 //Condition check if current item has match search key or match category
-                if (item.getName().toLowerCase().contains(searchValue.toLowerCase())
-                        && item.getCategory().toLowerCase().contains(localCategory.toLowerCase())) {
-                    itemList.add(item);
-
-                    //Check if current item category is conatained in hashmap
-                    int count = categoryList.containsKey(item.getCategory()) ? categoryList.get(item.getCategory()) : 0;
-
-                    //if category is not added to list yet, add to list and set value to 1
-                    //if value is already existed, increase by 1
-                    categoryList.put(item.getCategory(), count + 1);
-                }
+//                else if (!searchValue.isEmpty() && item.getName().toLowerCase().contains(searchValue.toLowerCase())
+//                        && item.getCategory().toLowerCase().contains(localCategory.toLowerCase())) {
+//                    addItemToFilteredList(item);
+//                }
             }
-            // sort again
-            itemList.sort((o1, o2) -> {
-                // reverse sort
-                if (o1.getId() < o2.getId()) {
-                    return 1; // normal will return -1
-                } else if (o1.getId() > o2.getId()) {
-                    return -1; // reverse
-                }
-                return 0;
-            });
 
+            // sort again
+            sortItemList();
 
             // Initialize list adapter
-            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
+            initListAdapter(view);
+        });
+    }
 
-            // linear styles
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setNestedScrollingEnabled(true);
-            recyclerView.setAdapter(mAdapter);
-            Log.d(TAG, "searchStr: " + searchValue);
+    private boolean matchesCategory(String itemCategory, String localCategory) {
+        return itemCategory
+                .equalsIgnoreCase(localCategory.toLowerCase());
+    }
 
-            //This set list adapter for category
-            ArrayList<String> listCategoryValue = new ArrayList<>();
-            for (Map.Entry<String, Integer> category : categoryList.entrySet()) {
-                listCategoryValue.add(category.getKey() + '(' + category.getValue() + ')');
+    private boolean containsCategory(String itemCategory, String localCategory) {
+        return itemCategory.toLowerCase().contains(localCategory.toLowerCase());
+    }
+
+    private boolean matchesItemName(String itemName, String searchValue) {
+        return itemName.toLowerCase().contains(searchValue.toLowerCase());
+    }
+
+    private void addItemToFilteredList(Item item) {
+        itemList.add(item);
+        //Check if current item category is contained in hashmap
+        int count = categoryList.containsKey(item.getCategory()) ?
+                categoryList.get(item.getCategory()) : 0;
+
+        //if category is not added to list yet, add to list and set value to 1
+        //if value is already existed, increase by 1
+        categoryList.put(item.getCategory(), count + 1);
+    }
+
+    private void sortItemList() {
+        itemList.sort((o1, o2) -> {
+            // reverse sort
+            if (o1.getId() < o2.getId()) {
+                return 1; // normal will return -1
+            } else if (o1.getId() > o2.getId()) {
+                return -1; // reverse
             }
+            return 0;
+        });
+    }
 
-            LinearLayoutManager horizontalLayoutManager
-                    = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
-            categoryRecycleView.setLayoutManager(horizontalLayoutManager);
-            categoryAdapter = new CategoryAdapter(view.getContext(), listCategoryValue);
-            categoryAdapter.setClickListener(new CategoryAdapter.ItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
+    private void initListAdapter(View view) {
+        mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
 
-                    //Set category on Clicked category
-                    String[] arrOfStr = listCategoryValue.get(position).split("\\(", 2);
-                    selectedCategory=arrOfStr[0];
-                    Toast.makeText(view.getContext(), "Clicked on " + selectedCategory, Toast.LENGTH_SHORT).show();
+        // linear styles
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setNestedScrollingEnabled(true);
+        recyclerView.setAdapter(mAdapter);
+//            Log.d(TAG, "searchStr: " + searchValue);
 
-                    fetchItemsToListview(view);
-                }
-            });
-            categoryRecycleView.setAdapter(categoryAdapter);
-            // grid styles
+        //This set list adapter for category
+        ArrayList<String> listCategoryValue = new ArrayList<>();
+        for (Map.Entry<String, Integer> category : categoryList.entrySet()) {
+            listCategoryValue.add(category.getKey() + '(' + category.getValue() + ')');
+        }
+
+        LinearLayoutManager horizontalLayoutManager
+                = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        categoryRecycleView.setLayoutManager(horizontalLayoutManager);
+        categoryAdapter = new CategoryAdapter(view.getContext(), listCategoryValue);
+        categoryAdapter.setClickListener((view1, position) -> {
+            //Set category on Clicked category
+            String[] arrOfStr = listCategoryValue.get(position).split("\\(", 2);
+            selectedCategory = arrOfStr[0];
+//            Toast.makeText(view1.getContext(), "Clicked on " + selectedCategory, Toast.LENGTH_SHORT).show();
+
+            fetchItemsToListView(view1);
+        });
+        categoryRecycleView.setAdapter(categoryAdapter);
+        // grid styles
 //        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
 //        recyclerView.setLayoutManager(mLayoutManager);
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView.setAdapter(mAdapter);
 //        recyclerView.setNestedScrollingEnabled(false);
-        });
     }
 
     // attach components
