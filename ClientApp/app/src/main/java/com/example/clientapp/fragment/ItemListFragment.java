@@ -77,15 +77,24 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
 
-        Log.d(TAG, "FoodListFragment: onCreateView");
-
+        // Get arguments
+        getArgs();
+//        Log.d(TAG, "FoodListFragment: onCreateView");
 
         return view;
+    }
+
+    private void getArgs() {
+        try {
+            // Get bundle
+            Bundle args = getArguments();
+            selectedCategory = args.getString("category");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //This function check if search view value is changed
@@ -145,9 +154,8 @@ public class ItemListFragment extends Fragment {
             String currentItemCategory;
 
             // validate if there is no value in the list
-            if (value == null || value.isEmpty()) {
+            if (value == null || value.isEmpty())
                 return;
-            }
 
             // Cast to item object and add to item list
             for (int i = 0; i < value.size(); i++) {
@@ -273,8 +281,7 @@ public class ItemListFragment extends Fragment {
     }
 
 
-
-    // attach components
+    // Attach components
     public void getViews(View view) {
         searchTxt = view.findViewById(R.id.searchView);
         // Get recycler view

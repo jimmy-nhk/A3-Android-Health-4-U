@@ -20,5 +20,20 @@
             android:backgroundTint="@color/primary_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Stores"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_blue_light"
+            android:layout_marginVertical="20dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerNewStores"
+            android:backgroundTint="@color/primary_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </FrameLayout>

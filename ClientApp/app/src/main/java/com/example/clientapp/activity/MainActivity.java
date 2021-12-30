@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
 
         loadOrderList();
         viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
@@ -193,8 +193,6 @@ public class MainActivity extends AppCompatActivity{
             super.onBackPressed();
 //        }
     }
-
-
 
 
     public void onProfileBtnClick(View view) {
