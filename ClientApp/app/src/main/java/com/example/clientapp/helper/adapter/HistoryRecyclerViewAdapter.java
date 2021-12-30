@@ -1,4 +1,4 @@
-package com.example.clientapp.helper;
+package com.example.clientapp.helper.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -65,7 +65,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         holder.historyDate.setText("Date: " + cart.getDate());
         holder.cartPrice.setText("Total Price: " + cart.getPrice() + "$");
 
-        //TODO: validate the cancel case
         holder.isProcessing.setText(cart.getIsFinished() ? "Finished" : "isProcessing");
         holder.isProcessing.setTextColor(cart.getIsFinished() ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.black));
 

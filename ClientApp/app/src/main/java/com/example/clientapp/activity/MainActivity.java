@@ -8,6 +8,7 @@ import com.example.clientapp.fragment.ItemListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
 import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.broadcast.NotificationReceiver;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
@@ -25,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity{
 
     private int orderSize;
     private Client client;
+    private String selectedCategory;
+
 
 
     @Override
@@ -64,7 +68,9 @@ public class MainActivity extends AppCompatActivity{
         viewModel.getSelectedItem().observe(this, item -> {
             // Perform an action with the latest item data
         });
+        selectedCategory = "";
 
+        registerService();
         bottomNavigationView = findViewById(R.id.bottom_navigation_container);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -94,7 +100,16 @@ public class MainActivity extends AppCompatActivity{
                         return true;
                     case R.id.itemsNav:
                         fragment = new ItemListFragment();
-                        loadFragment(fragment);
+                        // Put item in bundle to send to ItemDetails fragment
+                        // send the string to ItemList Fragment
+                        try {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("category", selectedCategory);
+                            fragment.setArguments(bundle);
+                            loadFragment(fragment);
+                        }catch (Exception e){
+                        }
+
                         return true;
                     case R.id.cartNav:
                         fragment = new CartFragment();
@@ -235,8 +250,6 @@ public class MainActivity extends AppCompatActivity{
                 i += occurrences - 1;
 
             }
-
-            //TODO: add date checkout
             order = new Order(orderSize, filterDate(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
 
             Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
@@ -250,6 +263,9 @@ public class MainActivity extends AppCompatActivity{
                     viewModel.resetMutableItemList();
 
                     //TODO: add notification here (use broadcast)
+                    Intent intent = new Intent(ORDER_NOTIFICATION);
+                    sendBroadcast(intent);
+
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add order to FireStore: " + finalOrder.toString()));
 
@@ -263,6 +279,17 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
+    private NotificationReceiver notificationReceiver;
+    private IntentFilter intentFilter;
+
+    private void registerService(){
+        notificationReceiver = new NotificationReceiver();
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(ORDER_NOTIFICATION);
+        this.registerReceiver(notificationReceiver, intentFilter);
+
+    }
     // filter the string date
     public String filterDate (String rawString){
 
@@ -308,6 +335,18 @@ public class MainActivity extends AppCompatActivity{
             }
 
         });
+    }
+
+    public String getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(String selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
     }
 }
 

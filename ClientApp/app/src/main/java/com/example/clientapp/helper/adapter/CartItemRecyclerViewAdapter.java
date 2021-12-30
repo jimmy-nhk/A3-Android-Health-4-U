@@ -1,4 +1,4 @@
-package com.example.clientapp.helper;
+package com.example.clientapp.helper.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,22 +8,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
+import com.example.clientapp.helper.ItemViewModel;
 import com.example.clientapp.model.Item;
-import com.example.clientapp.model.Order;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.List;
 

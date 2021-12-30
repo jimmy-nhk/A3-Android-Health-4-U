@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,12 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.CategoryAdapter;
-import com.example.clientapp.helper.CategoryHomeAdapter;
-import com.example.clientapp.helper.ItemRecyclerViewAdapter;
+import com.example.clientapp.activity.MainActivity;
+import com.example.clientapp.helper.adapter.CategoryHomeAdapter;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,6 +86,15 @@ public class HomeFragment extends Fragment {
         adapter.setClickListener((view1, position) -> {
             //Set category on Clicked category
             selectedCategory = listCategoryValue.get(position);
+//            Toast.makeText(getContext(), selectedCategory, Toast.LENGTH_SHORT).show();
+
+            // Go to itemList  fragment
+            MainActivity mainActivity = (MainActivity) view.getContext();
+            mainActivity.setSelectedCategory(selectedCategory);
+
+            // select the icon on nav bar
+            mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
+
         });
         categoryRecycleView.setAdapter(adapter);
     }

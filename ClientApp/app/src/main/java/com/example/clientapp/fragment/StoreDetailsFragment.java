@@ -20,10 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.ItemRecyclerViewAdapter;
+import com.example.clientapp.helper.adapter.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Vendor;
@@ -32,10 +31,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -106,17 +102,6 @@ public class StoreDetailsFragment extends Fragment {
     private void initService(View view) {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
-        fireStore.collection("vendors")
-                .document(String.valueOf(vendorID))
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.d(TAG, error.getMessage());
-                    } else {
-                        //TODO: add Vendor to model and cast to Vendor here
-//                        Toast.makeText(getContext(), value.toString(), Toast.LENGTH_SHORT).show();
-                    }
-        });
-        itemCollection = fireStore.collection(ITEM_COLLECTION);
 
         //Fetch item from server
         itemList = new ArrayList<>(); //Reset value of item List

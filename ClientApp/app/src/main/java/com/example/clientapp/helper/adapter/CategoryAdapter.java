@@ -1,4 +1,4 @@
-package com.example.clientapp.helper;
+package com.example.clientapp.helper.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -61,7 +61,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         void onItemClick(View view, int position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements com.example.clientapp.helper.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements com.example.clientapp.helper.adapter.ViewHolder {
         public Button categoryBtn;
 
         public ViewHolder(View view) {

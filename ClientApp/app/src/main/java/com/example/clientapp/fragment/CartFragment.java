@@ -16,11 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.CartItemRecyclerViewAdapter;
-import com.example.clientapp.helper.ItemRecyclerViewAdapter;
+import com.example.clientapp.helper.adapter.CartItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
 import com.example.clientapp.model.Item;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
-package com.example.clientapp.helper;
+package com.example.clientapp.helper.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
@@ -92,7 +90,7 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
         void onItemClick(View view, int position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements com.example.clientapp.helper.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements com.example.clientapp.helper.adapter.ViewHolder {
         public LinearLayout categoryBtn;
         public TextView categoryText;
         public ImageView categoryImg;
