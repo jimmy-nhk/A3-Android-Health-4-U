@@ -23,7 +23,6 @@ import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.clientapp.activity.MainActivity;
-import com.example.clientapp.helper.adapter.CategoryHomeAdapter;
 
 
 import java.util.ArrayList;
@@ -151,44 +150,18 @@ public class HomeFragment extends Fragment {
         loadNewStoreList(view);
     }
 
-    private void loadItemListFragment(String category) {
-        Fragment fragment = new ItemListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("category", category);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    private void loadStoreDetailFragment(Vendor vendor) {
-        Fragment fragment = new StoreDetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("vendor", vendor);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+//    private void loadStoreDetailFragment(Vendor vendor) {
+//        Fragment fragment = new StoreDetailsFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("vendor", vendor);
+//        fragment.setArguments(bundle);
+//        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//        transaction.replace(R.id.fragment_container, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     private void getViews(View view) {
         categoryRecycleView = view.findViewById(R.id.recyclerCategoryHome);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d(TAG, "onDestroyView");
-
-        onDestroy();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
-
     }
 }

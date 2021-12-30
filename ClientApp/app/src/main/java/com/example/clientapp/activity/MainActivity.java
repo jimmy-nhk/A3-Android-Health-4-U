@@ -56,7 +56,9 @@ public class MainActivity extends AppCompatActivity{
     private Client client;
     private String selectedCategory;
 
-
+    public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
+    private NotificationReceiver notificationReceiver;
+    private IntentFilter intentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,9 +279,6 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
-    private NotificationReceiver notificationReceiver;
-    private IntentFilter intentFilter;
 
     private void registerService(){
         notificationReceiver = new NotificationReceiver();
