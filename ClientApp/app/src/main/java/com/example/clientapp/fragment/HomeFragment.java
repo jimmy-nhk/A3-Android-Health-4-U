@@ -117,11 +117,6 @@ public class HomeFragment extends Fragment {
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
         categoryRecycleView.setLayoutManager(horizontalLayoutManager);
         newStoresAdapter = new NewStoreRecyclerViewAdapter(view.getContext(), newStoreList);
-        categoryHomeAdapter.setClickListener((view1, position) -> {
-            //Set category on Clicked category
-//            selectedCategory = storeList.get(position);
-//            loadStoreDetailFragment(selectedCategory);
-        });
         categoryRecycleView.setAdapter(categoryHomeAdapter);
     }
 

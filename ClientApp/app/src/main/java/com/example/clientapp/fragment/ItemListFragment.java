@@ -67,6 +67,10 @@ public class ItemListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
+
+        // Get arguments
+        getArgs();
+
         getViews(view);
         initService(view);
         checkSearch(view);
@@ -79,19 +83,14 @@ public class ItemListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-
-        // Get arguments
-        getArgs();
-//        Log.d(TAG, "FoodListFragment: onCreateView");
-
         return view;
     }
 
     private void getArgs() {
         try {
-            // Get bundle
-            Bundle args = getArguments();
-            selectedCategory = args.getString("category");
+            if (getArguments() != null) {
+                selectedCategory = getArguments().getString("category");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,7 +279,6 @@ public class ItemListFragment extends Fragment {
 
     }
 
-
     // Attach components
     public void getViews(View view) {
         searchTxt = view.findViewById(R.id.searchView);
@@ -289,40 +287,6 @@ public class ItemListFragment extends Fragment {
         categoryRecycleView = view.findViewById(R.id.categoryRecycleView);
         cancelBtn = view.findViewById(R.id.cancelSearch);
 
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-//        try {
-//            selectedCategory = getArguments().getString("category");
-//            Toast.makeText(getContext(), "getBundle: " + selectedCategory, Toast.LENGTH_SHORT).show();
-//        }catch (Exception e){
-//            selectedCategory = "";
-//            Toast.makeText(getContext(), "getBundle: null", Toast.LENGTH_SHORT).show();
-//
-//        }
-
-        if (getArguments() != null) {
-            selectedCategory = getArguments().getString("category");
-            Toast.makeText(getContext(), "getBundle: " + selectedCategory, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d(TAG, "onDestroyView");
-
-        onDestroy();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
 
     }
 }

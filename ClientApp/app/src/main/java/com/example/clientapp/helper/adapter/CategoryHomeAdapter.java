@@ -21,7 +21,6 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
     private ArrayList<String> arrayList;
 
     private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
     private Context context;
 
     public CategoryHomeAdapter(Context context, ArrayList<String> arrayList) {
@@ -70,20 +69,15 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
         holder.categoryText.setTextSize(textSize);
 
         holder.categoryBtn.setOnClickListener(v -> {
-
             //Set category on Clicked category
             String selectedCategory = arrayList.get(position);
 
-            Toast.makeText(v.getContext(), "selectedCategory: "+selectedCategory, Toast.LENGTH_SHORT).show();
-
-            // Go to itemList  fragment
+            // Go to itemList fragment
             MainActivity mainActivity = (MainActivity) context;
             mainActivity.setSelectedCategory(selectedCategory);
 
             // select the icon on nav bar
             mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
-
-//            if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
         });
     }
 
@@ -95,16 +89,6 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
     // Convenience method for getting data at click position
     public String getItem(int id) {
         return arrayList.get(id);
-    }
-
-    // Allows clicks events to be caught
-    public void setClickListener(CategoryHomeAdapter.ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    // Parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements com.example.clientapp.helper.adapter.ViewHolder {
