@@ -1,10 +1,14 @@
 package com.example.vendorapp.helper;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -40,6 +49,8 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         this.itemList = data;
         this.mLayoutInflater = LayoutInflater.from(context);
     }
+
+
 
     @NonNull
     @Override
@@ -73,31 +84,100 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         Item item = this.itemList.get(position);
 
+//        new FetchImageTask(item.getImage()) {
+//            @Override
+//            protected void onPostExecute(Bitmap result) {
+//                if (result != null) {
+//                    holder.image.setImageBitmap(result);
+//                }
+//            }
+//        }.execute("IMAGE_URL");
+        if (item.getImage().length() > 0) {
+            try {
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(item.getImage());
+                final long ONE_MEGABYTE = 1024 * 1024;
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                DisplayMetrics dm = new DisplayMetrics();
+                                ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                                holder.image.setMinimumHeight(dm.heightPixels);
+                                holder.image.setMinimumWidth(dm.widthPixels);
+                                holder.image.setImageBitmap(bm);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            } catch (Exception e){
+
+            }
+
+
+        }
+
         holder.name.setText(item.getName());
         holder.price.setText(item.getPrice() + "");
         holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
-        try {
-            Thread thread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        imageURL = new URL(item.getImage());
-                        Bitmap mIcon_val = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-                        holder.image.setImageBitmap(mIcon_val);
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                }
-            });
-            thread.start();
-        } catch (Exception e) {
-            holder.image.setImageResource(R.drawable.food);
-            e.printStackTrace();
-        }
+
+
+//        //TODO: Implement service
+//        Intent intent = new Intent(context, LoadImageIntentService.class);
+//        intent.putExtra("imageUrl", item.getImage());
+//
+//
+//        context.startService(intent);
+
+//        try {
+//            Thread thread = new Thread(new Runnable(){
+//                @Override
+//                public void run() {
+//                    try {
+//                        imageURL = new URL(item.getImage());
+//                        Bitmap mIcon_val = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+//                        holder.image.setImageBitmap(mIcon_val);
+//                    } catch (Exception e) {
+//                        Log.e(TAG, e.getMessage());
+//                    }
+//                }
+//            });
+//            thread.start();
+//        } catch (Exception e) {
+//            holder.image.setImageResource(R.drawable.food);
+//            e.printStackTrace();
+//        }
         //TODO: Image and Button
 
 
+    }
+
+    private class FetchImageTask extends AsyncTask<String, Integer, Bitmap> {
+        private String imageUrl;
+
+        public FetchImageTask(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... arg0) {
+            Bitmap mIcon_val = null;
+            try {
+                imageURL = new URL(imageUrl);
+                mIcon_val = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return mIcon_val;
+        }
     }
 
     @Override
@@ -105,6 +185,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         return itemList.size();
     }
 }
+
 class ItemViewHolder extends RecyclerView.ViewHolder {
 
     ImageView image;

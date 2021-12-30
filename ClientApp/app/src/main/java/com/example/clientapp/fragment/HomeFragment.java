@@ -21,6 +21,9 @@ import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.clientapp.activity.MainActivity;
+import com.example.clientapp.helper.adapter.CategoryHomeAdapter;
+
 
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+    private static final String TAG = HomeFragment.class.getSimpleName();
 
     // Views
     private RecyclerView categoryRecycleView;
@@ -101,7 +105,16 @@ public class HomeFragment extends Fragment {
         categoryHomeAdapter.setClickListener((view1, position) -> {
             //Set category on Clicked category
             selectedCategory = listCategoryValue.get(position);
-            loadItemListFragment(selectedCategory);
+
+//            Toast.makeText(getContext(), selectedCategory, Toast.LENGTH_SHORT).show();
+
+            // Go to itemList  fragment
+            MainActivity mainActivity = (MainActivity) view.getContext();
+            mainActivity.setSelectedCategory(selectedCategory);
+
+            // select the icon on nav bar
+            mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
+
         });
         categoryRecycleView.setAdapter(categoryHomeAdapter);
     }
@@ -179,5 +192,20 @@ public class HomeFragment extends Fragment {
 
     private void getViews(View view) {
         categoryRecycleView = view.findViewById(R.id.recyclerCategoryHome);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+
+        onDestroy();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+
     }
 }

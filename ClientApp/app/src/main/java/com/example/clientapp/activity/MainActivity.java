@@ -1,4 +1,6 @@
 package com.example.clientapp.activity;
+import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+
 import com.example.clientapp.R;
 import com.example.clientapp.fragment.CartFragment;
 import com.example.clientapp.fragment.HistoryFragment;
@@ -6,6 +8,7 @@ import com.example.clientapp.fragment.ItemListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
 import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.broadcast.NotificationReceiver;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
@@ -17,11 +20,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -38,6 +43,7 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity{
     private final String ORDER_COLLECTION = "orders";
     private final String TAG = MainActivity.class.getSimpleName();
+    private FragmentTransaction transaction;
 
     // the item model list
     private ItemViewModel viewModel;
@@ -48,6 +54,9 @@ public class MainActivity extends AppCompatActivity{
 
     private int orderSize;
     private Client client;
+    private String selectedCategory;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +68,9 @@ public class MainActivity extends AppCompatActivity{
         viewModel.getSelectedItem().observe(this, item -> {
             // Perform an action with the latest item data
         });
+        selectedCategory = "";
 
+        registerService();
         bottomNavigationView = findViewById(R.id.bottom_navigation_container);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -89,7 +100,16 @@ public class MainActivity extends AppCompatActivity{
                         return true;
                     case R.id.itemsNav:
                         fragment = new ItemListFragment();
-                        loadFragment(fragment);
+                        // Put item in bundle to send to ItemDetails fragment
+                        // send the string to ItemList Fragment
+                        try {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("category", selectedCategory);
+                            fragment.setArguments(bundle);
+                            loadFragment(fragment);
+                        }catch (Exception e){
+                        }
+
                         return true;
                     case R.id.cartNav:
                         fragment = new CartFragment();
@@ -103,23 +123,77 @@ public class MainActivity extends AppCompatActivity{
                 return false;
             };
 
-    private void loadFragment(Fragment fragment) {
+
+    public void loadFragment(Fragment fragment) {
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+                Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
+                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
+
+            }
+        } catch (Exception e){
+
+        }
+
         // load fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+//        transaction.addToBackStack(null);
+        transaction.commit();
+
+
+    }
+
+    public void loadFragmentWithBackStack(Fragment fragment){
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+                Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
+                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
+
+            }
+        } catch (Exception e){
+
+        }
+        FragmentManager fm = getSupportFragmentManager();
+
+        Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+        transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     @Override
-    public void onBackPressed(){
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
+    public void onBackPressed() {
+
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+
+        } catch (Exception e){
+
         }
-        else {
+//        // validate the back button in the device
+//        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+//            finish();
+//        } else {
             super.onBackPressed();
-        }
+//        }
     }
+
 
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
@@ -129,7 +203,7 @@ public class MainActivity extends AppCompatActivity{
             Log.d(TAG, "onProfileBtnClick: client=" + client);
             fragment.setArguments(bundle);
         }
-        loadFragment(fragment);
+        loadFragmentWithBackStack(fragment);
     }
 
     // order btn
@@ -174,8 +248,6 @@ public class MainActivity extends AppCompatActivity{
                 i += occurrences - 1;
 
             }
-
-            //TODO: add date checkout
             order = new Order(orderSize, filterDate(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
 
             Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
@@ -189,6 +261,9 @@ public class MainActivity extends AppCompatActivity{
                     viewModel.resetMutableItemList();
 
                     //TODO: add notification here (use broadcast)
+                    Intent intent = new Intent(ORDER_NOTIFICATION);
+                    sendBroadcast(intent);
+
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add order to FireStore: " + finalOrder.toString()));
 
@@ -202,6 +277,17 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
+    private NotificationReceiver notificationReceiver;
+    private IntentFilter intentFilter;
+
+    private void registerService(){
+        notificationReceiver = new NotificationReceiver();
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(ORDER_NOTIFICATION);
+        this.registerReceiver(notificationReceiver, intentFilter);
+
+    }
     // filter the string date
     public String filterDate (String rawString){
 
@@ -247,6 +333,18 @@ public class MainActivity extends AppCompatActivity{
             }
 
         });
+    }
+
+    public String getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(String selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
     }
 }
 

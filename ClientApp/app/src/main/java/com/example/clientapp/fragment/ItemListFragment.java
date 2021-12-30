@@ -1,5 +1,6 @@
 package com.example.clientapp.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.ItemRecyclerViewAdapter;
+import com.example.clientapp.helper.adapter.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.ItemViewModel;
-import com.example.clientapp.helper.CategoryAdapter;
+import com.example.clientapp.helper.adapter.CategoryAdapter;
 import com.example.clientapp.model.Item;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,8 +78,7 @@ public class ItemListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-        //TODO: TESTING. Remember to turn on
-//        initService(view);
+
 
         // Get arguments
         getArgs();
@@ -105,17 +105,21 @@ public class ItemListFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
 //                Toast.makeText(view.getContext(), "onQueryTextSubmit", Toast.LENGTH_SHORT).show();
                 fetchItemsToListView(view);
+                Log.d(TAG, "onQueryTextSubmit");
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 fetchItemsToListView(view);
+                Log.d(TAG, "onQueryTextChange");
                 return false;
             }
         });
     }
 
+    // init service
     private void initService(View view) {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
@@ -124,11 +128,14 @@ public class ItemListFragment extends Fragment {
         //Fetch item from server
         fetchItemsToListView(view);
         cancelBtn.setOnClickListener(this::onCancelBtnClick);
+
     }
 
+    // onCancel btn
     private void onCancelBtnClick(View view){
         selectedCategory = "";
         searchTxt.setQuery("",false);
+        Log.d(TAG, "selectedCategory: onCancel: " + selectedCategory);
         fetchItemsToListView(view);
     }
 
@@ -136,6 +143,8 @@ public class ItemListFragment extends Fragment {
         // Init conditions
         String searchValue = searchTxt.getQuery().toString();
         String localCategory = this.selectedCategory;
+        Log.d(TAG, "localCategory: " + localCategory);
+        Log.d(TAG, "selectedCategory: " + selectedCategory);
 
         // Load items from Firestore
         itemCollection.addSnapshotListener((value, error) -> {
@@ -189,17 +198,21 @@ public class ItemListFragment extends Fragment {
             // Initialize list adapter
             initListAdapter(view);
         });
+
     }
 
+    //validate category
     private boolean matchesCategory(String itemCategory, String localCategory) {
         return itemCategory
                 .equalsIgnoreCase(localCategory.toLowerCase());
     }
 
+    //validate category
     private boolean containsCategory(String itemCategory, String localCategory) {
         return itemCategory.toLowerCase().contains(localCategory.toLowerCase());
     }
 
+    // match name
     private boolean matchesItemName(String itemName, String searchValue) {
         return itemName.toLowerCase().contains(searchValue.toLowerCase());
     }
@@ -227,6 +240,7 @@ public class ItemListFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initListAdapter(View view) {
         mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
 
@@ -238,6 +252,8 @@ public class ItemListFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(true);
         recyclerView.setAdapter(mAdapter);
 //            Log.d(TAG, "searchStr: " + searchValue);
+
+        mAdapter.notifyDataSetChanged();
 
         //This set list adapter for category
         ArrayList<String> listCategoryValue = new ArrayList<>();
@@ -255,16 +271,15 @@ public class ItemListFragment extends Fragment {
             selectedCategory = arrOfStr[0];
 //            Toast.makeText(view1.getContext(), "Clicked on " + selectedCategory, Toast.LENGTH_SHORT).show();
 
+            Log.d(TAG, "selectedCategory in adapter: " + selectedCategory);
             fetchItemsToListView(view1);
         });
         categoryRecycleView.setAdapter(categoryAdapter);
-        // grid styles
-//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        recyclerView.setLayoutManager(mLayoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setAdapter(mAdapter);
-//        recyclerView.setNestedScrollingEnabled(false);
+        categoryAdapter.notifyDataSetChanged();
+
+
     }
+
 
     // Attach components
     public void getViews(View view) {
@@ -273,10 +288,41 @@ public class ItemListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         categoryRecycleView = view.findViewById(R.id.categoryRecycleView);
         cancelBtn = view.findViewById(R.id.cancelSearch);
+
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        try {
+//            selectedCategory = getArguments().getString("category");
+//            Toast.makeText(getContext(), "getBundle: " + selectedCategory, Toast.LENGTH_SHORT).show();
+//        }catch (Exception e){
+//            selectedCategory = "";
+//            Toast.makeText(getContext(), "getBundle: null", Toast.LENGTH_SHORT).show();
+//
+//        }
+
+        if (getArguments() != null) {
+            selectedCategory = getArguments().getString("category");
+            Toast.makeText(getContext(), "getBundle: " + selectedCategory, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+
+        onDestroy();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+
     }
 }
