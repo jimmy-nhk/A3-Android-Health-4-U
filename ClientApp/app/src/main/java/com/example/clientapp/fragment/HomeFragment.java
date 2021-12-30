@@ -5,24 +5,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.adapter.CategoryHomeAdapter;
-import com.example.clientapp.helper.NewStoreRecyclerViewAdapter;
-import com.example.clientapp.model.Item;
+import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.example.clientapp.activity.MainActivity;
 
 
 import java.util.ArrayList;
@@ -36,7 +31,8 @@ public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
 
     // Views
-    private RecyclerView categoryRecycleView;
+    private RecyclerView categoryRecyclerView;
+    private RecyclerView newStoreRecyclerView;
     private RecyclerView recyclerView;
     private CategoryHomeAdapter categoryHomeAdapter;
     private NewStoreRecyclerViewAdapter newStoresAdapter;
@@ -101,22 +97,17 @@ public class HomeFragment extends Fragment {
         // set linear layout
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
-        categoryRecycleView.setLayoutManager(horizontalLayoutManager);
+        categoryRecyclerView.setLayoutManager(horizontalLayoutManager);
         categoryHomeAdapter = new CategoryHomeAdapter(view.getContext(), listCategoryValue);
-        categoryRecycleView.setAdapter(categoryHomeAdapter);
+        categoryRecyclerView.setAdapter(categoryHomeAdapter);
     }
 
-    private void initNewStoreListAdapter(View view) {
-        ArrayList<Vendor> newStoreList = new ArrayList<>();
-
-        //This set list adapter for category
-
-
+    private void initNewStoreListAdapter(View view, ArrayList<Vendor> newStoreList) {
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
-        categoryRecycleView.setLayoutManager(horizontalLayoutManager);
+        newStoreRecyclerView.setLayoutManager(horizontalLayoutManager);
         newStoresAdapter = new NewStoreRecyclerViewAdapter(view.getContext(), newStoreList);
-        categoryRecycleView.setAdapter(categoryHomeAdapter);
+        newStoreRecyclerView.setAdapter(newStoresAdapter);
     }
 
     private void loadNewStoreList(View view) {
@@ -134,7 +125,7 @@ public class HomeFragment extends Fragment {
                     storeList.add(value.getDocuments().get(i).toObject(Vendor.class));
 
                 // Load
-                initNewStoreListAdapter(view);
+                initNewStoreListAdapter(view, storeList);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,18 +141,8 @@ public class HomeFragment extends Fragment {
         loadNewStoreList(view);
     }
 
-//    private void loadStoreDetailFragment(Vendor vendor) {
-//        Fragment fragment = new StoreDetailsFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("vendor", vendor);
-//        fragment.setArguments(bundle);
-//        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//        transaction.replace(R.id.fragment_container, fragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
-
     private void getViews(View view) {
-        categoryRecycleView = view.findViewById(R.id.recyclerCategoryHome);
+        categoryRecyclerView = view.findViewById(R.id.recyclerCategoryHome);
+        newStoreRecyclerView = view.findViewById(R.id.recyclerNewStores);
     }
 }
