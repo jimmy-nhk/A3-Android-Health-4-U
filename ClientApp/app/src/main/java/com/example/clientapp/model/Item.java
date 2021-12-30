@@ -83,6 +83,14 @@ public class Item implements Parcelable, Comparable<Item> {
         this.category = category;
     }
 
+    public double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
+
     public int getId() {
         return id;
     }

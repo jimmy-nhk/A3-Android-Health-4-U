@@ -1,4 +1,6 @@
 package com.example.clientapp.activity;
+import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+
 import com.example.clientapp.R;
 import com.example.clientapp.fragment.CartFragment;
 import com.example.clientapp.fragment.HistoryFragment;
@@ -17,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -38,6 +41,7 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity{
     private final String ORDER_COLLECTION = "orders";
     private final String TAG = MainActivity.class.getSimpleName();
+    private FragmentTransaction transaction;
 
     // the item model list
     private ItemViewModel viewModel;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity{
 
     private int orderSize;
     private Client client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +108,79 @@ public class MainActivity extends AppCompatActivity{
                 return false;
             };
 
-    private void loadFragment(Fragment fragment) {
+
+    public void loadFragment(Fragment fragment) {
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+                Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
+                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
+
+            }
+        } catch (Exception e){
+
+        }
+
         // load fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+//        transaction.addToBackStack(null);
+        transaction.commit();
+
+
+    }
+
+    public void loadFragmentWithBackStack(Fragment fragment){
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+                Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
+                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
+
+            }
+        } catch (Exception e){
+
+        }
+        FragmentManager fm = getSupportFragmentManager();
+
+        Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+        transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+    @Override
+    public void onBackPressed() {
+
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+
+        } catch (Exception e){
+
+        }
+//        // validate the back button in the device
+//        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+//            finish();
+//        } else {
+            super.onBackPressed();
+//        }
+    }
+
+
+
 
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
@@ -119,7 +190,7 @@ public class MainActivity extends AppCompatActivity{
             Log.d(TAG, "onProfileBtnClick: client=" + client);
             fragment.setArguments(bundle);
         }
-        loadFragment(fragment);
+        loadFragmentWithBackStack(fragment);
     }
 
     // order btn

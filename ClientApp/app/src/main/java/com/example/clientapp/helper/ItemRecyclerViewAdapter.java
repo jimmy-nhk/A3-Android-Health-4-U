@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.example.clientapp.R;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.activity.MainActivity;
@@ -64,10 +63,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         // Go to item detail fragment
         MainActivity mainActivity = (MainActivity) context;
-        FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        mainActivity.loadFragmentWithBackStack(fragment);
     }
 
     @Override
@@ -76,15 +72,13 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         Item item =  itemList.get(position);
 
         holder.name.setText(("Name: " + item.getName() + " id: " + item.getId()));
-        holder.price.setText(("Price: " + item.getPrice() + ""));
+        holder.price.setText(("Price: " + item.getPrice() + "$"));
         holder.vendorName.setText(("VendorID: " + item.getVendorID() + ""));
         holder.category.setText(("Category: " + item.getCategory()));
 
         // init final position for on click
-//        int finalPosition = position;
         holder.addBtn.setOnClickListener(v -> {
-            Item item1 = itemList.get(position);
-            viewModel.addItem(item1);
+            viewModel.addItem(item);
         });
 
         //TODO: Image and Button

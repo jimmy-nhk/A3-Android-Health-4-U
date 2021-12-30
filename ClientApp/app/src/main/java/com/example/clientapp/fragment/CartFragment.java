@@ -31,6 +31,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class CartFragment extends Fragment {
+    private static final String TAG = CartFragment.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private List<Item> itemList;
@@ -101,13 +102,18 @@ public class CartFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
 
-    private void initService(View view) {
+        onDestroy();
+    }
 
-
-
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
 
     }
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import com.example.clientapp.R;
 import com.example.clientapp.activity.MainActivity;
 import com.example.clientapp.model.Item;
+
+import java.util.Objects;
 
 public class ItemDetailsFragment extends Fragment {
 
@@ -76,13 +79,16 @@ public class ItemDetailsFragment extends Fragment {
         Fragment fragment = new StoreDetailsFragment();
         fragment.setArguments(bundle);
 
-        // Go to item detail fragment
-        FragmentTransaction transaction;
-        if (getActivity() != null) {
-            transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+
+        try {
+            // Go to item detail fragment
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
             transaction.commit();
+        }catch (Exception e){
+            return;
         }
     }
 
@@ -98,4 +104,5 @@ public class ItemDetailsFragment extends Fragment {
         // Set store on click listener
         storeNameTxt.setOnClickListener(v -> handleStoreClick());
     }
+
 }

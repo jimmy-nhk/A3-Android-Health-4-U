@@ -1,5 +1,6 @@
 package com.example.clientapp.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,6 +115,7 @@ public class ItemListFragment extends Fragment {
         //Fetch item from server
         fetchItemsToListView(view);
         cancelBtn.setOnClickListener(this::onCancelBtnClick);
+
     }
 
     private void onCancelBtnClick(View view){
@@ -180,6 +182,7 @@ public class ItemListFragment extends Fragment {
             // Initialize list adapter
             initListAdapter(view);
         });
+
     }
 
     private boolean matchesCategory(String itemCategory, String localCategory) {
@@ -218,6 +221,7 @@ public class ItemListFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initListAdapter(View view) {
         mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
 
@@ -229,6 +233,8 @@ public class ItemListFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(true);
         recyclerView.setAdapter(mAdapter);
 //            Log.d(TAG, "searchStr: " + searchValue);
+
+        mAdapter.notifyDataSetChanged();
 
         //This set list adapter for category
         ArrayList<String> listCategoryValue = new ArrayList<>();
@@ -249,6 +255,7 @@ public class ItemListFragment extends Fragment {
             fetchItemsToListView(view1);
         });
         categoryRecycleView.setAdapter(categoryAdapter);
+        categoryAdapter.notifyDataSetChanged();
         // grid styles
 //        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
 //        recyclerView.setLayoutManager(mLayoutManager);
@@ -256,6 +263,8 @@ public class ItemListFragment extends Fragment {
 //        recyclerView.setAdapter(mAdapter);
 //        recyclerView.setNestedScrollingEnabled(false);
     }
+
+
 
     // attach components
     public void getViews(View view) {
@@ -269,5 +278,20 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+
+        onDestroy();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+
     }
 }
