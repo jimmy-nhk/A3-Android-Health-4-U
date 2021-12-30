@@ -150,7 +150,7 @@
                 <EditText
                     android:id="@+id/editRating"
                     android:layout_width="250dp"
-                    android:enabled="false"
+                    android:editable="false"
                     android:inputType="numberDecimal"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp" />
