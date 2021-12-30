@@ -294,47 +294,33 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
 
             // adding listeners on upload
             // or failure of image
+            // Progress Listener for loading
+// percentage on the dialog box
             ref.putFile(filePath)
                     .addOnSuccessListener(
-                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            taskSnapshot -> {
+                                // get path to add to item ọbject
+                                String path = taskSnapshot.getStorage().getPath();
+                                // Call function to upload item to DB
+                                uploadItemToDB(path);
 
-                                @Override
-                                public void onSuccess(
-                                        UploadTask.TaskSnapshot taskSnapshot) {
-                                    // get path to add to item ọbject
-                                    String path = taskSnapshot.getStorage().getPath();
-                                    // Call function to upload item to DB
-                                    uploadItemToDB(path);
-
-                                    // Image uploaded successfully, turn off the process dialog
-                                    progressDialog.dismiss();
-                                }
+                                // Image uploaded successfully, turn off the process dialog
+                                progressDialog.dismiss();
                             })
 
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            // Error, Image not uploaded
-                            progressDialog.dismiss();
-                        }
+                    .addOnFailureListener(e -> {
+                        // Error, Image not uploaded
+                        progressDialog.dismiss();
                     })
                     .addOnProgressListener(
-                            new OnProgressListener<UploadTask.TaskSnapshot>() {
-
-                                // Progress Listener for loading
-                                // percentage on the dialog box
-                                @Override
-                                public void onProgress(
-                                        UploadTask.TaskSnapshot taskSnapshot) {
-                                    double progress
-                                            = (100.0
-                                            * taskSnapshot.getBytesTransferred()
-                                            / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage(
-                                            "Added "
-                                                    + (int) progress + "%");
-                                }
+                            taskSnapshot -> {
+                                double progress
+                                        = (100.0
+                                        * taskSnapshot.getBytesTransferred()
+                                        / taskSnapshot.getTotalByteCount());
+                                progressDialog.setMessage(
+                                        "Added "
+                                                + (int) progress + "%");
                             });
         }
     }

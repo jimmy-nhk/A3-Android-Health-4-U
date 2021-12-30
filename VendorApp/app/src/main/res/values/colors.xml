@@ -11,4 +11,13 @@
     <color name="red">#b21f1f</color>
     <color name="main_blue">#40beee</color>
     <color name="green">#00FF59</color>
+
+
+
+    <color name="primary_blue">#01579b</color>
+    <color name="primary_blue_light">#4f83cc</color>
+    <color name="primary_blue_dark">#002f6c</color>
+    <color name="secondary_teal">#26a69a</color>
+    <color name="secondary_teal_dark">#64d8cb</color>
+    <color name="secondary_teal_light">#00766c</color>
 </resources>

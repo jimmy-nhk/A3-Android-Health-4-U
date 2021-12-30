@@ -13,6 +13,8 @@
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/activity_homepage.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/activity_sign_up_step1.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/activity_sign_up_step2.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/category_home_cardview.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_cart.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_food_list.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/fragment_item_details.xml" value="0.25416666666666665" />
@@ -36,8 +38,6 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3104166666666667" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.15729166666666666" />
         <entry key="app/src/main/res/layout/cart_with_num.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/category_cardview.xml" value="0.19074074074074074" />
-        <entry key="app/src/main/res/layout/category_home_cardview.xml" value="0.1" />
         <entry key="app/src/main/res/layout/feed_update_count.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_food_list.xml" value="0.1" />

@@ -146,7 +146,7 @@ public class SignUpActivity extends AppCompatActivity {
         c.setStoreName(storenameText.getText().toString().trim());
 //        c.setFullName(fullNameText.getText().toString().trim());
 
-        vendorCollection.document(username)
+        vendorCollection.document(vendorSize+"")
                 .set(c.toMap())
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "Successfully added vendor to FireStore: " + c.toString());

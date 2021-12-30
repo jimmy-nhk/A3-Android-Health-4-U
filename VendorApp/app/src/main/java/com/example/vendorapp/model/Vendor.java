@@ -13,15 +13,15 @@ import java.util.Map;
 public class Vendor implements Parcelable {
 
     private int id;
-    private String storeName;
-    private String fullName;
-    private String userName;
-    private String email;
-    private String phone;
-    private String address;
-    private int rating;
-    private int totalSale;
-    private String image;
+    private String storeName="";
+    private String fullName="";
+    private String userName="";
+    private String email="";
+    private String phone="";
+    private String address="";
+    private double rating=0;
+    private int totalSale=0;
+    private String image="/vendors/food";
 
 
     public static final String VENDOR_ID = "id";
@@ -109,11 +109,11 @@ public class Vendor implements Parcelable {
         this.address = address;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -144,7 +144,7 @@ public class Vendor implements Parcelable {
         dest.writeString(userName);
         dest.writeString(phone);
         dest.writeString(address);
-        dest.writeInt(rating);
+        dest.writeDouble(rating);
         dest.writeInt(totalSale);
         dest.writeString(image );
 
@@ -159,7 +159,7 @@ public class Vendor implements Parcelable {
         userName = in.readString();
         phone = in.readString();
         address = in.readString();
-        rating=in.readInt();
+        rating=in.readDouble();
         totalSale=in.readInt();
         image = in.readString();
     }

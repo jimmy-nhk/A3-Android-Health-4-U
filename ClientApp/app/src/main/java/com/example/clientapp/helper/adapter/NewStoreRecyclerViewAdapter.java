@@ -59,9 +59,10 @@ public class NewStoreRecyclerViewAdapter extends
 
     private void setStoreImage(ViewHolder holder, Vendor vendor) {
         try {
-            if (vendor.getImage() == null) return;
+//            if (vendor.getImage() == null) return;
 
             if (vendor.getImage().length() > 0) {
+                Log.d("setStoreImage",vendor.getImage());
                 StorageReference mImageRef =
                         FirebaseStorage.getInstance().getReference(vendor.getImage());
 

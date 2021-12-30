@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="200sp"
             android:adjustViewBounds="true"
-            android:src="@drawable/bun"
+            android:src="@drawable/food"
             android:scaleType="centerCrop" />
 
         <androidx.core.widget.NestedScrollView
@@ -181,6 +181,7 @@
                             android:text="5sao"
                             android:textSize="14sp" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

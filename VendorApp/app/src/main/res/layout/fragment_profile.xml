@@ -1,21 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/ProfileFragment"
     tools:context=".fragment.ProfileFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/profileCoverImg"
+            android:layout_width="match_parent"
+            android:layout_height="200sp"
+            android:adjustViewBounds="true"
+            android:contentDescription="cover Image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/food" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_alignBottom="@+id/profileCoverImg"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10sp"
+            app:cardBackgroundColor="#BFFFFFFF"
+            app:cardCornerRadius="50sp">
+
+            <ImageButton
+                android:id="@+id/changeCoverImgBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:src="@drawable/image_icon"/>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="200sp"
+        android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_margin="30dp">
+        android:padding="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -23,29 +61,14 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Full Name"/>
-
-                <EditText
-                    android:id="@+id/editFullName"
-                    android:layout_marginStart="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="Username"/>
+                    android:text="Username" />
 
                 <EditText
                     android:id="@+id/editUsername"
-                    android:layout_marginStart="20dp"
                     android:layout_width="270dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:layout_marginStart="20dp" />
 
             </LinearLayout>
             <LinearLayout
@@ -55,14 +78,33 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Email"/>
+                    android:text="Full Name" />
+
+                <EditText
+                    android:id="@+id/editFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Email" />
 
                 <EditText
                     android:id="@+id/editEmail"
-                    android:layout_marginStart="20dp"
                     android:layout_width="270dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -70,14 +112,16 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Phone"/>
+                    android:text="Phone" />
 
                 <EditText
                     android:id="@+id/editPhone"
-                    android:layout_marginStart="20dp"
                     android:layout_width="270dp"
-                    android:layout_height="wrap_content"/>
+                    android:inputType="number"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -85,14 +129,15 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Address"/>
+                    android:text="Address" />
 
                 <EditText
                     android:id="@+id/editAddress"
-                    android:layout_marginStart="20dp"
                     android:layout_width="250dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -100,14 +145,17 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Rating"/>
+                    android:text="Rating" />
 
                 <EditText
                     android:id="@+id/editRating"
-                    android:layout_marginStart="20dp"
                     android:layout_width="250dp"
-                    android:layout_height="wrap_content"/>
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -115,14 +163,23 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:text="Total Sales"/>
+                    android:text="Total Sales" />
 
                 <EditText
                     android:id="@+id/editTotalSales"
-                    android:layout_marginStart="20dp"
                     android:layout_width="250dp"
-                    android:layout_height="wrap_content"/>
+                    android:inputType="number"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:layout_marginStart="20dp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/profileSaveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Save"/>
+
         </LinearLayout>
     </LinearLayout>
 

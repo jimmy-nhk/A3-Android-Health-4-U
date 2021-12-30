@@ -153,6 +153,14 @@ public class MainActivity extends AppCompatActivity{
         }
         loadFragmentWithBackStack(fragment);
     }
+    // In your activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }
 
 class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {
