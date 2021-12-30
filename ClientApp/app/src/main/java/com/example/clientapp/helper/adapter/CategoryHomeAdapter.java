@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
+import com.example.clientapp.activity.MainActivity;
 
 import java.util.ArrayList;
 
@@ -20,10 +22,12 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
 
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context context;
 
     public CategoryHomeAdapter(Context context, ArrayList<String> arrayList) {
         this.mInflater = LayoutInflater.from(context);
         this.arrayList = arrayList;
+        this.context = context;
     }
 
     @NonNull
@@ -66,7 +70,20 @@ public class CategoryHomeAdapter extends RecyclerView.Adapter<CategoryHomeAdapte
         holder.categoryText.setTextSize(textSize);
 
         holder.categoryBtn.setOnClickListener(v -> {
-            if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
+
+            //Set category on Clicked category
+            String selectedCategory = arrayList.get(position);
+
+            Toast.makeText(v.getContext(), "selectedCategory: "+selectedCategory, Toast.LENGTH_SHORT).show();
+
+            // Go to itemList  fragment
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.setSelectedCategory(selectedCategory);
+
+            // select the icon on nav bar
+            mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
+
+//            if (mClickListener != null) mClickListener.onItemClick(v, holder.getAdapterPosition());
         });
     }
 

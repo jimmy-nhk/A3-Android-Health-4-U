@@ -13,9 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.CategoryHomeAdapter;
+import com.example.clientapp.helper.adapter.CategoryHomeAdapter;
 import com.example.clientapp.helper.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Vendor;
@@ -98,24 +99,11 @@ public class HomeFragment extends Fragment {
         listCategoryValue.add("Snacks");
         listCategoryValue.add("Drinks");
 
+        // set linear layout
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
         categoryRecycleView.setLayoutManager(horizontalLayoutManager);
         categoryHomeAdapter = new CategoryHomeAdapter(view.getContext(), listCategoryValue);
-        categoryHomeAdapter.setClickListener((view1, position) -> {
-            //Set category on Clicked category
-            selectedCategory = listCategoryValue.get(position);
-
-//            Toast.makeText(getContext(), selectedCategory, Toast.LENGTH_SHORT).show();
-
-            // Go to itemList  fragment
-            MainActivity mainActivity = (MainActivity) view.getContext();
-            mainActivity.setSelectedCategory(selectedCategory);
-
-            // select the icon on nav bar
-            mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
-
-        });
         categoryRecycleView.setAdapter(categoryHomeAdapter);
     }
 
