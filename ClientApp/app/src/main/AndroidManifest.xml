@@ -9,10 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClientApp">
+        <service
+            android:name=".helper.NotificationService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".activity.BillingActivity"
+            android:parentActivityName=".activity.MainActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".helper.broadcast.NotificationReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
         <activity
             android:name=".activity.SignUpStep2Activity"

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.activity.MainActivity;
 import com.example.clientapp.fragment.ItemDetailsFragment;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
 
 import java.util.List;

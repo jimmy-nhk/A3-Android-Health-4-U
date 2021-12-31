@@ -1,10 +1,16 @@
 package com.example.clientapp.model;
 
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class Cart {
+public class Cart implements Parcelable {
 
     private int id;
     private String date;
@@ -35,6 +41,49 @@ public class Cart {
             price += orderList.get(i).getPrice();
         }
     }
+
+    public Cart(int id, String date, List<Order> orderList, double price, boolean isFinished) {
+        this.id = id;
+        this.date = date;
+        this.orderList = orderList;
+        this.price = price;
+        this.isFinished = isFinished;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(date);
+        dest.writeTypedList(orderList);
+        dest.writeDouble(price);
+        dest.writeByte((byte) (isFinished ? 1 : 0));
+    }
+
+    protected Cart(Parcel in) {
+        id = in.readInt();
+        date = in.readString();
+//        orderList = new ArrayList<Order>();
+//        in.readList(orderList,null);
+        orderList = in.createTypedArrayList(Order.CREATOR);
+
+        price = in.readDouble();
+        isFinished = in.readByte() != 0;
+    }
+
+    public static final Creator<Cart> CREATOR = new Creator<Cart>() {
+        @Override
+        public Cart createFromParcel(Parcel in) {
+            return new Cart(in);
+        }
+
+        @Override
+        public Cart[] newArray(int size) {
+            return new Cart[size];
+        }
+    };
+
+
 
     public boolean getIsFinished() {
         return isFinished;
@@ -75,5 +124,23 @@ public class Cart {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", date='" + date + '\'' +
+                ", orderList=" + orderList +
+                ", price=" + price +
+                ", isFinished=" + isFinished +
+                '}';
     }
 }

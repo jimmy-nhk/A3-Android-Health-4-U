@@ -1,5 +1,6 @@
 package com.example.clientapp.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,10 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.adapter.CartItemRecyclerViewAdapter;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class CartFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Item> itemList;
     private CartItemRecyclerViewAdapter mAdapter;
+    private TextView priceTxt;
 
     private ItemViewModel viewModel;
 
@@ -73,9 +76,12 @@ public class CartFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view);
 
+        priceTxt = view.findViewById(R.id.priceTxt);
+
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -83,12 +89,8 @@ public class CartFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(getViewLifecycleOwner(), itemList -> {
 
-            // Update the selected filters UI
-//            for (Item i:
-//                 itemList) {
-//                Log.d("CartFragment: ", i.toString());
-//            }
-            mAdapter = new CartItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
+
+            mAdapter = new CartItemRecyclerViewAdapter(getActivity(), itemList);
 
             // linear styles
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -97,6 +99,7 @@ public class CartFragment extends Fragment {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setNestedScrollingEnabled(true);
             recyclerView.setAdapter(mAdapter);
+
         });
     }
 

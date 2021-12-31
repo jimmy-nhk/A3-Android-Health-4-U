@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.adapter.ItemRecyclerViewAdapter;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Vendor;
 import com.google.android.gms.tasks.OnCompleteListener;

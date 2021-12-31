@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
@@ -20,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.adapter.ItemRecyclerViewAdapter;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.helper.adapter.CategoryAdapter;
 import com.example.clientapp.model.Item;
 import com.google.firebase.firestore.CollectionReference;

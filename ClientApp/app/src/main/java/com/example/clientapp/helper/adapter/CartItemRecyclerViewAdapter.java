@@ -1,5 +1,6 @@
 package com.example.clientapp.helper.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
 
 import java.util.List;
@@ -25,12 +26,11 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
     private ItemViewModel viewModel;
 //    final static String TAG = "CartItemRecyclerViewAdapter";
 
-    public CartItemRecyclerViewAdapter(Context context, List<Item> data , ItemViewModel viewModel) {
+    public CartItemRecyclerViewAdapter(Context context, List<Item> data ) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
         this.context = context;
         this.itemList = data;
         this.mLayoutInflater = LayoutInflater.from(context);
-        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -42,10 +42,11 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
         return new CartItemViewHolder(view).linkAdapter(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CartItemViewHolder holder, int position) {
         Item item = itemList.get(position);
-        holder.name.setText(item.getName());
+        holder.name.setText("Name: " + item.getName());
         holder.price.setText(("Price: " + item.getPrice()));
         holder.vendorName.setText(("VendorID: " + item.getVendorID()));
         holder.category.setText(("Category: " + item.getCategory()));
@@ -66,7 +67,9 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
         itemList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, itemList.size());
+
     }
+
 }
 
 class CartItemViewHolder extends RecyclerView.ViewHolder {

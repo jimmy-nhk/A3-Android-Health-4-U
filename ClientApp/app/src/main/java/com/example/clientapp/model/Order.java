@@ -1,10 +1,14 @@
 package com.example.clientapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Order {
+public class Order implements Parcelable {
     private int id;
     private String date;
     private boolean isProcessed;
@@ -15,6 +19,44 @@ public class Order {
     private int clientID;
     private double price;
 
+
+    protected Order(Parcel in) {
+        id = in.readInt();
+        date = in.readString();
+        isProcessed = in.readByte() != 0;
+        isCancelled = in.readByte() != 0;
+        itemList = in.createTypedArrayList(Item.CREATOR);
+        quantity = new ArrayList<Integer>(); // or any other type of List
+        in.readList(quantity, null);
+        vendorID = in.readInt();
+        clientID = in.readInt();
+        price = in.readDouble();
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeString(date);
+        dest.writeByte((byte) (isProcessed ? 1 : 0));
+        dest.writeByte((byte) (isCancelled ? 1 : 0));
+        dest.writeTypedList(itemList);
+        dest.writeList(quantity);
+        dest.writeInt(vendorID);
+        dest.writeInt(clientID);
+        dest.writeDouble(price);
+    }
+
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -65,6 +107,14 @@ public class Order {
     }
 
     public void setIsCancelled(boolean cancelled) {
+        isCancelled = cancelled;
+    }
+
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
         isCancelled = cancelled;
     }
 
@@ -130,14 +180,13 @@ public class Order {
                 "id=" + id +
                 ", date='" + date + '\'' +
                 ", isProcessed=" + isProcessed +
+                ", isCancelled=" + isCancelled +
                 ", itemList=" + itemList +
                 ", quantity=" + quantity +
                 ", vendorID=" + vendorID +
                 ", clientID=" + clientID +
                 ", price=" + price +
                 '}';
-
-
     }
 
     public double getPrice() {
@@ -147,4 +196,11 @@ public class Order {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
 }

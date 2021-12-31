@@ -7,15 +7,22 @@ import com.example.clientapp.fragment.HistoryFragment;
 import com.example.clientapp.fragment.ItemListFragment;
 import com.example.clientapp.fragment.HomeFragment;
 import com.example.clientapp.fragment.ProfileFragment;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.CartViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.helper.broadcast.NotificationReceiver;
+import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
@@ -47,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     // the item model list
     private ItemViewModel viewModel;
+    private CartViewModel cartViewModel;
 
     private FirebaseFirestore fireStore;
     private CollectionReference orderCollection;
@@ -55,8 +63,13 @@ public class MainActivity extends AppCompatActivity {
     private int orderSize;
     private Client client;
     private String selectedCategory;
+    private List<Cart> cartList;
 
+
+    public static final String CANCEL_NOTIFICATION = "Your order is cancelled!\nCheck it out!";
     public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
+    public static final String PROCESS_NOTIFICATION = "Your order is successfully processed!\nCheck it out!";
+
     private NotificationReceiver notificationReceiver;
     private IntentFilter intentFilter;
 
@@ -65,12 +78,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loadOrderList();
+
         viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(this, item -> {
             // Perform an action with the latest item data
         });
         selectedCategory = "";
+
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+
 
         registerService();
         bottomNavigationView = findViewById(R.id.bottom_navigation_container);
@@ -87,8 +103,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             client = intent.getParcelableExtra("client");
+            loadOrderList();
             Log.d(TAG, "onCreate: client=" + client);
         }
+
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -245,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                 i += occurrences - 1;
 
             }
-            order = new Order(orderSize, filterDate(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
+            order = new Order(orderSize, filterDateOrder(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
 
             Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
             Order finalOrder = order;
@@ -278,12 +297,14 @@ public class MainActivity extends AppCompatActivity {
         notificationReceiver = new NotificationReceiver();
         intentFilter = new IntentFilter();
         intentFilter.addAction(ORDER_NOTIFICATION);
+        intentFilter.addAction(CANCEL_NOTIFICATION);
+        intentFilter.addAction(PROCESS_NOTIFICATION);
         this.registerReceiver(notificationReceiver, intentFilter);
 
     }
 
     // filter the string date
-    public String filterDate (String rawString){
+    public String filterDateOrder (String rawString){
 
         // initialize the new string
         char [] filterString = new char[rawString.length()];
@@ -309,11 +330,18 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+
     private void loadOrderList() {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
-        orderCollection = fireStore.collection(ORDER_COLLECTION);
 
+        // setting to keep the fireStore fetching data without the internet
+//        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+//                .setPersistenceEnabled(true)
+//                .build();
+//        fireStore.setFirestoreSettings(settings);
+
+        orderCollection = fireStore.collection(ORDER_COLLECTION);
 
 
         // load items
@@ -327,7 +355,208 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        cartList = new ArrayList<>(); //Reset value of cart List
+        List<Order> orderList = new ArrayList<>();
+
+
+        // load orders
+        orderCollection.whereEqualTo("clientID" , client.getId())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+
+                        Log.d(TAG, "loadCart: value.getDocumentChanges size: " + value.getDocumentChanges().size());
+
+                        Order orderModified = null;
+                        for (DocumentChange documentChange: value.getDocumentChanges()){
+                                if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
+                                    orderModified =  documentChange.getDocument().toObject(Order.class);
+                                    Log.d(TAG, "order changed: " + orderModified.toString());
+                                    break;
+                                }
+                        }
+
+                        // clear to list
+                        cartList = new ArrayList<>();
+                        cartViewModel.resetMutableCartList();
+
+                        // init necessary variable for doing logic
+                        int countCart = 0;
+                        Cart currentCart;
+                        int countProcessed;
+                        int countCancel;
+                        boolean isModified;
+
+                        assert value != null;
+                        Log.d(TAG, "loadCart: value size: " + value.getDocuments().size());
+
+                        //scan the value from db
+                        for (int i = value.size() - 1 ; i >= 0; i--){
+                            orderList.add(value.getDocuments().get(i).toObject(Order.class));
+                        }
+
+                        // sort reverse way
+                        orderList.sort((o1, o2) -> {
+                            // reverse sort
+                            if (o1.getId() < o2.getId()){
+                                return 1; // normal will return -1
+                            } else if (o1.getId() > o2.getId()){
+                                return -1; // reverse
+                            }
+                            return 0;
+                        });
+
+                        Log.d(TAG, "loadCart: orderList.size(): " + orderList.size());
+
+                        for (int i = 0 ; i < orderList.size(); i++){
+
+                            Log.d(TAG, "loadCart: order: " + orderList.get(i).toString());
+                            Log.d(TAG, "loadCart: iTh: " + i);
+
+
+                            String time = filterDate(orderList.get(i).getDate());
+                            Log.d(TAG, "loadCart: time: " + time);
+
+                            // take the list of order in the same time
+                            List<Order> orderByDate = orderList.stream().filter(order -> {
+    //                            Log.d(TAG, "filter: " + order.getDate().trim().equals(time));
+    //                            Log.d(TAG, "filter: isProcessed: " + order.getIsProcessed());
+    //                            Log.d(TAG, "filter: object " + order.toString() + " orderList size: " + orderList.size());
+                                return order.getDate().trim().equals(time) ;
+                            }).collect(Collectors.toList());
+
+                            Log.d(TAG, "loadCart: orderByDate size: " + orderByDate.size());
+
+
+                            // create cart object
+                            currentCart = new Cart(countCart, time ,orderByDate );
+
+
+                            // init count processed
+                            countProcessed = 0;
+                            countCancel = 0;
+                            isModified = false;
+                            for (Order order: orderByDate){
+
+                                // validate if the orderModified is null
+                                try {
+
+                                    if (orderModified.getId() == order.getId()){
+                                        isModified = true;
+                                        Log.d(TAG, "loadCart: orderModified : " + orderModified.toString());
+                                    }
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    isModified = false;
+                                }
+
+                                // validate if the order is cancel
+                                if (order.getIsCancelled()){
+                                    countCancel++;
+                                    continue;
+                                }
+
+    //                            Log.d(TAG, "filter-condition: isProcess: " + order.getIsProcessed());
+                                // check if processed yet ?
+                                if (order.getIsProcessed()){
+                                    countProcessed ++;
+                                }
+                            }
+    //                        Log.d(TAG, "loadCart: orderByDate size: " +orderByDate.size());
+    //                        Log.d(TAG, "loadCart: countProcessed : " +countProcessed);
+
+
+                            // validate if the order is already processed.
+                            if ((countProcessed + countCancel) == orderByDate.size()){
+                                currentCart.setIsFinished(true);
+                            }
+
+                            countCart++;
+
+                            // validate if the order is changed
+                            if (isModified){
+
+                                Log.d(TAG, "isModified: currentCart : " + currentCart.toString());
+                                Log.d(TAG, "isModified: orderModified.getIsProcessed() : " + orderModified.getIsProcessed());
+                                Log.d(TAG, "isModified: orderModified.getIsCancelled() : " + orderModified.getIsCancelled());
+
+                                // add notification if the order is cancel
+                                //        id = in.readInt();
+                                //        date = in.readString();
+                                //        orderList = in.createTypedArrayList(Order.CREATOR);
+                                //        price = in.readDouble();
+                                //        isFinished = in.readByte() != 0;
+                                Intent intent = new Intent(orderModified.getIsProcessed()? PROCESS_NOTIFICATION : orderModified.getIsCancelled()? CANCEL_NOTIFICATION : null);
+//                                intent.putExtra("id", currentCart.getId());
+//                                intent.putExtra("date", currentCart.getDate());
+//                                intent.putExtra("orderList",(Serializable) currentCart.getOrderList());
+//                                intent.putExtra("price", currentCart.getPrice());
+//                                intent.putExtra("isFinished", currentCart.getIsFinished());
+
+                                intent.putExtra("client", client);
+                                intent.putExtra("cart", currentCart);
+                                sendBroadcast(intent);
+                                isModified = false;
+                            }
+
+
+
+                            // add cart to cartList
+                            cartList.add(currentCart);
+
+
+                            i += orderByDate.size() - 1;
+
+
+                        }
+
+
+                        // reset the list
+                        orderList.clear();
+    //                    Log.d(TAG, "loadCart: cardList size: " +cartList.size());
+
+
+                        boolean successAddCart = cartViewModel.addListCarts(cartList);
+                        Log.d(TAG, "loadCart: add successfully ? " +successAddCart);
+                        Log.d(TAG, "loadCart: cartViewModel size:  " +cartViewModel.getListCart().size());
+
+                    }
+        });
     }
+
+    // filter the string date
+    public String filterDate (String rawString){
+
+        // initialize the new string
+        char [] filterString = new char[rawString.length()];
+
+        int countColon = 0;
+
+        // iterate through each character in the string
+        for (int i = 0 ; i < rawString.length(); i++){
+
+
+            // check if the character is :
+            if(rawString.charAt(i) == ':'){
+                countColon++;
+                if (countColon == 2){
+                    filterString[i] = rawString.charAt(i);
+                    filterString[i+1] = rawString.charAt(i+1);
+                    filterString[i+2] = rawString.charAt(i+2);
+                    return String.valueOf(filterString).trim();
+                }
+
+            }
+
+            filterString[i] = rawString.charAt(i);
+        }
+
+        return null;
+    }
+
 
     public String getSelectedCategory() {
         return selectedCategory;

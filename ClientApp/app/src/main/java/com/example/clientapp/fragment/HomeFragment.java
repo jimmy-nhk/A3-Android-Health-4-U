@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.ItemViewModel;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.helper.adapter.CategoryHomeAdapter;
 import com.example.clientapp.helper.adapter.ItemRecyclerViewAdapter;
 import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
