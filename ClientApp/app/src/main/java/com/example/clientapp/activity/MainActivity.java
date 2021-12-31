@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private final String ORDER_COLLECTION = "orders";
     private final String TAG = MainActivity.class.getSimpleName();
     private FragmentTransaction transaction;
@@ -129,17 +129,15 @@ public class MainActivity extends AppCompatActivity{
     public void loadFragment(Fragment fragment) {
         try {
             FragmentManager fm = getSupportFragmentManager();
-
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
             for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
                 Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
                 fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
                 Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
-
             }
-        } catch (Exception e){
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // load fragment
@@ -147,14 +145,11 @@ public class MainActivity extends AppCompatActivity{
         transaction.replace(R.id.fragment_container, fragment);
 //        transaction.addToBackStack(null);
         transaction.commit();
-
-
     }
 
     public void loadFragmentWithBackStack(Fragment fragment){
         try {
             FragmentManager fm = getSupportFragmentManager();
-
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
             for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
@@ -163,8 +158,8 @@ public class MainActivity extends AppCompatActivity{
                 Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
 
             }
-        } catch (Exception e){
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         FragmentManager fm = getSupportFragmentManager();
 
@@ -195,7 +190,6 @@ public class MainActivity extends AppCompatActivity{
             super.onBackPressed();
 //        }
     }
-
 
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
@@ -278,7 +272,6 @@ public class MainActivity extends AppCompatActivity{
         }
 
     }
-
 
     private void registerService(){
         notificationReceiver = new NotificationReceiver();
