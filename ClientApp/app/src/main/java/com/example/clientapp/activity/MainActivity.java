@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putString("category", selectedCategory);
                             fragment.setArguments(bundle);
                             loadFragment(fragment);
-                        }catch (Exception e){
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                         return true;
@@ -280,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
         this.registerReceiver(notificationReceiver, intentFilter);
 
     }
+
     // filter the string date
     public String filterDate (String rawString){
 
