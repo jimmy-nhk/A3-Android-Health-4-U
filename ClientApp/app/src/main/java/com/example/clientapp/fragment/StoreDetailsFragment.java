@@ -78,7 +78,6 @@ public class StoreDetailsFragment extends Fragment {
 
         if (getArguments() != null) {
             vendorID = getArguments().getInt("vendorID");
-
         }
     }
 

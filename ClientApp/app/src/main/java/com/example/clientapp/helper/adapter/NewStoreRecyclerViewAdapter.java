@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +15,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
+import com.example.clientapp.activity.MainActivity;
+import com.example.clientapp.fragment.ProfileFragment;
+import com.example.clientapp.fragment.StoreDetailsFragment;
 import com.example.clientapp.model.Vendor;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -49,12 +53,31 @@ public class NewStoreRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vendor vendor = vendorList.get(position);
-        Log.d("onBindViewHolder", vendor.toString());
         holder.newStoreNameText.setText(vendor.getStoreName());
         holder.newStoreRatingBar.setRating(vendor.getRating());
 
         // Set image by URL
         setStoreImage(holder, vendor);
+
+        // On card click
+        holder.newStoreCard.setOnClickListener(v -> handleOnCardClick(vendor));
+    }
+
+    private void handleOnCardClick(Vendor vendor) {
+        // Go to itemList fragment
+        MainActivity mainActivity = (MainActivity) context;
+
+        // select the icon on nav bar
+        mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
+
+        // Redirect to Store detail fragment
+        Fragment fragment = new StoreDetailsFragment();
+        if (vendor != null) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("vendorID", vendor.getId());
+            fragment.setArguments(bundle);
+        }
+        mainActivity.loadFragmentWithBackStack(fragment);
     }
 
     private void setStoreImage(ViewHolder holder, Vendor vendor) {
@@ -93,12 +116,14 @@ public class NewStoreRecyclerViewAdapter extends
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private CardView newStoreCard;
         private ImageView newStoreImage;
         private TextView newStoreNameText;
         private RatingBar newStoreRatingBar;
 
         public ViewHolder(@NonNull View view) {
             super(view);
+            newStoreCard = view.findViewById(R.id.newStoreCard);
             newStoreImage = view.findViewById(R.id.newStoreImage);
             newStoreNameText = view.findViewById(R.id.newStoreNameText);
             newStoreRatingBar = view.findViewById(R.id.newStoreRatingBar);
