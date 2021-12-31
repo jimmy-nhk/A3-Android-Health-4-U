@@ -26,11 +26,12 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
     private ItemViewModel viewModel;
 //    final static String TAG = "CartItemRecyclerViewAdapter";
 
-    public CartItemRecyclerViewAdapter(Context context, List<Item> data ) {
+    public CartItemRecyclerViewAdapter(Context context, List<Item> data,  ItemViewModel viewModel) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
         this.context = context;
         this.itemList = data;
         this.mLayoutInflater = LayoutInflater.from(context);
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -67,7 +68,7 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
         itemList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, itemList.size());
-
+        viewModel.setMutableItemList(itemList);
     }
 
 }

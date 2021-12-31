@@ -148,26 +148,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         } catch (Exception ignored){
             ignored.printStackTrace();
         }
-
-//        intent = new Intent(context, BillingActivity.class);
-//        intent.putExtra("cart", cart);
-
-
-
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        pendingIntent = PendingIntent.getActivity(context, 100, intent, 0);
-//        builder.setContentTitle(aMessage)                            // required
-//                .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
-//                .setContentText(context.getString(R.string.app_name)) // required
-//                .setDefaults(Notification.DEFAULT_ALL)
-//                .setAutoCancel(true)
-//                .setContentIntent(pendingIntent)
-//                .setTicker(aMessage)
-//                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-//
-//
-//        Notification notification = builder.build();
-//        notifManager.notify(notifyId, notification);
     }
 
 }

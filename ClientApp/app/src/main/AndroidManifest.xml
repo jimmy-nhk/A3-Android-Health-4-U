@@ -10,14 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClientApp">
         <service
-            android:name=".helper.NotificationService"
+            android:name=".helper.broadcast.NotificationService"
+            android:label="@string/app_name"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name = "app.com.notifyme.NotificationService" />
+                <category android:name= "android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".activity.BillingActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activity.MainActivity" />
 
         <receiver
             android:name=".helper.broadcast.NotificationReceiver"
