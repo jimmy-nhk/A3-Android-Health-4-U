@@ -67,6 +67,11 @@ public class NewStoreRecyclerViewAdapter extends
         // Go to itemList fragment
         MainActivity mainActivity = (MainActivity) context;
 
+        // Change nav to itemNav
+//        mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
+//        mainActivity.setIsNewStoreClicked(true);
+//        Log.d(this.getClass().getSimpleName(), "getIsNewStoreClicked=" + mainActivity.getIsNewStoreClicked());
+
         // Redirect to Store detail fragment
         Fragment fragment = new StoreDetailsFragment();
         if (vendor != null) {
