@@ -67,9 +67,6 @@ public class NewStoreRecyclerViewAdapter extends
         // Go to itemList fragment
         MainActivity mainActivity = (MainActivity) context;
 
-        // select the icon on nav bar
-        mainActivity.getBottomNavigationView().setSelectedItemId(R.id.itemsNav);
-
         // Redirect to Store detail fragment
         Fragment fragment = new StoreDetailsFragment();
         if (vendor != null) {
