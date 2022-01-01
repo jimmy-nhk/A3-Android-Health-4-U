@@ -25,19 +25,36 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.fragment.ItemListFragment;
 import com.example.vendorapp.fragment.HomeFragment;
 import com.example.vendorapp.fragment.OrderListFragment;
 import com.example.vendorapp.fragment.ProfileFragment;
+import com.example.vendorapp.helper.NotificationService;
+import com.example.vendorapp.helper.OrderViewModel;
+import com.example.vendorapp.model.Order;
 import com.example.vendorapp.model.Vendor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
+    private static final String ORDER_COMING = "New order needs processing!";
     private Vendor vendor;
     private FragmentTransaction transaction;
+    private static final String ORDER_COLLECTION = "orders";
+    private List<Order> orderList;
+    private FirebaseFirestore fireStore;
+    private CollectionReference orderCollection;
+    private OrderViewModel orderViewModel;
 
     private BottomNavigationView bottomNavigationView;
     @Override
@@ -59,6 +76,8 @@ public class MainActivity extends AppCompatActivity{
         if (intent != null) {
             vendor = (Vendor) intent.getParcelableExtra("vendor");
         }
+
+        initService();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -75,6 +94,7 @@ public class MainActivity extends AppCompatActivity{
                         loadFragment(fragment);
                         return true;
                     case R.id.orderNav:
+                        Log.d(TAG, "vendor: " + vendor.toString());
                         fragment = new OrderListFragment(vendor.getId());
                         loadFragment(fragment);
                         return true;
@@ -131,6 +151,102 @@ public class MainActivity extends AppCompatActivity{
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void initService(){
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+
+        // init fireStore db
+        fireStore = FirebaseFirestore.getInstance();
+        orderCollection = fireStore.collection(ORDER_COLLECTION);
+
+        Log.d(TAG, "initService: vendorId: " + vendor.getId());
+
+        orderCollection.whereEqualTo("vendorID", vendor.getId())
+                .addSnapshotListener((value, error) -> {
+
+                    orderList = new ArrayList<>();
+                    orderViewModel.resetMutableOrderList();
+//                    Log.d(TAG, "orderCollectionLoadDb: listSize: " + value.size());
+
+                    // validate 0 case
+                    if (value.size() == 0){
+                        return;
+                    }
+
+                    Order orderModified = null;
+                    // Check if modified
+                    for (DocumentChange documentChange: value.getDocumentChanges()){
+                        if (documentChange.getType() == DocumentChange.Type.ADDED) {
+                            orderModified =  documentChange.getDocument().toObject(Order.class);
+
+                            //FIXME: Cannot receive noti here
+                            if (orderModified.getDate().equals(filterDateOrder(LocalDateTime.now().toString()))) {
+                                Log.d(TAG, "order changed: " + orderModified.toString());
+                                Intent intent = new Intent(this, NotificationService.class);
+                                intent.putExtra("message", ORDER_COMING);
+                                intent.putExtra("order", orderModified);
+                                intent.setPackage(this.getPackageName());
+                                startService(intent);
+                                break;
+                            }
+                        }
+                    }
+
+                    //reverse way (newest show first)
+                    for (int i = value.size() - 1 ; i >= 0; i--){
+
+                        Order order = value.getDocuments().get(i).toObject(Order.class);
+//                        Log.d(TAG, "orderCollectionLoadDb: order from db: " + order.toString());
+                        orderList.add(order);
+                    }
+
+                    orderList.sort((o1, o2) -> {
+                        // reverse sort
+                        if (o1.getId() < o2.getId()){
+                            return 1; // normal will return -1
+                        } else if (o1.getId() > o2.getId()){
+                            return -1; // reverse
+                        }
+                        return 0;
+                    });
+
+
+                    boolean successAddOrder = orderViewModel.addListOrders(orderList);
+                    Log.d(TAG, "loadCart: add successfully ? " + successAddOrder);
+                    Log.d(TAG, "loadCart: cartViewModel size:  " +orderViewModel.getListOrder().size());
+
+
+                });
+    }
+
+
+    // filter the string date
+    public String filterDateOrder (String rawString){
+
+        // initialize the new string
+        char [] filterString = new char[rawString.length()];
+
+
+        // iterate through each character in the string
+        for (int i = 0 ; i < rawString.length(); i++){
+
+            // check if the character is T then replace it with T
+            if (rawString.charAt(i) == 'T'){
+                filterString[i] = ' ';
+                continue;
+            }
+
+            // check if the character is :
+            if(rawString.charAt(i) == '.'){
+                Log.d(TAG, "time: " +String.valueOf(filterString).trim() );
+                return String.valueOf(filterString).trim();
+            }
+
+            filterString[i] = rawString.charAt(i);
+        }
+
+        return null;
     }
 
     // add item on click

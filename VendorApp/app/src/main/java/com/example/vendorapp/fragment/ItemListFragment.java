@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.helper.ItemRecyclerViewAdapter;
+import com.example.vendorapp.helper.adapter.ItemRecyclerViewAdapter;
 import com.example.vendorapp.model.Item;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;

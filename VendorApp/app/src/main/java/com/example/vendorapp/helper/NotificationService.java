@@ -1,4 +1,5 @@
-package com.example.clientapp.helper.broadcast;
+package com.example.vendorapp.helper;
+
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,11 +15,11 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.clientapp.R;
-import com.example.clientapp.activity.BillingActivity;
-import com.example.clientapp.activity.MainActivity;
-import com.example.clientapp.model.Cart;
-import com.example.clientapp.model.Client;
+import com.example.vendorapp.R;
+import com.example.vendorapp.activity.OrderDetailActivity;
+import com.example.vendorapp.model.Order;
+import com.example.vendorapp.model.Vendor;
+
 
 public class NotificationService extends Service {
 
@@ -41,8 +42,6 @@ public class NotificationService extends Service {
 
         return START_STICKY;
     }
-
-    
 
 
     @Override
@@ -95,23 +94,23 @@ public class NotificationService extends Service {
         }
         builder = new NotificationCompat.Builder(this, id);
 //        MainActivity mainActivity = (MainActivity) this.this;
-        intent = new Intent(this, BillingActivity.class);
+        intent = new Intent(this, OrderDetailActivity.class);
 
         Log.d(this.getClass().getSimpleName(), "Hello noti intent: ");
         try {
 
-            Cart cart1 = intentView.getParcelableExtra("cart");
-            Log.d(this.getClass().getSimpleName(), "Cart1 in noti intent: " + cart1.toString());
+            Order order = intentView.getParcelableExtra("order");
+            Log.d(this.getClass().getSimpleName(), "Order in noti intent: " + order.toString());
 
-            intent.putExtra("cart", cart1);
+            intent.putExtra("order", order);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP  | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
 // Create the TaskStackBuilder and add the intent, which inflates the back stack
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addNextIntentWithParentStack(intent);
-            Client client = intentView.getParcelableExtra("client");
-            stackBuilder.editIntentAt(0).putExtra("client", client);
+            Vendor vendor = intentView.getParcelableExtra("vendor");
+            stackBuilder.editIntentAt(0).putExtra("vendor", vendor);
 
 // Get the PendingIntent containing the entire back stack
             pendingIntent =

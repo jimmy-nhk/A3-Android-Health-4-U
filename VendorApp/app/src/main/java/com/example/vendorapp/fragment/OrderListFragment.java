@@ -9,22 +9,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.helper.OrderRecyclerViewAdapter;
+import com.example.vendorapp.helper.OrderViewModel;
+import com.example.vendorapp.helper.adapter.OrderRecyclerViewAdapter;
 import com.example.vendorapp.model.Order;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,6 +81,7 @@ public class OrderListFragment extends Fragment {
     private CollectionReference orderCollection;
     private RecyclerView recyclerView;
     private OrderRecyclerViewAdapter mAdapter;
+    private OrderViewModel orderViewModel;
 
     public void initService(View view){
         // init fireStore db
@@ -91,50 +90,67 @@ public class OrderListFragment extends Fragment {
 
         Log.d(TAG, "initService: vendorId: " + vendorID);
 
-        orderCollection.whereEqualTo("vendorID", vendorID)
-                .addSnapshotListener((value, error) -> {
+        orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
+        orderViewModel.getSelectedListOrder().observe(getViewLifecycleOwner(), orders -> {
+            recyclerView = view.findViewById(R.id.recycler_view);
 
-                    orderList = new ArrayList<>();
-
-//                    Log.d(TAG, "orderCollectionLoadDb: listSize: " + value.size());
-
-                    // validate 0 case
-                    if (value.size() == 0){
-                        return;
-                    }
-
-                    //reverse way (newest show first)
-                    for (int i = value.size() - 1 ; i >= 0; i--){
-
-                        Order order = value.getDocuments().get(i).toObject(Order.class);
-//                        Log.d(TAG, "orderCollectionLoadDb: order from db: " + order.toString());
-                        orderList.add(order);
-                    }
-
-                    orderList.sort((o1, o2) -> {
-                        // reverse sort
-                        if (o1.getId() < o2.getId()){
-                            return 1; // normal will return -1
-                        } else if (o1.getId() > o2.getId()){
-                            return -1; // reverse
-                        }
-                        return 0;
-                    });
-
-                    recyclerView = view.findViewById(R.id.recycler_view);
-
-                    mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orderList);
+            mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orders);
 
 
-                    // linear styles
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setNestedScrollingEnabled(true);
-                    recyclerView.setAdapter(mAdapter);
+            // linear styles
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setNestedScrollingEnabled(true);
+            recyclerView.setAdapter(mAdapter);
 
-                });
+        });
+
+//        orderCollection.whereEqualTo("vendorID", vendorID)
+//                .addSnapshotListener((value, error) -> {
+//
+//                    orderList = new ArrayList<>();
+//
+////                    Log.d(TAG, "orderCollectionLoadDb: listSize: " + value.size());
+//
+//                    // validate 0 case
+//                    if (value.size() == 0){
+//                        return;
+//                    }
+//
+//                    //reverse way (newest show first)
+//                    for (int i = value.size() - 1 ; i >= 0; i--){
+//
+//                        Order order = value.getDocuments().get(i).toObject(Order.class);
+////                        Log.d(TAG, "orderCollectionLoadDb: order from db: " + order.toString());
+//                        orderList.add(order);
+//                    }
+//
+//                    orderList.sort((o1, o2) -> {
+//                        // reverse sort
+//                        if (o1.getId() < o2.getId()){
+//                            return 1; // normal will return -1
+//                        } else if (o1.getId() > o2.getId()){
+//                            return -1; // reverse
+//                        }
+//                        return 0;
+//                    });
+//
+//                    recyclerView = view.findViewById(R.id.recycler_view);
+//
+//                    mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orderList);
+//
+//
+//                    // linear styles
+//                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//                    recyclerView.setLayoutManager(linearLayoutManager);
+//                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+//                    recyclerView.setNestedScrollingEnabled(true);
+//                    recyclerView.setAdapter(mAdapter);
+//
+//                });
     }
 
     @Override

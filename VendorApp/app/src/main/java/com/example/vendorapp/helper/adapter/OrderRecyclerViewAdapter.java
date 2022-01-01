@@ -1,4 +1,4 @@
-package com.example.vendorapp.helper;
+package com.example.vendorapp.helper.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -175,7 +175,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     @Override
     public int getItemCount() {
 
-        Log.d(TAG, "OrderRecyclerViewAdapter: getItemCount: " + orderList.size());
+//        Log.d(TAG, "OrderRecyclerViewAdapter: getItemCount: " + orderList.size());
         return orderList.size();
     }
 }

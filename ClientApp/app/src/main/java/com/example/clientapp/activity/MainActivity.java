@@ -268,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 i += occurrences - 1;
 
             }
+            orderSize++;
             order = new Order(orderSize, filterDateOrder(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
 
             Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
@@ -292,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
             itemOrder = new ArrayList<>();
             quantity = new ArrayList<>();
             price = 0;
-            orderSize++;
         }
 
     }
@@ -491,27 +491,23 @@ public class MainActivity extends AppCompatActivity {
                             //        orderList = in.createTypedArrayList(Order.CREATOR);
                             //        price = in.readDouble();
                             //        isFinished = in.readByte() != 0;
-                            Intent intent = new Intent(orderModified.getIsProcessed()? PROCESS_NOTIFICATION : orderModified.getIsCancelled()? CANCEL_NOTIFICATION : null);
-
-                            intent.putExtra("client", client);
-                            intent.putExtra("cart", currentCart);
-                            sendBroadcast(intent);
-
-                            /** Using service*/
-//                            Intent intent = new Intent(this, NotificationService.class);
-
+//                            Intent intent = new Intent(orderModified.getIsProcessed()? PROCESS_NOTIFICATION : orderModified.getIsCancelled()? CANCEL_NOTIFICATION : null);
+//
 //                            intent.putExtra("client", client);
 //                            intent.putExtra("cart", currentCart);
 //                            sendBroadcast(intent);
-//                            intent.setPackage(this.getPackageName());
-//                            startService( intent) ;
+
+                            /** Using service*/
+                            if (orderModified.getIsProcessed() || orderModified.getIsCancelled()){
+                                Intent intent = new Intent(this, NotificationService.class);
+                                intent.putExtra("message",orderModified.getIsProcessed()? PROCESS_NOTIFICATION : CANCEL_NOTIFICATION  );
+                                intent.putExtra("client", client);
+                                intent.putExtra("cart", currentCart);
+                                intent.setPackage(this.getPackageName());
+                                startService( intent) ;
+                            }
 
 
-//                            Intent intent = new Intent(this, AlarmReceiver.class);
-//                            intent.putExtra("NotificationText", "some text");
-//                            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                            AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-//                            alarmManager.set(AlarmManager.RTC_WAKEUP, '5', pendingIntent);
                             isModified = false;
                         }
 
