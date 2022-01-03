@@ -4,11 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5sp"
-    android:layout_marginTop="5sp"
-    android:layout_marginRight="5sp"
-    android:layout_marginBottom="5sp"
-    app:cardBackgroundColor="#FAF5F5">
+    android:layout_margin="5sp"
+    app:cardBackgroundColor="#3F4f83cc"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,7 +19,8 @@
             android:layout_marginStart="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="Item Image"/>
 
         <TextView
             android:id="@+id/itemName"
