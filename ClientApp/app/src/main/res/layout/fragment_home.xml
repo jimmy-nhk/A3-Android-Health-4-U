@@ -18,6 +18,12 @@
                 android:text="Profile"
                 android:onClick="onProfileBtnClick"/>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chat"
+                android:onClick="onChatBtnClick"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCategoryHome"
                 android:backgroundTint="@color/primary_blue"

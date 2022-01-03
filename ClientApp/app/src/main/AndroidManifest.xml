@@ -9,15 +9,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClientApp">
+        <activity
+            android:name=".chat.MessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".chat.MainChatActivity"
+            android:exported="false" />
+
         <service
             android:name=".helper.broadcast.NotificationService"
-            android:label="@string/app_name"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
-                <action
-                    android:name = "app.com.notifyme.NotificationService" />
-                <category android:name= "android.intent.category.DEFAULT" />
+                <action android:name="app.com.notifyme.NotificationService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 
