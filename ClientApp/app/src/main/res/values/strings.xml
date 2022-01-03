@@ -95,4 +95,5 @@
     <string name="sign_up_underline"><u>Sign Up</u></string>
     <string name="store_image">Store Image</string>
     <string name="item_image">Item Image</string>
+    <string name="add_icon">Add Icon</string>
 </resources>
