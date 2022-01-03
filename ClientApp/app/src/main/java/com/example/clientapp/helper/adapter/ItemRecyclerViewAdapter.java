@@ -1,14 +1,19 @@
 package com.example.clientapp.helper.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.clientapp.R;
 import androidx.annotation.NonNull;
@@ -72,18 +77,19 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 //        Log.d("ItemRecyclerViewAdapter" , "render");
         Item item =  itemList.get(position);
 
-        holder.name.setText(("Name: " + item.getName() + " id: " + item.getId()));
-        holder.price.setText(("Price: " + item.getPrice() + "$"));
-        holder.vendorName.setText(("VendorID: " + item.getVendorID() + ""));
+        holder.name.setText((item.getName()));
+        holder.price.setText((item.getPrice() + "$"));
+        holder.vendorName.setText(("VendorID: " + item.getVendorID()));
         holder.category.setText(("Category: " + item.getCategory()));
 
         // init final position for on click
         holder.addBtn.setOnClickListener(v -> {
             viewModel.addItem(item);
+            Toast.makeText(v.getContext(), "Added item" + item.getName() + "to card", Toast.LENGTH_SHORT).show();
         });
 
         //TODO: Image and Button
-        holder.image.setImageResource(R.drawable.avatar_foreground);
+        holder.image.setImageResource(R.drawable.food);
     }
 
     @Override
@@ -98,8 +104,10 @@ class ItemViewHolder extends RecyclerView.ViewHolder {
     TextView vendorName;
     TextView price;
     TextView category;
-    Button addBtn;
+//    Button addBtn;
+    LinearLayout addBtn;
 
+    @SuppressLint("ClickableViewAccessibility")
     public ItemViewHolder(@NonNull View itemView) {
         super(itemView);
 
