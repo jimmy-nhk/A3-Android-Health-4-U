@@ -16,6 +16,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.vendorapp.R;
+import com.example.vendorapp.activity.MainActivity;
 import com.example.vendorapp.activity.OrderDetailActivity;
 import com.example.vendorapp.model.Order;
 import com.example.vendorapp.model.Vendor;
@@ -89,11 +90,10 @@ public class NotificationService extends Service {
         if (mChannel == null) {
             mChannel = new NotificationChannel(id, title, importance);
             mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setVibrationPattern(new long[]{100, 200, 300});
             notifManager.createNotificationChannel(mChannel);
         }
         builder = new NotificationCompat.Builder(this, id);
-//        MainActivity mainActivity = (MainActivity) this.this;
         intent = new Intent(this, OrderDetailActivity.class);
 
         Log.d(this.getClass().getSimpleName(), "Hello noti intent: ");
@@ -103,13 +103,14 @@ public class NotificationService extends Service {
             Log.d(this.getClass().getSimpleName(), "Order in noti intent: " + order.toString());
 
             intent.putExtra("order", order);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP  | Intent.FLAG_ACTIVITY_NEW_TASK);
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP  | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
 // Create the TaskStackBuilder and add the intent, which inflates the back stack
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addNextIntentWithParentStack(intent);
             Vendor vendor = intentView.getParcelableExtra("vendor");
+            Log.d(this.getClass().getSimpleName(), "Vendor in noti intent: " + vendor.toString());
+
             stackBuilder.editIntentAt(0).putExtra("vendor", vendor);
 
 // Get the PendingIntent containing the entire back stack
@@ -123,7 +124,7 @@ public class NotificationService extends Service {
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
                     .setTicker(aMessage)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    .setVibrate(new long[]{100, 200, 300});
 
 
             Notification notification = builder.build();

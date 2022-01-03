@@ -45,7 +45,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String ORDER_COMING = "New order needs processing!";
     private Vendor vendor;
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity{
     private OrderViewModel orderViewModel;
 
     private BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,28 +81,33 @@ public class MainActivity extends AppCompatActivity{
         initService();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
-                Fragment fragment;
+        Fragment fragment;
 
-                switch (item.getItemId()) {
-                    case R.id.homePageNav:
-                        fragment = new HomeFragment();
-                        loadFragment(fragment);
-                        return true;
-                    case R.id.itemsNav:
-                        fragment = new ItemListFragment();
-                        loadFragment(fragment);
-                        return true;
-                    case R.id.orderNav:
-                        Log.d(TAG, "vendor: " + vendor.toString());
-                        fragment = new OrderListFragment(vendor.getId());
-                        loadFragment(fragment);
-                        return true;
+        switch (item.getItemId()) {
+            case R.id.homePageNav:
+                fragment = new HomeFragment();
+                loadFragment(fragment);
+                return true;
+            case R.id.itemsNav:
+                fragment = new ItemListFragment();
+                loadFragment(fragment);
+                return true;
+            case R.id.orderNav:
+                Log.d(TAG, "vendor: " + vendor.toString());
+                fragment = new OrderListFragment(vendor.getId());
+                loadFragment(fragment);
+                return true;
 
-                }
-                return false;
-            };
+        }
+        return false;
+    };
 
     public void loadFragment(Fragment fragment) {
         try {
@@ -109,13 +115,13 @@ public class MainActivity extends AppCompatActivity{
 
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
-            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+            for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
                 Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
-                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStackImmediate(null, POP_BACK_STACK_INCLUSIVE);
                 Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
 
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -128,19 +134,19 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    public void loadFragmentWithBackStack(Fragment fragment){
+    public void loadFragmentWithBackStack(Fragment fragment) {
         try {
             FragmentManager fm = getSupportFragmentManager();
 
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
-            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+            for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
                 Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
-                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStackImmediate(null, POP_BACK_STACK_INCLUSIVE);
                 Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
 
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
         FragmentManager fm = getSupportFragmentManager();
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
-    public void initService(){
+    public void initService() {
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
         // init fireStore db
@@ -170,22 +176,28 @@ public class MainActivity extends AppCompatActivity{
 //                    Log.d(TAG, "orderCollectionLoadDb: listSize: " + value.size());
 
                     // validate 0 case
-                    if (value.size() == 0){
+                    if (value.size() == 0) {
                         return;
                     }
 
                     Order orderModified = null;
+                    String currentTime = filterDateOrder(LocalDateTime.now().toString()).substring(0, filterDateOrder(LocalDateTime.now().toString()).length() - 3);
+                    Log.d(TAG, "current time changed: " + currentTime);
+
                     // Check if modified
-                    for (DocumentChange documentChange: value.getDocumentChanges()){
+                    for (DocumentChange documentChange : value.getDocumentChanges()) {
                         if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                            orderModified =  documentChange.getDocument().toObject(Order.class);
+                            orderModified = documentChange.getDocument().toObject(Order.class);
 
                             //FIXME: Cannot receive noti here
-                            if (orderModified.getDate().equals(filterDateOrder(LocalDateTime.now().toString()))) {
+                            Log.d(TAG, "order time: " + orderModified.getDate());
+
+                            if (orderModified.getDate().substring(0, orderModified.getDate().length() - 3).equals(currentTime)) {
                                 Log.d(TAG, "order changed: " + orderModified.toString());
                                 Intent intent = new Intent(this, NotificationService.class);
                                 intent.putExtra("message", ORDER_COMING);
                                 intent.putExtra("order", orderModified);
+                                intent.putExtra("vendor",vendor);
                                 intent.setPackage(this.getPackageName());
                                 startService(intent);
                                 break;
@@ -194,7 +206,7 @@ public class MainActivity extends AppCompatActivity{
                     }
 
                     //reverse way (newest show first)
-                    for (int i = value.size() - 1 ; i >= 0; i--){
+                    for (int i = value.size() - 1; i >= 0; i--) {
 
                         Order order = value.getDocuments().get(i).toObject(Order.class);
 //                        Log.d(TAG, "orderCollectionLoadDb: order from db: " + order.toString());
@@ -203,9 +215,9 @@ public class MainActivity extends AppCompatActivity{
 
                     orderList.sort((o1, o2) -> {
                         // reverse sort
-                        if (o1.getId() < o2.getId()){
+                        if (o1.getId() < o2.getId()) {
                             return 1; // normal will return -1
-                        } else if (o1.getId() > o2.getId()){
+                        } else if (o1.getId() > o2.getId()) {
                             return -1; // reverse
                         }
                         return 0;
@@ -214,7 +226,7 @@ public class MainActivity extends AppCompatActivity{
 
                     boolean successAddOrder = orderViewModel.addListOrders(orderList);
                     Log.d(TAG, "loadCart: add successfully ? " + successAddOrder);
-                    Log.d(TAG, "loadCart: cartViewModel size:  " +orderViewModel.getListOrder().size());
+                    Log.d(TAG, "loadCart: cartViewModel size:  " + orderViewModel.getListOrder().size());
 
 
                 });
@@ -222,24 +234,24 @@ public class MainActivity extends AppCompatActivity{
 
 
     // filter the string date
-    public String filterDateOrder (String rawString){
+    public String filterDateOrder(String rawString) {
 
         // initialize the new string
-        char [] filterString = new char[rawString.length()];
+        char[] filterString = new char[rawString.length()];
 
 
         // iterate through each character in the string
-        for (int i = 0 ; i < rawString.length(); i++){
+        for (int i = 0; i < rawString.length(); i++) {
 
             // check if the character is T then replace it with T
-            if (rawString.charAt(i) == 'T'){
+            if (rawString.charAt(i) == 'T') {
                 filterString[i] = ' ';
                 continue;
             }
 
             // check if the character is :
-            if(rawString.charAt(i) == '.'){
-                Log.d(TAG, "time: " +String.valueOf(filterString).trim() );
+            if (rawString.charAt(i) == '.') {
+                Log.d(TAG, "time: " + String.valueOf(filterString).trim());
                 return String.valueOf(filterString).trim();
             }
 
@@ -255,7 +267,7 @@ public class MainActivity extends AppCompatActivity{
         try {
             Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
             startActivityForResult(intent, R.integer.intentMainAdditem);
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Cannot change to Add Item Activity");
         }
     }
@@ -269,6 +281,7 @@ public class MainActivity extends AppCompatActivity{
         }
         loadFragmentWithBackStack(fragment);
     }
+
     // In your activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

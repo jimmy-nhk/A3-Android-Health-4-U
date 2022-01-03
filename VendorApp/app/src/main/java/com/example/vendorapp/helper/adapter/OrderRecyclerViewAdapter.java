@@ -2,6 +2,7 @@ package com.example.vendorapp.helper.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
+import com.example.vendorapp.activity.OrderDetailActivity;
 import com.example.vendorapp.model.Order;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -55,15 +57,30 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
     @NonNull
     @Override
-    public OrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         //TODO: switch the xml file
         View recyclerViewOrder = mLayoutInflater.inflate(R.layout.order_cart_view, parent, false);
 
 //        Log.d(TAG, "onCreateViewHolder: ");
 
+        recyclerViewOrder.setOnClickListener(v -> handleRecyclerOrderClick((RecyclerView) parent, v)
+
+        );
+
         return new OrderViewHolder(recyclerViewOrder);
 
+    }
+
+    // pass to order details intent
+    private void handleRecyclerOrderClick(RecyclerView parent, View v) {
+
+        int position = parent.getChildLayoutPosition(v);
+        Order order = orderList.get(position);
+
+        Intent intent = new Intent(context, OrderDetailActivity.class);
+        intent.putExtra("order", order);
+        context.startActivity(intent);
     }
 
 

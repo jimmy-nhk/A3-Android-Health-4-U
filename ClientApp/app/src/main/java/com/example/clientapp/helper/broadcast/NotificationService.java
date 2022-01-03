@@ -90,7 +90,7 @@ public class NotificationService extends Service {
         if (mChannel == null) {
             mChannel = new NotificationChannel(id, title, importance);
             mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setVibrationPattern(new long[]{100, 200, 300});
             notifManager.createNotificationChannel(mChannel);
         }
         builder = new NotificationCompat.Builder(this, id);
@@ -124,7 +124,7 @@ public class NotificationService extends Service {
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
                     .setTicker(aMessage)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    .setVibrate(new long[]{100, 200, 300});
 
 
             Notification notification = builder.build();

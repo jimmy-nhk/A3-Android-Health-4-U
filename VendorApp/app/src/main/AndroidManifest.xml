@@ -15,12 +15,21 @@
         android:theme="@style/Theme.VendorApp">
         <activity
             android:name=".activity.OrderDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activity.MainActivity"
+            />
 
         <service
             android:name=".helper.NotificationService"
+            android:label="@string/app_name"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action
+                    android:name = "app.com.notifyme.NotificationService" />
+                <category android:name= "android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".activity.AddItemActivity"
