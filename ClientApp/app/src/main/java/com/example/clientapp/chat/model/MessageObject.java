@@ -10,6 +10,9 @@ public class MessageObject {
     private String receiver;
     private String message;
 
+    public MessageObject() {
+    }
+
     public MessageObject(int id, String sender, String receiver, String message) {
         this.id = id;
         this.sender = sender;

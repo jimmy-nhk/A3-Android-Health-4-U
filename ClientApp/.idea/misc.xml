@@ -26,6 +26,8 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4101123595505618" />
         <entry key="app/src/main/res/drawable/avatar_background.xml" value="0.2755208333333333" />
         <entry key="app/src/main/res/drawable/avatar_foreground.xml" value="0.2755208333333333" />
+        <entry key="app/src/main/res/drawable/background_left.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_right.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/bottom_nav_tab_background.xml" value="0.4101123595505618" />
         <entry key="app/src/main/res/drawable/cart.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/cart_with_num.xml" value="0.17916666666666667" />
@@ -41,6 +43,8 @@
         <entry key="app/src/main/res/layout/activity_message.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.15729166666666666" />
         <entry key="app/src/main/res/layout/cart_with_num.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/chat_item_left.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/chat_item_right.xml" value="0.1" />
         <entry key="app/src/main/res/layout/feed_update_count.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_billing.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.1" />

@@ -1,14 +1,18 @@
 package com.example.clientapp.chat;
 
 import com.example.clientapp.R;
+import com.example.clientapp.chat.adapter.MessageAdapter;
 import com.example.clientapp.chat.model.MessageObject;
 import com.example.clientapp.model.Client;
+import com.example.clientapp.model.Order;
 import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +23,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,6 +49,11 @@ public class MessageActivity extends AppCompatActivity {
     private final String MESSAGE_COLLECTION = "messages";
     private final String TAG = "MessageActivity";
 
+    MessageAdapter messageAdapter;
+    List<MessageObject> messageObjectList;
+
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +75,12 @@ public class MessageActivity extends AppCompatActivity {
         btn_send = findViewById(R.id.btn_send);
         text_send = findViewById(R.id.text_send);
 
+        recyclerView = findViewById(R.id.recycler_view_message);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,14 +97,7 @@ public class MessageActivity extends AppCompatActivity {
         fireStore = FirebaseFirestore.getInstance();
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
 
-        // load items
-        messageCollection.addSnapshotListener((value, error) -> {
 
-            messageSize = value.size();
-
-
-
-        });
 
         intent = getIntent();
         currentVendor = intent.getParcelableExtra("vendor");
@@ -94,6 +105,8 @@ public class MessageActivity extends AppCompatActivity {
 
         username.setText("username: " + currentVendor.getUsername());
         profile_image.setImageResource(R.mipmap.ic_launcher);
+        readMessages();
+
         //FIXME: fix image
 //        Glide.with(mContext).load(vendor.getImage()).into(holder.profile_image);
 
@@ -115,5 +128,39 @@ public class MessageActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add Message to FireStore: " + messageObject.toString()));
 
+    }
+
+    // read message
+    private void readMessages(){
+
+
+        // load items
+        messageCollection.addSnapshotListener((value, error) -> {
+            messageObjectList = new ArrayList<>();
+
+            messageSize = value.size();
+
+            MessageObject messageObject;
+            //scan the value from db
+            for (int i = value.size() - 1 ; i >= 0; i--){
+                messageObject = value.getDocuments().get(i).toObject(MessageObject.class);
+
+
+                //validate the condition to add the message to the list
+                if (messageObject.getReceiver().equals(currentClient.getUsername()) && messageObject.getSender().equals(currentVendor.getUsername()) ||
+                    messageObject.getReceiver().equals(currentVendor.getUsername()) && messageObject.getSender().equals(currentClient.getUsername())){
+
+                    // add message
+                    messageObjectList.add(messageObject);
+                }
+
+
+            }
+            // set reverse the collection
+            Collections.reverse(messageObjectList);
+            messageAdapter = new MessageAdapter(MessageActivity.this, messageObjectList, currentClient , currentVendor);
+            recyclerView.setAdapter(messageAdapter);
+
+        });
     }
 }
