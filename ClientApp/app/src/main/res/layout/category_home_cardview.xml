@@ -4,7 +4,7 @@
     android:layout_width="120dp"
     android:layout_height="170dp"
     android:layout_marginHorizontal="2sp"
-    android:backgroundTint="@color/primary_blue_light"
+    android:backgroundTint="@color/primary_blue"
     android:orientation="vertical"
     android:clickable="true">
 

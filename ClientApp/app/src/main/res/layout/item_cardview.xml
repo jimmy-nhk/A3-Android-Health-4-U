@@ -3,77 +3,96 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="5sp"
-    android:layout_marginTop="5sp"
-    android:layout_marginRight="5sp"
-    android:layout_marginBottom="5sp"
-    app:cardBackgroundColor="#FAF5F5">
+    android:layout_height="140dp"
+    android:layout_margin="5sp"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/primary_blue_light_transparent"
+    app:cardElevation="0dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp">
 
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            app:cardCornerRadius="10dp"
+            android:layout_marginStart="10dp"
+            android:elevation="0dp"
+            android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/itemName"
-            android:layout_width="120dp"
-            android:layout_height="19dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:text="Item name"
-            app:layout_constraintStart_toEndOf="@+id/itemImage"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/itemImage"
+                android:layout_width="94dp"
+                android:layout_height="94dp"
+                android:scaleType="fitXY"
+                android:layout_gravity="center"
+                android:contentDescription="@string/item_image"
+                android:elevation="0dp"
+                android:src="@drawable/food" />
+        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/itemVendorName"
-            android:layout_width="115dp"
-            android:layout_height="23dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:text="Vendor Name"
-            app:layout_constraintStart_toEndOf="@+id/itemImage"
-            app:layout_constraintTop_toBottomOf="@+id/itemName" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp">
+            <TextView
+                android:id="@+id/itemName"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/primary_blue"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Item name"/>
 
-        <TextView
-            android:id="@+id/itemCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:text="Food Category"
-            app:layout_constraintStart_toEndOf="@+id/itemImage"
-            app:layout_constraintTop_toBottomOf="@+id/itemVendorName" />
+            <TextView
+                android:id="@+id/itemVendorName"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:text="Vendor Name"/>
 
-        <Button
-            android:id="@+id/addItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="4dp"
-            android:backgroundTint="@color/secondary_teal"
-            android:text="Add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/itemCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="4dp"
+                android:text="Food Category"/>
 
-        <TextView
-            android:id="@+id/itemPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:text="10$"
-            app:layout_constraintBottom_toTopOf="@+id/addItem"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/addItem" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/itemPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:text="10$"/>
 
+                <LinearLayout
+                    android:id="@+id/addItem"
+                    android:layout_width="60dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bordered_container"
+                    android:backgroundTint="@color/primary_blue"
+                    android:clickable="true">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add"
+                        android:contentDescription="@string/add_icon"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

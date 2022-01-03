@@ -15,6 +15,7 @@
     <color name="primary_blue">#01579b</color>
     <color name="primary_blue_light">#4f83cc</color>
     <color name="primary_blue_dark">#002f6c</color>
+    <color name="primary_blue_light_transparent">#1F4f83cc</color>
     <color name="secondary_teal">#26a69a</color>
     <color name="secondary_teal_dark">#64d8cb</color>
     <color name="secondary_teal_light">#00766c</color>
