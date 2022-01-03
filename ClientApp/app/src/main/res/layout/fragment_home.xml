@@ -6,55 +6,124 @@
     tools:context=".fragment.HomeFragment">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
-                android:onClick="onProfileBtnClick"/>
+                android:onClick="onProfileBtnClick"
+                android:text="Profile" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:layout_marginStart="12dp"
+                    android:text="Hydration Reminder"
+                    android:textColor="@color/primary_blue_light"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="Drinking Notification" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/hydrationSwitch"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/isDrinking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:layout_width="0sp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:text="Interal" />
+
+                        <TextView
+                            android:id="@+id/hydrationInterval"
+                            android:layout_width="0sp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="1 minutes"
+                            android:gravity="end"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCategoryHome"
-                android:backgroundTint="@color/primary_blue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Stores"
-                android:textSize="30dp"
+                android:layout_marginVertical="20dp"
                 android:layout_marginStart="12dp"
-                android:textStyle="bold"
+                android:text="New Stores"
                 android:textColor="@color/primary_blue_light"
-                android:layout_marginVertical="20dp"/>
+                android:textSize="30dp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerNewStores"
-                android:backgroundTint="@color/primary_blue"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Food"
-                android:textSize="30dp"
+                android:layout_marginVertical="20dp"
                 android:layout_marginStart="12dp"
-                android:textStyle="bold"
+                android:text="New Food"
                 android:textColor="@color/primary_blue_light"
-                android:layout_marginVertical="20dp"/>
+                android:textSize="30dp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerNewItems"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="12dp"/>
+                android:layout_marginHorizontal="12dp" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

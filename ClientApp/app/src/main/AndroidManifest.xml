@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.clientapp">
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,11 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClientApp">
+
         <service
             android:name=".helper.broadcast.NotificationService"
             android:label="@string/app_name"
             android:enabled="true"
             android:exported="true">
+
             <intent-filter>
                 <action
                     android:name = "app.com.notifyme.NotificationService" />
@@ -25,12 +29,12 @@
             android:name=".activity.BillingActivity"
             android:exported="false"
             android:parentActivityName=".activity.MainActivity" />
-
         <receiver
             android:name=".helper.broadcast.NotificationReceiver"
             android:enabled="true"
             android:exported="true" />
-
+        <receiver android:name=".helper.broadcast.HydrationReminderReceiver" >
+        </receiver>
         <activity
             android:name=".activity.SignUpStep2Activity"
             android:exported="false" />
