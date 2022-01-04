@@ -57,7 +57,7 @@ public class NewStoreRecyclerViewAdapter extends
         holder.newStoreRatingBar.setRating(vendor.getRating());
 
         // Set image by URL
-        setStoreImage(holder, vendor);
+        setStoreImage(holder, vendor.getImage());
 
         // On card click
         holder.newStoreCard.setOnClickListener(v -> handleOnCardClick(vendor));
@@ -82,14 +82,12 @@ public class NewStoreRecyclerViewAdapter extends
         mainActivity.loadFragmentWithBackStack(fragment);
     }
 
-    private void setStoreImage(ViewHolder holder, Vendor vendor) {
+    private void setStoreImage(ViewHolder holder, String imageUrl) {
         try {
-//            if (vendor.getImage() == null) return;
-
-            if (vendor.getImage().length() > 0) {
-                Log.d("setStoreImage",vendor.getImage());
+            if (imageUrl.length() > 0) {
+//                Log.d("setStoreImage", imageUrl);
                 StorageReference mImageRef =
-                        FirebaseStorage.getInstance().getReference(vendor.getImage());
+                        FirebaseStorage.getInstance().getReference(imageUrl);
 
                 final long ONE_MEGABYTE = 1024 * 1024;
                 mImageRef.getBytes(ONE_MEGABYTE)

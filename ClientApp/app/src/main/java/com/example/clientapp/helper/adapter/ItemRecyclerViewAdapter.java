@@ -1,8 +1,12 @@
 package com.example.clientapp.helper.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,6 +28,9 @@ import com.example.clientapp.activity.MainActivity;
 import com.example.clientapp.fragment.ItemDetailsFragment;
 import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
+import com.example.clientapp.model.Vendor;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -81,6 +88,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         holder.price.setText((item.getPrice() + "$"));
         holder.vendorName.setText(("VendorID: " + item.getVendorID()));
         holder.category.setText(("Category: " + item.getCategory()));
+        setItemImage(holder, item.getImage());
 
         // init final position for on click
         holder.addBtn.setOnClickListener(v -> {
@@ -90,6 +98,31 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
         //TODO: Image and Button
         holder.image.setImageResource(R.drawable.food);
+    }
+
+    private void setItemImage(ItemViewHolder holder, String imageUrl) {
+        try {
+            if (imageUrl.length() > 0) {
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(imageUrl);
+
+                final long ONE_MEGABYTE = 1024 * 1024;
+                // Handle any errors
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            holder.image.setMinimumHeight(dm.heightPixels);
+                            holder.image.setMinimumWidth(dm.widthPixels);
+                            holder.image.setImageBitmap(bm);
+                        }).addOnFailureListener(Throwable::printStackTrace);
+            }
+        } catch (Exception e) {
+//            .setImageResource(R.drawable.bun); //Set something else
+            e.printStackTrace();
+        }
     }
 
     @Override
