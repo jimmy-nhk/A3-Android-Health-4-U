@@ -147,12 +147,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     public void onLogInBtnClick(View view) {
 //        email = emailText.getText().toString().trim();
 //        password = passwordText.getText().toString().trim();
+//        username= "";
 //        email = "afc.luan2508@gmail.com";
 //        password = "222222";
 //        username = "";
 
-        email = "afc.luan25081@gmail.com";
-        password = "222222";
+        email = "v4@gmail.com";
+        password = "111111";
         username = "";
 
         if (!email.contains("@")) {
@@ -227,7 +228,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void getFirebaseVendorByEmail(String email) {
 
-        Log.d(TAG, "getFirebaseVendorByEmail: " );
+        Log.d(TAG, "getFirebaseVendorByEmail: " + email);
         fireStore.collection("vendors")
                 .whereEqualTo("email", email)
                 .addSnapshotListener((value, e) -> {
@@ -236,6 +237,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                         return;
                     }
 
+                    Log.d(TAG, "value size: " + value.size());
                     if (value != null) {
                         DocumentSnapshot doc = value.getDocuments().get(0);
                         if (doc != null) {

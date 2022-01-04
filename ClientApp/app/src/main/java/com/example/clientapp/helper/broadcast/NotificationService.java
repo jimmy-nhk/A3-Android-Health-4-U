@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -128,7 +129,8 @@ public class NotificationService extends Service {
 
 
             Notification notification = builder.build();
-            notifManager.notify(notifyId, notification);
+            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
+            notifManager.notify(oneTimeID, notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();

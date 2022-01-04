@@ -9,19 +9,19 @@ import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.Map;
-
 public class Vendor implements Parcelable {
 
     private int id;
-    private String storeName="";
-    private String fullName="";
-    private String userName="";
-    private String email="";
-    private String phone="";
-    private String address="";
-    private double rating=0;
-    private int totalSale=0;
-    private String image="/vendors/food";
+    private String storeName;
+    private String fullName;
+    private String userName;
+    private String email;
+    private String phone;
+    private String address;
+    private double rating;
+    private int totalSale;
+    private String image;
+    private String status;
 
 
     public static final String VENDOR_ID = "id";
@@ -40,7 +40,21 @@ public class Vendor implements Parcelable {
 
     }
 
-    public Vendor(String storeName,String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image) {
+    public Vendor(int id, String storeName, String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image, String status) {
+        this.id = id;
+        this.storeName = storeName;
+        this.fullName = fullName;
+        this.userName = userName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.rating = rating;
+        this.totalSale = totalSale;
+        this.image = image;
+        this.status = status;
+    }
+
+    public Vendor(String storeName, String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image) {
         this.storeName = storeName;
         this.fullName = fullName;
         this.userName = userName;
@@ -75,14 +89,6 @@ public class Vendor implements Parcelable {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getUsername() {
-        return userName;
-    }
-
-    public void setUsername(String userName) {
-        this.userName = userName;
     }
 
     public String getEmail() {
@@ -133,6 +139,22 @@ public class Vendor implements Parcelable {
         this.image = image;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -147,6 +169,7 @@ public class Vendor implements Parcelable {
         dest.writeDouble(rating);
         dest.writeInt(totalSale);
         dest.writeString(image );
+        dest.writeString(status);
 
     }
 
@@ -159,9 +182,10 @@ public class Vendor implements Parcelable {
         userName = in.readString();
         phone = in.readString();
         address = in.readString();
-        rating=in.readDouble();
+        rating=in.readInt();
         totalSale=in.readInt();
         image = in.readString();
+        status = in.readString();
     }
 
 
@@ -197,6 +221,7 @@ public class Vendor implements Parcelable {
                 ", rating=" + rating +
                 ", totalSale=" + totalSale +
                 ", image='" + image + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 
@@ -212,10 +237,7 @@ public class Vendor implements Parcelable {
         result.put(VENDOR_RATING, rating);
         result.put(VENDOR_TOTALSALE, totalSale);
         result.put(VENDOR_IMAGE, image);
+        result.put("status", status);
         return result;
     }
 }
-
-
-
-

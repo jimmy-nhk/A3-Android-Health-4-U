@@ -34,9 +34,25 @@ public class Client implements Parcelable {
     private double height;
     private double bmi;
     private String image;
+    private String status;
 
     public Client() {
 
+    }
+
+    public Client(int id, String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image, String status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.dob = dob;
+        this.weight = weight;
+        this.height = height;
+        this.bmi = bmi;
+        this.image = image;
+        this.status = status;
     }
 
     public Client(String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image) {
@@ -72,6 +88,7 @@ public class Client implements Parcelable {
         height = in.readDouble();
         bmi = in.readDouble();
         image = in.readString();
+        status = in.readString();
 
         Log.d("Client", "parcelObject: " + this.toString());
     }
@@ -92,11 +109,11 @@ public class Client implements Parcelable {
         this.fullName = fullName;
     }
 
-    public String getUsername() {
+    public String getUserName() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUserName(String username) {
         this.username = username;
     }
 
@@ -164,6 +181,14 @@ public class Client implements Parcelable {
         this.image = image;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -178,6 +203,7 @@ public class Client implements Parcelable {
         dest.writeDouble(height);
         dest.writeDouble(bmi);
         dest.writeString(image);
+        dest.writeString(status);
 
         Log.d("Client", "writeToParcel: " + this.toString());
     }
@@ -215,6 +241,7 @@ public class Client implements Parcelable {
                 ", height=" + height +
                 ", bmi=" + bmi +
                 ", image='" + image + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 
@@ -232,6 +259,8 @@ public class Client implements Parcelable {
         result.put(CLIENT_HEIGHT, height);
         result.put(CLIENT_BMI, bmi);
         result.put(CLIENT_IMAGE, image);
+        result.put("status", status);
+
         return result;
     }
 }

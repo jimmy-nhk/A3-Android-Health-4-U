@@ -73,7 +73,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             client = getArguments().getParcelable("client");
-            username = client.getUsername();
+            username = client.getUserName();
 
             Log.d(TAG, "client=" + client);
         }
@@ -106,7 +106,7 @@ public class ProfileFragment extends Fragment {
                 Log.d(TAG, "c != null=" + (c != null));
                 if (c != null) {
                     fullName = c.getFullName();
-                    username = c.getUsername();
+                    username = c.getUserName();
                     email = c.getEmail();
                     phone = c.getPhone();
                     dob = c.getDob();

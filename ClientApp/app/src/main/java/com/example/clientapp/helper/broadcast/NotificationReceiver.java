@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -143,7 +144,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
             Notification notification = builder.build();
-            notifManager.notify(notifyId, notification);
+            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
+            notifManager.notify(oneTimeID, notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();
