@@ -18,9 +18,10 @@ public class Vendor implements Parcelable {
     private String email;
     private String phone;
     private String address;
-    private int rating;
+    private double rating;
     private int totalSale;
     private String image;
+    private String status;
 
 
     public static final String VENDOR_ID = "id";
@@ -37,6 +38,20 @@ public class Vendor implements Parcelable {
 
     public Vendor() {
 
+    }
+
+    public Vendor(int id, String storeName, String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image, String status) {
+        this.id = id;
+        this.storeName = storeName;
+        this.fullName = fullName;
+        this.userName = userName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.rating = rating;
+        this.totalSale = totalSale;
+        this.image = image;
+        this.status = status;
     }
 
     public Vendor(String storeName, String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image) {
@@ -76,14 +91,6 @@ public class Vendor implements Parcelable {
         this.fullName = fullName;
     }
 
-    public String getUsername() {
-        return userName;
-    }
-
-    public void setUsername(String userName) {
-        this.userName = userName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -108,11 +115,11 @@ public class Vendor implements Parcelable {
         this.address = address;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -132,6 +139,22 @@ public class Vendor implements Parcelable {
         this.image = image;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -143,9 +166,10 @@ public class Vendor implements Parcelable {
         dest.writeString(userName);
         dest.writeString(phone);
         dest.writeString(address);
-        dest.writeInt(rating);
+        dest.writeDouble(rating);
         dest.writeInt(totalSale);
         dest.writeString(image );
+        dest.writeString(status);
 
     }
 
@@ -158,9 +182,10 @@ public class Vendor implements Parcelable {
         userName = in.readString();
         phone = in.readString();
         address = in.readString();
-        rating=in.readInt();
+        rating=in.readDouble();
         totalSale=in.readInt();
         image = in.readString();
+        status = in.readString();
     }
 
 
@@ -196,6 +221,7 @@ public class Vendor implements Parcelable {
                 ", rating=" + rating +
                 ", totalSale=" + totalSale +
                 ", image='" + image + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 
@@ -211,6 +237,7 @@ public class Vendor implements Parcelable {
         result.put(VENDOR_RATING, rating);
         result.put(VENDOR_TOTALSALE, totalSale);
         result.put(VENDOR_IMAGE, image);
+        result.put("status", status);
         return result;
     }
 }

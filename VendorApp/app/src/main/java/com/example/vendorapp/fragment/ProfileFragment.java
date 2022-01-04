@@ -173,7 +173,7 @@ public class ProfileFragment extends Fragment {
 
     private void updateUI() {
         fullNameTxt.setText(vendor.getFullName());
-        usernameTxt.setText(vendor.getUsername());
+        usernameTxt.setText(vendor.getUserName());
         emailTxt.setText(vendor.getEmail());
         phoneTxt.setText(vendor.getPhone());
         addressTxt.setText(vendor.getAddress());

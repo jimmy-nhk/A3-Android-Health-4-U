@@ -2,6 +2,7 @@ package com.example.clientapp.activity;
 import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import com.example.clientapp.R;
+import com.example.clientapp.chat.MainChatActivity;
 import com.example.clientapp.fragment.CartFragment;
 import com.example.clientapp.fragment.HistoryFragment;
 import com.example.clientapp.fragment.ItemListFragment;
@@ -110,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
             loadOrderList();
             Log.d(TAG, "onCreate: client=" + client);
         }
-
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -226,6 +225,14 @@ public class MainActivity extends AppCompatActivity {
         loadFragmentWithBackStack(fragment);
     }
 
+
+    public void onChatBtnClick(View view){
+
+        Intent intent = new Intent(this, MainChatActivity.class);
+        intent.putExtra("client", client);
+        startActivity(intent);
+    }
+
     // order btn
     public void onOrderBtnClick(View view) {
         List<Item> cartList = viewModel.getListItem();
@@ -304,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(CANCEL_NOTIFICATION);
         intentFilter.addAction(PROCESS_NOTIFICATION);
         this.registerReceiver(notificationReceiver, intentFilter);
-
     }
 
     // filter the string date

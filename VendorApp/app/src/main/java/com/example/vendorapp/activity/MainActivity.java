@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.vendorapp.R;
+import com.example.vendorapp.chat.MainChatActivity;
 import com.example.vendorapp.fragment.ItemListFragment;
 import com.example.vendorapp.fragment.HomeFragment;
 import com.example.vendorapp.fragment.OrderListFragment;
@@ -81,10 +82,13 @@ public class MainActivity extends AppCompatActivity {
         initService();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void onChatBtnClick(View view){
+
+        Intent intent = new Intent(MainActivity.this, MainChatActivity.class);
+        intent.putExtra("vendor", vendor);
+        startActivity(intent);
     }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {

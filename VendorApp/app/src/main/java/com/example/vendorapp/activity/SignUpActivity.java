@@ -85,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
             String fullName = "fullname";
             String storeName = storenameText.getText().toString().trim();
             String email = emailText.getText().toString().trim();
-            String phone = "123456789";
+            String phone = "123456789" ;
             String dob = "123456789";
             String password = passwordText.getText().toString().trim();
             String confirmPassword = confirmPasswordText.getText().toString().trim();
@@ -142,7 +142,7 @@ public class SignUpActivity extends AppCompatActivity {
         Vendor c = new Vendor();
         c.setId(vendorSize);
         c.setEmail(emailText.getText().toString().trim());
-        c.setUsername(usernameText.getText().toString().trim());
+        c.setUserName(usernameText.getText().toString().trim());
         c.setStoreName(storenameText.getText().toString().trim());
 //        c.setFullName(fullNameText.getText().toString().trim());
 
@@ -227,7 +227,7 @@ public class SignUpActivity extends AppCompatActivity {
     // Check if username is unique
     private boolean isUsernameUnique(String username){
         for (Vendor vendor: vendorList) {
-            if (username.equals(vendor.getUsername())) return false;
+            if (username.equals(vendor.getUserName())) return false;
         }
         return true;
     }
