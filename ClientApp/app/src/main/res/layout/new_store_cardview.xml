@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/newStoreCard"
     android:layout_width="140dp"
     android:layout_height="180dp"
     android:layout_marginHorizontal="2sp"
     android:orientation="vertical"
-    android:clickable="true">
+    android:clickable="true"
+    android:backgroundTint="#00000000"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +18,9 @@
         <ImageView
             android:id="@+id/newStoreImage"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/store_image"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

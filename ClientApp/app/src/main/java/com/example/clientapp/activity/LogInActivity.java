@@ -152,6 +152,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // validate in case it cannot sign in with authentication
         try {
+
             firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
@@ -246,14 +247,18 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                         return;
                     }
 
-                    if (value != null) {
-                        DocumentSnapshot doc = value.getDocuments().get(0);
-                        if (doc != null) {
-                            client = doc.toObject(Client.class);
-                            Log.d(TAG, "Query Client by email="+client.toString());
+                    try {
+                        if (value != null) {
+                            DocumentSnapshot doc = value.getDocuments().get(0);
+                            if (doc != null) {
+                                client = doc.toObject(Client.class);
+                                Log.d(TAG, "Query Client by email="+client.toString());
 
-                            updateUI();
+                                updateUI();
+                            }
                         }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
                     }
                 });
     }
