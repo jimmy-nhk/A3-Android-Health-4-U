@@ -54,7 +54,7 @@ public class NewStoreRecyclerViewAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vendor vendor = vendorList.get(position);
         holder.newStoreNameText.setText(vendor.getStoreName());
-        holder.newStoreRatingBar.setRating(vendor.getRating());
+        holder.newStoreRatingBar.setRating(Float.parseFloat(vendor.getRating() + ""));
 
         // Set image by URL
         setStoreImage(holder, vendor);

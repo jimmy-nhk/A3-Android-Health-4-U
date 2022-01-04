@@ -1,26 +1,4 @@
-package com.example.clientapp.chat;
-
-import com.example.clientapp.R;
-import com.example.clientapp.activity.MainActivity;
-import com.example.clientapp.chat.adapter.MessageAdapter;
-import com.example.clientapp.chat.model.MessageObject;
-import com.example.clientapp.model.Client;
-import com.example.clientapp.model.Vendor;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.vendorapp.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,11 +9,33 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.vendorapp.R;
+import com.example.vendorapp.chat.adapter.MessageAdapter;
+import com.example.vendorapp.chat.model.MessageObject;
+import com.example.vendorapp.model.Client;
+import com.example.vendorapp.model.Vendor;
+import com.example.vendorapp.model.Client;
+import com.example.vendorapp.model.Vendor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -103,7 +103,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String msg = text_send.getText().toString();
                 if (!msg.equals("")){
-                    sendMessage(currentClient.getUserName(), currentVendor.getUserName(), msg);
+                    sendMessage( currentVendor.getUserName(),currentClient.getUserName(), msg);
                 }else {
                     Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
                 }
@@ -122,43 +122,43 @@ public class MessageActivity extends AppCompatActivity {
         currentVendor = intent.getParcelableExtra("vendor");
         currentClient = intent.getParcelableExtra("client");
 
-        username.setText("username: " + currentVendor.getUserName());
+        username.setText("username: " + currentClient.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
         readMessages();
 
-//        seenMessage();
+        seenMessage();
         //FIXME: fix image
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);
 
     }
 
-//    private void seenMessage(){
-//
-//        seenListener = (EventListener) messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//
-//                MessageObject messageObject;
-//                assert value != null;
-//                for (DocumentSnapshot ds: value
-//                     ) {
-//                    messageObject = ds.toObject(MessageObject.class);
-//
-//                    // check the message is alraedy read
-//                    if (messageObject.getReceiver().equals(currentClient.getUserName())
-//                        && messageObject.getSender().equals(currentVendor.getUserName())){
-//
-//                        // set the isSeen to true
-//                        HashMap<String , Object> hashMap = new HashMap<>();
-//                        hashMap.put("isSeen", true);
-//
-//                        // update db
-//                        ds.getReference().update(hashMap);
-//                    }
-//                }
-//            }
-//        });
-//    }
+    private void seenMessage(){
+
+        seenListener = (EventListener) messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                MessageObject messageObject;
+                assert value != null;
+                for (DocumentSnapshot ds: value
+                     ) {
+                    messageObject = ds.toObject(MessageObject.class);
+
+                    // check the message is alraedy read
+                    if (messageObject.getReceiver().equals(currentClient.getUserName())
+                        && messageObject.getSender().equals(currentVendor.getUserName())){
+
+                        // set the isSeen to true
+                        HashMap<String , Object> hashMap = new HashMap<>();
+                        hashMap.put("isSeen", true);
+
+                        // update db
+                        ds.getReference().update(hashMap);
+                    }
+                }
+            }
+        });
+    }
 
     private void sendMessage(String sender, String receiver, String message){
 
@@ -195,8 +195,8 @@ public class MessageActivity extends AppCompatActivity {
 
 
                 //validate the condition to add the message to the list
-                if (messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName()) ||
-                    messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName())){
+                if (messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName()) ||
+                    messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName())){
 
                     // add message
                     messageObjectList.add(messageObject);

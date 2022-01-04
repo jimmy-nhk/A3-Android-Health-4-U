@@ -1,7 +1,6 @@
-package com.example.clientapp.chat.adapter;
+package com.example.vendorapp.chat.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.clientapp.R;
-import com.example.clientapp.chat.MessageActivity;
-import com.example.clientapp.chat.model.MessageObject;
-import com.example.clientapp.model.Client;
-import com.example.clientapp.model.Vendor;
+import com.example.vendorapp.R;
+import com.example.vendorapp.chat.model.MessageObject;
+import com.example.vendorapp.model.Client;
+import com.example.vendorapp.model.Vendor;
 
 import java.util.List;
 
@@ -37,13 +34,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.mContext = mContext;
         this.messageObjectList = messageObjectList;
         this.client = currentClient;
-        this.imageUrl = imageUrl;
         this.vendor = vendor;
     }
 
     @NonNull
     @Override
-    public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == MSG_TYPE_RIGHT){
             view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
@@ -57,7 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     @Override
-    public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         MessageObject messageObject = messageObjectList.get(position);
 
@@ -90,7 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
 
-        if (messageObjectList.get(position).getSender().equals(client.getUserName())){
+        if (messageObjectList.get(position).getSender().equals(vendor.getUserName())){
             return MSG_TYPE_RIGHT;
         } else
             return MSG_TYPE_LEFT;

@@ -1,6 +1,10 @@
-package com.example.clientapp.chat.fragments;
+package com.example.vendorapp.chat.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -8,17 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.example.vendorapp.R;
+import com.example.vendorapp.chat.VendorViewModel;
+import com.example.vendorapp.chat.adapter.ClientAdapter;
+import com.example.vendorapp.chat.model.MessageObject;
+import com.example.vendorapp.model.Client;
+import com.example.vendorapp.model.Vendor;
 
-import com.example.clientapp.R;
-import com.example.clientapp.chat.ClientViewModel;
-import com.example.clientapp.chat.adapter.VendorAdapter;
-import com.example.clientapp.chat.model.MessageObject;
-import com.example.clientapp.model.Client;
-import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -34,19 +34,20 @@ import java.util.stream.Collectors;
 public class ChatsFragment extends Fragment {
 
     private FirebaseFirestore fireStore;
-    private CollectionReference vendorCollection;
-    private final String VENDOR_COLLECTION = "vendors";
+    private CollectionReference clientCollection;
+    private final String CLIENT_COLLECTION = "clients";
     private CollectionReference messageCollection;
     private final String MESSAGE_COLLECTION = "messages";
-    private VendorAdapter vendorAdapter;
+    private ClientAdapter clientAdapter;
 
-    private List<String> vendorList;
-    private List<Vendor> mVendors;
+    private List<String> clientsList;
+    private List<Client> mClients;
+
     private static final String TAG = "ChatsFragment";
     private RecyclerView recyclerView;
-    private Client currentClient;
+    private Vendor currentVendor;
 
-    private ClientViewModel clientViewModel;
+    private VendorViewModel vendorViewModel;
 
 
     @Override
@@ -58,8 +59,8 @@ public class ChatsFragment extends Fragment {
 
 
         // set the current value
-        clientViewModel = new ViewModelProvider(requireActivity()).get(ClientViewModel.class);
-        currentClient = clientViewModel.getValue();
+        vendorViewModel = new ViewModelProvider(requireActivity()).get(VendorViewModel.class);
+        currentVendor = vendorViewModel.getValue();
 
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
@@ -67,9 +68,8 @@ public class ChatsFragment extends Fragment {
 
         // init firestore
         fireStore = FirebaseFirestore.getInstance();
-        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
-
+        clientCollection = fireStore.collection(CLIENT_COLLECTION);
         loadMessage();
 
         return view;
@@ -81,7 +81,7 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                vendorList = new ArrayList<>();
+                clientsList = new ArrayList<>();
 
                 MessageObject messageObject;
                 // iterate through value in db
@@ -90,17 +90,17 @@ public class ChatsFragment extends Fragment {
                     messageObject = ds.toObject(MessageObject.class);
 
                     // get the one who receives message from the current user
-                    if (messageObject.getSender().equals(currentClient.getUserName())){
-                        vendorList.add(messageObject.getReceiver());
+                    if (messageObject.getSender().equals(currentVendor.getUserName())){
+                        clientsList.add(messageObject.getReceiver());
                     }
 
                     // get the one who sends message to the current user
-                    if (messageObject.getReceiver().equals(currentClient.getUserName())){
-                        vendorList.add(messageObject.getReceiver());
+                    if (messageObject.getReceiver().equals(currentVendor.getUserName())){
+                        clientsList.add(messageObject.getReceiver());
                     }
                 }
 
-                loadVendors();
+                loadClients();
 
             }
 
@@ -108,40 +108,40 @@ public class ChatsFragment extends Fragment {
     }
 
 
-    private void loadVendors() {
+    private void loadClients() {
 
 
         // load the vendor
-        vendorCollection
+        clientCollection
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                mVendors = new ArrayList<>();
+                mClients = new ArrayList<>();
 
                 // this function below is used for getting unique value from the list
-                vendorList = vendorList.stream().distinct().collect(Collectors.toList());
-                Log.d(TAG, "vendorListString: " + vendorList);
+                clientsList = clientsList.stream().distinct().collect(Collectors.toList());
+                Log.d(TAG, "clientListString: " + clientsList);
 
-                Vendor vendor;
+                Client client;
 
-                Log.d(TAG, "vendor size in db: " + value.size());
+                Log.d(TAG, "client size in db: " + value.size());
 
                 for (DocumentSnapshot ds: value
                 ){
-                    vendor = ds.toObject(Vendor.class);
+                    client = ds.toObject(Client.class);
 
-                    Log.d(TAG, "vendor: " + vendor.toString());
-                    for (String userName: vendorList){
-                        if (userName.equals(vendor.getUserName())){
-                            mVendors.add(vendor);
+                    Log.d(TAG, "vendor: " + client.toString());
+                    for (String userName: clientsList){
+                        if (userName.equals(client.getUserName())){
+                            mClients.add(client);
                         }
                     }
                 }
 
-                Log.d(TAG, "mVendors: size " + mVendors.size());
-                vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, true);
-                recyclerView.setAdapter(vendorAdapter);
+                Log.d(TAG, "mVendors: size " + mClients.size());
+                clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, true);
+                recyclerView.setAdapter(clientAdapter);
 
             }
         });

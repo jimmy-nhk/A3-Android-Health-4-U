@@ -138,6 +138,10 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         emailText = findViewById(R.id.editEmailLogInTxt);
         errorLoginTxt = findViewById(R.id.errorLoginTxt);
         errorLoginTxt.setVisibility(View.INVISIBLE);
+
+        //FIXME: TURN THIS OFF
+        emailText.setText("c2@gmail.com");
+        passwordText.setText("111111");
 //        signInGoogleButton = findViewById(R.id.signInWithGoogle);
 //
 //        TextView textView = (TextView) signInGoogleButton.getChildAt(0);
@@ -148,7 +152,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         // validate in case it cannot sign in with authentication
         try {
-            firebaseAuth.signInWithEmailAndPassword("c1@gmail.com", "111111")
+            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with signed-in user's information

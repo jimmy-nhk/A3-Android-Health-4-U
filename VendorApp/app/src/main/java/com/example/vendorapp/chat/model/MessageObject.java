@@ -1,4 +1,4 @@
-package com.example.clientapp.chat.model;
+package com.example.vendorapp.chat.model;
 
 import java.util.HashMap;
 import java.util.Map;

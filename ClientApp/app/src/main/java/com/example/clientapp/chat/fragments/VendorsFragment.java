@@ -1,6 +1,5 @@
 package com.example.clientapp.chat.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,17 +8,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.example.clientapp.R;
 import com.example.clientapp.chat.ClientViewModel;
-import com.example.clientapp.chat.adapter.UserAdapter;
-import com.example.clientapp.helper.viewModel.CartViewModel;
+import com.example.clientapp.chat.adapter.VendorAdapter;
 import com.example.clientapp.model.Client;
-import com.example.clientapp.model.Order;
 import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -30,13 +30,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersFragment extends Fragment {
+public class VendorsFragment extends Fragment {
 
     private static final String TAG = "UsersFragment";
     private RecyclerView recyclerView;
 
-    private UserAdapter userAdapter;
+    private VendorAdapter vendorAdapter;
     private List<Vendor> mVendors;
+    private List<Vendor> searchVendorList;
+
 
     private FirebaseFirestore fireStore;
     private CollectionReference vendorCollection;
@@ -44,6 +46,8 @@ public class UsersFragment extends Fragment {
     private ClientViewModel clientViewModel;
 
     private Client currentClient;
+    EditText searchVendors;
+
 
 
     @Override
@@ -53,12 +57,34 @@ public class UsersFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_users, container, false);
 
+        searchVendors = view.findViewById(R.id.search_vendors);
+        searchVendors.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchUsers(s.toString().toLowerCase());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mVendors = new ArrayList<>();
+
+        // init firestore
+        fireStore = FirebaseFirestore.getInstance();
+        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
+
 
         // set the current value
         clientViewModel = new ViewModelProvider(requireActivity()).get(ClientViewModel.class);
@@ -69,25 +95,54 @@ public class UsersFragment extends Fragment {
         return view;
     }
 
+    private void searchUsers(String s) {
+
+        // clear list
+        mVendors = new ArrayList<>();
+
+        // if search is empty
+        if (s.equals("")){
+            // load all vendors again
+            loadVendors();
+            return;
+        }
+
+        // iterate through the search list
+        for (Vendor vendor: searchVendorList
+             ) {
+
+            // check condition
+            if (vendor.getUserName().toLowerCase().contains(s)){
+                mVendors.add(vendor);
+            }
+        }
+
+        // set layout
+        vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, false);
+        recyclerView.setAdapter(vendorAdapter);
+
+    }
+
     private void loadVendors() {
 
-        // init firestore
-        fireStore = FirebaseFirestore.getInstance();
-        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
 
         // load the vendor
         vendorCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                mVendors = new ArrayList<>();
-                for (int i = value.size() - 1 ; i >= 0; i--){
-                    mVendors.add(value.getDocuments().get(i).toObject(Vendor.class));
-                }
+                // validate in the normal case without search
+                if (searchVendors.getText().toString().equals("")){
+                    mVendors = new ArrayList<>();
+                    for (int i = value.size() - 1 ; i >= 0; i--){
+                        mVendors.add(value.getDocuments().get(i).toObject(Vendor.class));
+                    }
 
-                Log.d(TAG, "mVendors: size" + mVendors.size());
-                userAdapter = new UserAdapter(getContext(), mVendors, currentClient);
-                recyclerView.setAdapter(userAdapter);
+                    searchVendorList = mVendors;
+                    Log.d(TAG, "mVendors: size" + mVendors.size());
+                    vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, false);
+                    recyclerView.setAdapter(vendorAdapter);
+                }
 
             }
         });

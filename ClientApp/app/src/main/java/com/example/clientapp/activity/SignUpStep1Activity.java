@@ -97,7 +97,7 @@ public class SignUpStep1Activity extends AppCompatActivity {
                         Log.d(TAG, "Successfully added new Client in Register Activity");
                         addClientToFireStore();
                     } else {
-                        String INVALID_GMAIL = "The email format is invalid.";
+                        String INVALID_GMAIL = "The email is already created..";
                         errorTxt.setVisibility(View.VISIBLE);
                         errorTxt.setText(INVALID_GMAIL);
 
@@ -161,7 +161,7 @@ public class SignUpStep1Activity extends AppCompatActivity {
     // Check if username is unique
     private boolean isUsernameUnique(String username){
         for (Client client: clientList) {
-            if (username.equals(client.getUsername())) return false;
+            if (username.equals(client.getUserName())) return false;
         }
         return true;
     }
@@ -267,11 +267,11 @@ public class SignUpStep1Activity extends AppCompatActivity {
         String password = passwordText.getText().toString().trim();
         String confirmPassword = confirmPasswordText.getText().toString().trim();
 
-        username = "c2";
-        fullName = "c2 name";
-        email = "c2@gmail.com";
-        password = "111111";
-        confirmPassword = "111111";
+//        username = "c2";
+//        fullName = "c2 name";
+//        email = "c2@gmail.com";
+//        password = "111111";
+//        confirmPassword = "111111";
 
         if (validateInput(fullName, username, email, password, confirmPassword)) {
             // Add client to authentication & firebase collection & go to next sign up step

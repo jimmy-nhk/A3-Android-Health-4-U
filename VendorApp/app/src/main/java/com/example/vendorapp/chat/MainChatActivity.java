@@ -1,14 +1,9 @@
-package com.example.clientapp.chat;
+package com.example.vendorapp.chat;
 
-import com.example.clientapp.R;
-import com.example.clientapp.chat.fragments.ChatsFragment;
-import com.example.clientapp.chat.fragments.VendorsFragment;
-import com.example.clientapp.model.Client;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +15,15 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-
+import com.example.vendorapp.R;
+import com.example.vendorapp.chat.fragments.ChatsFragment;
+import com.example.vendorapp.chat.fragments.ClientsFragment;
+import com.example.vendorapp.model.Vendor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -36,11 +35,13 @@ public class MainChatActivity extends AppCompatActivity {
     TextView username;
 
     private FirebaseFirestore fireStore;
-    private CollectionReference clientCollection;
-    private final String CLIENT_COLLECTION = "clients";
-    private Client currentClient;
+    private CollectionReference vendorCollection;
+    private final String VENDOR_COLLECTION = "vendors";
+    private Vendor currentVendor;
 
-    private ClientViewModel clientViewModel;
+
+
+    private VendorViewModel vendorViewModel;
     private final static String TAG= "MainChatActivity";
 
     @Override
@@ -48,22 +49,22 @@ public class MainChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_chat);
 
-        // get the current client
+        // get the current vendor
         Intent intent = getIntent();
-        currentClient = intent.getParcelableExtra("client");
+        currentVendor = intent.getParcelableExtra("vendor");
 
-        // set current client to the view model
-        clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
-        clientViewModel.setValue(currentClient);
+        // set current vendor to the view model
+        vendorViewModel = new ViewModelProvider(this).get(VendorViewModel.class);
+        vendorViewModel.setValue(currentVendor);
 
         // attach the component
         profile_image = findViewById(R.id.profile_image);
         username  = findViewById(R.id.usernameMainChat);
 
-        username.setText("username: "+currentClient.getUserName());
+        username.setText("username: "+currentVendor.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
         //FIXME: if has profile please fill in
-//                    Glide.with(getApplicationContext()).load(currentClient.getImage()).into(profile_image);
+//                    Glide.with(getApplicationContext()).load(currentvendor.getImage()).into(profile_image);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -73,7 +74,7 @@ public class MainChatActivity extends AppCompatActivity {
 
 
         fireStore = FirebaseFirestore.getInstance();
-        clientCollection = fireStore.collection(CLIENT_COLLECTION);
+        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -81,7 +82,7 @@ public class MainChatActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-        viewPagerAdapter.addFragment(new VendorsFragment(), "Users");
+        viewPagerAdapter.addFragment(new ClientsFragment(), "Users");
 
         viewPager.setAdapter(viewPagerAdapter);
 
@@ -92,7 +93,7 @@ public class MainChatActivity extends AppCompatActivity {
 
     private void toggleStatus(String status){
 
-        clientCollection.document(currentClient.getId() + "")
+        vendorCollection.document(currentVendor.getId() + "")
                 .update("status", status)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -111,15 +112,32 @@ public class MainChatActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         toggleStatus("online");
+        Log.d(TAG, "onResume");
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         toggleStatus("offline");
+        Log.d(TAG, "onPause");
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter{
