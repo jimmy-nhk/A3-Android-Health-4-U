@@ -12,16 +12,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Client implements Parcelable {
-    public static final String CLIENT_FULLNAME ="fullName";
-    public static final String CLIENT_USERNAME ="username";
-    public static final String CLIENT_EMAIL ="email";
-    public static final String CLIENT_PHONE ="phone";
-    public static final String CLIENT_ADDRESS ="address";
-    public static final String CLIENT_DOB ="dob";
-    public static final String CLIENT_WEIGHT ="weight";
-    public static final String CLIENT_HEIGHT ="height";
-    public static final String CLIENT_BMI ="bmi";
-    public static final String CLIENT_IMAGE ="image";
+    public static final String CLIENT_ID = "id";
+    public static final String CLIENT_FULLNAME = "fullName";
+    public static final String CLIENT_USERNAME = "username";
+    public static final String CLIENT_EMAIL = "email";
+    public static final String CLIENT_PHONE = "phone";
+    public static final String CLIENT_ADDRESS = "address";
+    public static final String CLIENT_DOB = "dob";
+    public static final String CLIENT_WEIGHT = "weight";
+    public static final String CLIENT_HEIGHT = "height";
+    public static final String CLIENT_BMI = "bmi";
+    public static final String CLIENT_IMAGE = "image";
+    public static final String CLIENT_STATUS = "status";
 
     private int id;
     private String fullName;
@@ -40,7 +42,18 @@ public class Client implements Parcelable {
 
     }
 
-    public Client(int id, String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image, String status) {
+    public Client(int id,
+                  String fullName,
+                  String username,
+                  String email,
+                  String phone,
+                  String address,
+                  String dob,
+                  double weight,
+                  double height,
+                  double bmi,
+                  String image,
+                  String status) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
@@ -53,19 +66,6 @@ public class Client implements Parcelable {
         this.bmi = bmi;
         this.image = image;
         this.status = status;
-    }
-
-    public Client(String fullName, String username, String email, String phone, String address, String dob, double weight, double height, double bmi, String image) {
-        this.fullName = fullName;
-        this.username = username;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.dob = dob;
-        this.weight = weight;
-        this.height = height;
-        this.bmi = bmi;
-        this.image = image;
     }
 
     public Client(int id, String fullName, String username, String email) {
@@ -248,18 +248,17 @@ public class Client implements Parcelable {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put(CLIENT_USERNAME, username);
+        result.put(CLIENT_ID, id);
         result.put(CLIENT_FULLNAME, fullName);
         result.put(CLIENT_EMAIL, email);
         result.put(CLIENT_PHONE, phone);
         result.put(CLIENT_DOB, dob);
-
         result.put(CLIENT_ADDRESS, phone);
-
         result.put(CLIENT_WEIGHT, weight);
         result.put(CLIENT_HEIGHT, height);
         result.put(CLIENT_BMI, bmi);
         result.put(CLIENT_IMAGE, image);
-        result.put("status", status);
+        result.put(CLIENT_STATUS, status);
 
         return result;
     }

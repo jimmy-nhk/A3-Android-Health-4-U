@@ -53,6 +53,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleInstance"
             android:exported="false" />
         <activity
             android:name=".activity.SignUpStep1Activity"

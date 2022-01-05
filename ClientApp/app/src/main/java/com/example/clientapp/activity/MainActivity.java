@@ -48,6 +48,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         // attaching bottom sheet behaviour - hide / show on scroll
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
-
 
         // init home fragment
         loadFragment(new HomeFragment());
@@ -179,34 +179,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-
         toggleStatus("online");
-        Log.d(TAG, "onStart");
+        Log.d(TAG, TAG + "onStart");
         super.onStart();
     }
 
     // sign out btn
-    public void onSignOut(View view) {
-
-
+    public void onSignOutBtnClick(View view) {
         client.setStatus("offline");
         clientCollection.document(client.getId() + "")
                 .set(client.toMap())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated offline status! " );
-                        FirebaseAuth.getInstance().signOut();
-                        finish();
-                    }
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "DocumentSnapshot successfully updated offline status! " );
+                    FirebaseAuth.getInstance().signOut();
+                    finish();
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "DocumentSnapshot fail updated status!");
-
-                    }
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
     }
 
     public void loadFragmentWithBackStack(Fragment fragment){
@@ -233,11 +221,8 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
-
-    private void toggleStatus(String status){
-
-        client.setStatus("online");
+    private void toggleStatus(String status) {
+        client.setStatus(status);
         clientCollection.document(client.getId() + "")
                 .set(client.toMap())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -289,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onChatBtnClick(View view){
-
         Intent intent = new Intent(this, MainChatActivity.class);
         intent.putExtra("client", client);
         startActivity(intent);
@@ -632,7 +616,6 @@ public class MainActivity extends AppCompatActivity {
 
         return null;
     }
-
 
     public String getSelectedCategory() {
         return selectedCategory;
