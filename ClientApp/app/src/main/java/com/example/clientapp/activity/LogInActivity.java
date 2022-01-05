@@ -57,6 +57,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private List<Client> clientList;
     private Client client;
 
+    private String email = "c0@gmail.com";
+    private String password = "111111";
+
     String idToken;
 
     private SignInButton signInGoogleButton;
@@ -73,8 +76,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (firebaseUser != null) {
             firebaseUser.getEmail();
         }
-
-
     }
 
     // init services
@@ -142,8 +143,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         errorLoginTxt.setVisibility(View.INVISIBLE);
 
         //FIXME: TURN THIS OFF
-        emailText.setText("c2@gmail.com");
-        passwordText.setText("111111");
+        emailText.setText(email);
+        passwordText.setText(password);
 //        signInGoogleButton = findViewById(R.id.signInWithGoogle);
 //
 //        TextView textView = (TextView) signInGoogleButton.getChildAt(0);
@@ -197,7 +198,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             // you can store user data to SharedPreference
             AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
             firebaseAuthWithGoogle(credential);
-        }else{
+        } else {
             // Google Sign In failed, update UI appropriately
             Log.e(TAG, "Login Unsuccessful. "+result.getStatus());
 //            Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT).show();
@@ -206,7 +207,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // firebaseAuth with GG
     private void firebaseAuthWithGoogle(AuthCredential credential){
-
         // sign in with gg
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
@@ -224,11 +224,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //                            Client client = new Client(userFirebase.getDisplayName(), userFirebase.getEmail(), userFirebase.getPhoneNumber());
 
                         //TODO: Choose which one to set the document id
-                        addClientToFireStore(userFirebase.getDisplayName() );
-
-                        // update the UI
-                            updateUI();
-                    }else{
+                        addClientToFireStore(userFirebase.getDisplayName());
+                    } else {
                         Log.w(TAG, "signInWithCredential" + task.getException().getMessage());
                         task.getException().printStackTrace();
                         errorLoginTxt.setVisibility(View.VISIBLE);
@@ -236,7 +233,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //                            Toast.makeText(LogInActivity.this, "Authentication failed.",
 //                                    Toast.LENGTH_SHORT).show();
                     }
-
                 });
     }
 
@@ -264,20 +260,20 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
 
-        fireStore.collection("clients")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
-                        client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
-                        if (client != null) {
-                            Log.d(TAG, "Query Vendor by email="+client.toString());
-
-                            updateUI();
-                        }
-                    }
-                });
+//        fireStore.collection("clients")
+//                .whereEqualTo("email", email)
+//                .get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+//                        client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
+//                        if (client != null) {
+//                            Log.d(TAG, "Query Vendor by email="+client.toString());
+//
+//                            updateUI();
+//                        }
+//                    }
+//                });
     }
 
     private void addClientToFireStore(String displayedName) {
@@ -328,7 +324,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             Log.d(TAG, "signInWithGoogle: " + data.toString());
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-
         }
     }
 
