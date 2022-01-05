@@ -33,7 +33,7 @@ public class Client implements Parcelable {
     private double height;
     private double bmi;
     private String image;
-    private String status;
+    private String status = "offline";
 
     public Client() {
 
@@ -246,6 +246,7 @@ public class Client implements Parcelable {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("id", id);
         result.put(CLIENT_USERNAME, username);
         result.put(CLIENT_FULLNAME, fullName);
         result.put(CLIENT_EMAIL, email);

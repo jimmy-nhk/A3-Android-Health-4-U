@@ -2,6 +2,7 @@ package com.example.vendorapp.chat.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,8 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ViewHolder
 //        Glide.with(mContext).load(vendor.getImage()).into(holder.profile_image);
 
         // check if chat is callable
+        Log.e(TAG, "client in Client Adapter: " + client.toString());
+
         if (isChat){
             if (client.getStatus().equals("online")){
                 holder.img_on.setVisibility(View.VISIBLE);

@@ -70,4 +70,11 @@ dependencies {
     implementation 'com.airbnb.android:lottie:4.2.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.android.support:support-v4:28.0.0'
+
+    implementation 'com.google.firebase:firebase-core:20.0.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-iid:21.1.0'
+
 }

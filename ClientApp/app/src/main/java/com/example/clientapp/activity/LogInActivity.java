@@ -237,43 +237,43 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void getFirebaseClientByEmail(String email) {
-        fireStore.collection("clients")
-                .whereEqualTo("email", email)
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-
-                    try {
-                        if (value != null) {
-                            DocumentSnapshot doc = value.getDocuments().get(0);
-                            if (doc != null) {
-                                client = doc.toObject(Client.class);
-                                Log.d(TAG, "Query Client by email="+client.toString());
-
-                                updateUI();
-                            }
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                });
-
 //        fireStore.collection("clients")
 //                .whereEqualTo("email", email)
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
-//                        client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
-//                        if (client != null) {
-//                            Log.d(TAG, "Query Vendor by email="+client.toString());
+//                .addSnapshotListener((value, e) -> {
+//                    if (e != null) {
+//                        Log.w(TAG, "Listen failed.", e);
+//                        return;
+//                    }
 //
-//                            updateUI();
+//                    try {
+//                        if (value != null) {
+//                            DocumentSnapshot doc = value.getDocuments().get(0);
+//                            if (doc != null) {
+//                                client = doc.toObject(Client.class);
+//                                Log.d(TAG, "Query Client by email="+client.toString());
+//
+//                                updateUI();
+//                            }
 //                        }
+//                    } catch (Exception exception) {
+//                        exception.printStackTrace();
 //                    }
 //                });
+
+        fireStore.collection("clients")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
+                        if (client != null) {
+                            Log.d(TAG, "Query Vendor by email="+client.toString());
+
+                            updateUI();
+                        }
+                    }
+                });
     }
 
     private void addClientToFireStore(String displayedName) {

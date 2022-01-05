@@ -2,6 +2,7 @@ package com.example.clientapp.helper.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
+import com.example.clientapp.activity.BillingActivity;
 import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Order;
 
@@ -73,7 +75,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         holder.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, BillingActivity.class);
+                intent.putExtra("cart", cart);
+                context.startActivity(intent);
             }
         });
     }

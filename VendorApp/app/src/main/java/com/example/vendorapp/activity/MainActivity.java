@@ -88,14 +88,17 @@ public class MainActivity extends AppCompatActivity {
         initService();
     }
 
+    // on chat btn
     public void onChatBtnClick(View view){
 
+        // pass to new intent
         Intent intent = new Intent(MainActivity.this, MainChatActivity.class);
         intent.putExtra("vendor", vendor);
         startActivity(intent);
     }
 
 
+    // bottom navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
         Fragment fragment;
@@ -119,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     };
 
+    // load fragment
     public void loadFragment(Fragment fragment) {
         try {
             FragmentManager fm = getSupportFragmentManager();
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // load fragment with backstack
     public void loadFragmentWithBackStack(Fragment fragment) {
         try {
             FragmentManager fm = getSupportFragmentManager();
@@ -169,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    // init service
     public void initService() {
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
@@ -178,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         vendorCollection = fireStore.collection(VENDOR_COLLECTION);
         Log.d(TAG, "initService: vendorId: " + vendor.getId());
 
+        // query
         orderCollection.whereEqualTo("vendorID", vendor.getId())
                 .addSnapshotListener((value, error) -> {
 
@@ -242,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    // onStart
     @Override
     protected void onStart() {
 
@@ -274,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //    }
 
+    // toggle status
     private void toggleStatus(String status){
 
         vendorCollection.document(vendor.getId() + "")

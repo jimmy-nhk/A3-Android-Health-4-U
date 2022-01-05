@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,8 +37,7 @@ public class MainChatActivity extends AppCompatActivity {
     TextView username;
 
     private FirebaseFirestore fireStore;
-    private CollectionReference clientCollection;
-    private final String CLIENT_COLLECTION = "clients";
+
     private Client currentClient;
 
     private ClientViewModel clientViewModel;
@@ -70,10 +70,7 @@ public class MainChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-
-
         fireStore = FirebaseFirestore.getInstance();
-        clientCollection = fireStore.collection(CLIENT_COLLECTION);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -89,6 +86,7 @@ public class MainChatActivity extends AppCompatActivity {
 
 
     }
+
 
 
 

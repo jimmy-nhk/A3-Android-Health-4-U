@@ -20,11 +20,11 @@ public class BillingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_billing);
 
         Intent intent = getIntent();
-        int id = intent.getIntExtra("id", 0);
-        String date = intent.getStringExtra("date");
-        List<Order> orderList = intent.getParcelableArrayListExtra("orderList");
-        double price = intent.getDoubleExtra("double", 0);
-        boolean isFinished = intent.getBooleanExtra("isFinished" , false);
+//        int id = intent.getIntExtra("id", 0);
+//        String date = intent.getStringExtra("date");
+//        List<Order> orderList = intent.getParcelableArrayListExtra("orderList");
+//        double price = intent.getDoubleExtra("double", 0);
+//        boolean isFinished = intent.getBooleanExtra("isFinished" , false);
 
 //        Cart cart = new Cart(id,date,orderList,price,isFinished);
         Cart cart = intent.getParcelableExtra("cart");

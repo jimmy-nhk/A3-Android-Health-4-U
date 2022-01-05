@@ -2,15 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.clientapp">
 
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
 
     <application
         android:allowBackup="true"
@@ -19,12 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClientApp">
+
         <activity
             android:name=".chat.MessageActivity"
             android:exported="false" />
         <activity
             android:name=".chat.MainChatActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activity.MainActivity" />
 
         <service
             android:name=".helper.broadcast.NotificationService"
@@ -38,31 +37,30 @@
             </intent-filter>
         </service>
 
+
         <activity
             android:name=".activity.BillingActivity"
             android:exported="false"
             android:parentActivityName=".activity.MainActivity" />
+
         <receiver
             android:name=".helper.broadcast.NotificationReceiver"
             android:enabled="true"
             android:exported="true" />
-        <receiver android:name=".helper.broadcast.HydrationReminderReceiver"></receiver>
+        <receiver android:name=".helper.broadcast.HydrationReminderReceiver" />
 
         <activity
             android:name=".activity.SignUpStep2Activity"
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleInstance"
             android:exported="false" />
         <activity
             android:name=".activity.SignUpStep1Activity"
             android:exported="false" />
         <activity
             android:name=".activity.LogInActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".activity.SplashScreenActivity"
             android:exported="true">

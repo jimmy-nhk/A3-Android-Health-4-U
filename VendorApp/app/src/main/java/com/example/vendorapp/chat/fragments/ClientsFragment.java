@@ -21,6 +21,7 @@ import com.example.vendorapp.chat.adapter.ClientAdapter;
 import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -89,11 +90,12 @@ public class ClientsFragment extends Fragment {
         vendorViewModel = new ViewModelProvider(requireActivity()).get(VendorViewModel.class);
         currentVendor = vendorViewModel.getValue();
 
-        loadVendors();
+        loadClients();
 
         return view;
     }
 
+    // search users
     private void searchUsers(String s) {
 
         // clear list
@@ -102,7 +104,7 @@ public class ClientsFragment extends Fragment {
         // if search is empty
         if (s.equals("")){
             // load all vendors again
-            loadVendors();
+            loadClients();
             return;
         }
 
@@ -122,7 +124,7 @@ public class ClientsFragment extends Fragment {
 
     }
 
-    private void loadVendors() {
+    private void loadClients() {
 
 
         // load the vendor
@@ -133,12 +135,17 @@ public class ClientsFragment extends Fragment {
                 // validate in the normal case without search
                 if (searchVendors.getText().toString().equals("")){
                     mClients = new ArrayList<>();
-                    for (int i = value.size() - 1 ; i >= 0; i--){
-                        mClients.add(value.getDocuments().get(i).toObject(Client.class));
+
+                    // get the client lists
+                    for (DocumentSnapshot ds: value
+                    ){
+                        mClients.add(ds.toObject(Client.class));
                     }
 
                     searchClientList = mClients;
                     Log.d(TAG, "mVendors: size" + mClients.size());
+
+                    // set view
                     clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, false);
                     recyclerView.setAdapter(clientAdapter);
                 }
