@@ -26,11 +26,14 @@ import com.example.vendorapp.model.Vendor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,8 +53,6 @@ public class MessageActivity extends AppCompatActivity {
     ImageButton btn_send;
     EditText text_send;
 
-    EventListener seenListener;
-
 
     Intent intent;
 
@@ -68,7 +69,6 @@ public class MessageActivity extends AppCompatActivity {
     List<MessageObject> messageObjectList;
 
     RecyclerView recyclerView;
-
 
 
     @Override
@@ -126,7 +126,7 @@ public class MessageActivity extends AppCompatActivity {
         profile_image.setImageResource(R.mipmap.ic_launcher);
         readMessages();
 
-        seenMessage();
+//        seenMessage();
         //FIXME: fix image
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);
 
@@ -134,7 +134,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private void seenMessage(){
 
-        seenListener = (EventListener) messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
@@ -164,7 +164,7 @@ public class MessageActivity extends AppCompatActivity {
 
         messageSize++;
         // init message
-        MessageObject messageObject = new MessageObject( messageSize,sender, receiver, message , false);
+        MessageObject messageObject = new MessageObject( messageSize,sender, receiver, message , false, true);
 
         // add message to db
         messageCollection.document(messageObject.getId() + "")
@@ -183,29 +183,33 @@ public class MessageActivity extends AppCompatActivity {
 
 
         // load items
-        messageCollection.addSnapshotListener((value, error) -> {
+        messageCollection.orderBy("id").addSnapshotListener((value, error) -> {
             messageObjectList = new ArrayList<>();
 
             messageSize = value.size();
+            Log.d(TAG, "messageSize:  " +messageSize);
+
+
 
             MessageObject messageObject;
             //scan the value from db
-            for (int i = value.size() - 1 ; i >= 0; i--){
-                messageObject = value.getDocuments().get(i).toObject(MessageObject.class);
+            for (DocumentSnapshot ds: value
+            ) {
+                messageObject = ds.toObject(MessageObject.class);
+                Log.d(TAG, "messageObj:  " +messageObject.toString());
 
 
-                //validate the condition to add the message to the list
-                if (messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName()) ||
-                    messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName())){
-
-                    // add message
+                if (messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName()) ||
+                        messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName())) {
                     messageObjectList.add(messageObject);
                 }
 
 
             }
             // set reverse the collection
-            Collections.reverse(messageObjectList);
+//            Collections.reverse(messageObjectList);
+            Log.d(TAG, "messageObjectList size:  " +messageObjectList.size());
+
             messageAdapter = new MessageAdapter(MessageActivity.this, messageObjectList, currentClient , currentVendor);
             recyclerView.setAdapter(messageAdapter);
 

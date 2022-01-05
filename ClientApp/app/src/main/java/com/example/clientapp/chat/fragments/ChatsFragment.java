@@ -96,7 +96,7 @@ public class ChatsFragment extends Fragment {
 
                     // get the one who sends message to the current user
                     if (messageObject.getReceiver().equals(currentClient.getUserName())){
-                        vendorList.add(messageObject.getReceiver());
+                        vendorList.add(messageObject.getSender());
                     }
                 }
 

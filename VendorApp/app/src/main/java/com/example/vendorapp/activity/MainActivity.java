@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
@@ -37,7 +38,10 @@ import com.example.vendorapp.helper.NotificationService;
 import com.example.vendorapp.helper.OrderViewModel;
 import com.example.vendorapp.model.Order;
 import com.example.vendorapp.model.Vendor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,9 +56,11 @@ public class MainActivity extends AppCompatActivity {
     private Vendor vendor;
     private FragmentTransaction transaction;
     private static final String ORDER_COLLECTION = "orders";
+    private static final String VENDOR_COLLECTION = "vendors";
     private List<Order> orderList;
     private FirebaseFirestore fireStore;
     private CollectionReference orderCollection;
+    private CollectionReference vendorCollection;
     private OrderViewModel orderViewModel;
 
     private BottomNavigationView bottomNavigationView;
@@ -169,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
         orderCollection = fireStore.collection(ORDER_COLLECTION);
-
+        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
         Log.d(TAG, "initService: vendorId: " + vendor.getId());
 
         orderCollection.whereEqualTo("vendorID", vendor.getId())
@@ -236,6 +242,57 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onStart() {
+
+        toggleStatus("online");
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    //    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        toggleStatus("offline");
+//        finish();
+//
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//
+//        toggleStatus("offline");
+//    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        toggleStatus("offline");
+//        finish();
+//
+//    }
+
+    private void toggleStatus(String status){
+
+        vendorCollection.document(vendor.getId() + "")
+                .update("status", status)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated status! " + status);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "DocumentSnapshot fail updated status!");
+
+                    }
+                });
+    }
 
     // filter the string date
     public String filterDateOrder(String rawString) {
@@ -293,6 +350,29 @@ public class MainActivity extends AppCompatActivity {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    // sign out btn
+    public void onSignOut(View view) {
+
+
+        vendorCollection.document(vendor.getId() + "")
+                .update("status", "offline")
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated offline status! " );
+                        FirebaseAuth.getInstance().signOut();
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "DocumentSnapshot fail updated status!");
+
+                    }
+                });
     }
 }
 

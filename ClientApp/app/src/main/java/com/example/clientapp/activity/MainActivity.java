@@ -16,7 +16,10 @@ import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -63,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore fireStore;
     private CollectionReference orderCollection;
+    private CollectionReference clientCollection;
+    private final String CLIENT_COLLECTION = "clients";
+
     private BottomNavigationView bottomNavigationView;
 
     private int orderSize;
@@ -170,6 +177,38 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
+    protected void onStart() {
+
+        toggleStatus("online");
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    // sign out btn
+    public void onSignOut(View view) {
+
+
+        client.setStatus("offline");
+        clientCollection.document(client.getId() + "")
+                .set(client.toMap())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated offline status! " );
+                        FirebaseAuth.getInstance().signOut();
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "DocumentSnapshot fail updated status!");
+
+                    }
+                });
+    }
+
     public void loadFragmentWithBackStack(Fragment fragment){
         try {
             FragmentManager fm = getSupportFragmentManager();
@@ -192,6 +231,29 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+
+
+    private void toggleStatus(String status){
+
+        client.setStatus("online");
+        clientCollection.document(client.getId() + "")
+                .set(client.toMap())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(@NonNull Void unused) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated status! " + status);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "DocumentSnapshot fail updated status!");
+
+                    }
+                });
     }
 
     @Override
@@ -352,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
         fireStore.setFirestoreSettings(settings);
 
         orderCollection = fireStore.collection(ORDER_COLLECTION);
-
+        clientCollection = fireStore.collection(CLIENT_COLLECTION);
 
         // load items
         orderCollection.addSnapshotListener((value, error) -> {

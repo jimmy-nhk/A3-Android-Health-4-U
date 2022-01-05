@@ -22,6 +22,7 @@
         <entry key="app/src/main/res/drawable/background_left.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_right.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main_chat.xml" value="0.1638888888888889" />
+        <entry key="app/src/main/res/layout/activity_main_chat2.xml" value="0.19114583333333332" />
         <entry key="app/src/main/res/layout/activity_message.xml" value="0.1638888888888889" />
         <entry key="app/src/main/res/layout/activity_order_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/chat_item_left.xml" value="0.17291666666666666" />

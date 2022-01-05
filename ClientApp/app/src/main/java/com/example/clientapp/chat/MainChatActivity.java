@@ -81,7 +81,7 @@ public class MainChatActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-        viewPagerAdapter.addFragment(new VendorsFragment(), "Users");
+        viewPagerAdapter.addFragment(new VendorsFragment(), "Vendors");
 
         viewPager.setAdapter(viewPagerAdapter);
 
@@ -90,37 +90,7 @@ public class MainChatActivity extends AppCompatActivity {
 
     }
 
-    private void toggleStatus(String status){
 
-        clientCollection.document(currentClient.getId() + "")
-                .update("status", status)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated status!");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "DocumentSnapshot fail updated status!");
-
-                    }
-                });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        toggleStatus("online");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        toggleStatus("offline");
-    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter{
 

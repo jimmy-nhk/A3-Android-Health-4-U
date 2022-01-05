@@ -65,17 +65,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 //            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
 //        }
 
-        // check for the last message
-        if (position == messageObjectList.size() - 1){
+        holder.txt_seen.setVisibility(View.GONE);
 
-            if (messageObject.getIsSeen()){
-                holder.txt_seen.setText("Seen");
-            } else {
-                holder.txt_seen.setText("Delivered");
-            }
-        } else {
-            holder.txt_seen.setVisibility(View.GONE);
-        }
+        // check for the last message
+//        if (position == messageObjectList.size() - 1){
+//
+//
+//
+//            if (messageObject.getIsSeen()){
+//                holder.txt_seen.setText("Seen");
+//            } else {
+//                holder.txt_seen.setText("Delivered");
+//            }
+//        } else {
+//            holder.txt_seen.setVisibility(View.GONE);
+//        }
     }
 
     @Override

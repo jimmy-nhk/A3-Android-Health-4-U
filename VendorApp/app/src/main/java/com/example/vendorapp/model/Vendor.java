@@ -21,7 +21,7 @@ public class Vendor implements Parcelable {
     private double rating;
     private int totalSale;
     private String image;
-    private String status;
+    private String status = "offline";
 
 
     public static final String VENDOR_ID = "id";

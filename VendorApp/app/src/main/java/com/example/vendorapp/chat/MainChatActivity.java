@@ -53,6 +53,8 @@ public class MainChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currentVendor = intent.getParcelableExtra("vendor");
 
+
+//        Log.d(TAG, "received vendor from MainChat: " + currentVendor.toString());
         // set current vendor to the view model
         vendorViewModel = new ViewModelProvider(this).get(VendorViewModel.class);
         vendorViewModel.setValue(currentVendor);
@@ -60,85 +62,74 @@ public class MainChatActivity extends AppCompatActivity {
         // attach the component
         profile_image = findViewById(R.id.profile_image);
         username  = findViewById(R.id.usernameMainChat);
-
         username.setText("username: "+currentVendor.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
-        //FIXME: if has profile please fill in
-//                    Glide.with(getApplicationContext()).load(currentvendor.getImage()).into(profile_image);
-
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+//        //FIXME: if has profile please fill in
+////                    Glide.with(getApplicationContext()).load(currentvendor.getImage()).into(profile_image);
+//
 
 
 
+        // init service
         fireStore = FirebaseFirestore.getInstance();
         vendorCollection = fireStore.collection(VENDOR_COLLECTION);
 
+
+        // attach UI
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager viewPager = findViewById(R.id.view_pager);
 
+        // setup view pager adapter
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
+        Log.d(TAG, "received vendor from MainChat: " + currentVendor.toString());
+
+        // set up fragments
         viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-        viewPagerAdapter.addFragment(new ClientsFragment(), "Users");
+        viewPagerAdapter.addFragment(new ClientsFragment(), "Clients");
 
         viewPager.setAdapter(viewPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
 
 
-    }
 
-    private void toggleStatus(String status){
-
-        vendorCollection.document(currentVendor.getId() + "")
-                .update("status", status)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated status!");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "DocumentSnapshot fail updated status!");
-
-                    }
-                });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        toggleStatus("online");
-        Log.d(TAG, "onResume");
-
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        toggleStatus("offline");
-        Log.d(TAG, "onPause");
 
-    }
+    //
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        Log.d(TAG, "onDestroy");
+//
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        toggleStatus("online");
+//        Log.d(TAG, "onResume");
+//
+//    }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        toggleStatus("offline");
+//        Log.d(TAG, "onPause");
+//
+//    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter{
 

@@ -10,8 +10,18 @@ public class MessageObject {
     private String receiver;
     private String message;
     private boolean isSeen;
+    private boolean isDelivered;
 
     public MessageObject() {
+    }
+
+    public MessageObject(int id, String sender, String receiver, String message, boolean isSeen, boolean isDelivered) {
+        this.id = id;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
+        this.isSeen = isSeen;
+        this.isDelivered = isDelivered;
     }
 
     public MessageObject(int id, String sender, String receiver, String message, boolean isSeen) {
@@ -33,6 +43,14 @@ public class MessageObject {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+    }
+
+    public boolean getIsDelivered() {
+        return isDelivered;
+    }
+
+    public void setIsDelivered(boolean delivered) {
+        isDelivered = delivered;
     }
 
     public boolean getIsSeen() {
@@ -82,7 +100,7 @@ public class MessageObject {
         result.put("receiver", receiver);
         result.put("message", message);
         result.put("isSeen", isSeen);
-
+        result.put("isDelivered" , isDelivered);
         return result;
     }
 
@@ -94,6 +112,7 @@ public class MessageObject {
                 ", receiver='" + receiver + '\'' +
                 ", message='" + message + '\'' +
                 ", isSeen=" + isSeen +
+                ", isDelivered=" + isDelivered +
                 '}';
     }
 }

@@ -9,6 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -261,6 +263,21 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                         exception.printStackTrace();
                     }
                 });
+
+        fireStore.collection("clients")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
+                        if (client != null) {
+                            Log.d(TAG, "Query Vendor by email="+client.toString());
+
+                            updateUI();
+                        }
+                    }
+                });
     }
 
     private void addClientToFireStore(String displayedName) {
@@ -285,7 +302,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         intent.putExtra("client", client);
         Log.d(TAG, "updateUI, client=" + client.toString());
         startActivity(intent);
-        finish();
+
     }
 
     @Override

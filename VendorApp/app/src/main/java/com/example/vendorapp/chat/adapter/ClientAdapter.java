@@ -47,7 +47,7 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Client client = mClients.get(position);
-        holder.username.setText("vendor name: " + client.getUserName());
+        holder.username.setText("client name: " + client.getUserName());
         holder.profile_image.setImageResource(R.mipmap.ic_launcher);
 //        Glide.with(mContext).load(vendor.getImage()).into(holder.profile_image);
 

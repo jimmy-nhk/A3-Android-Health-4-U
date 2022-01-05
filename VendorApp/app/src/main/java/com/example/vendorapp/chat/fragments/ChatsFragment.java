@@ -70,6 +70,7 @@ public class ChatsFragment extends Fragment {
         fireStore = FirebaseFirestore.getInstance();
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
         clientCollection = fireStore.collection(CLIENT_COLLECTION);
+        Log.d(TAG, "ChatFragment inits everything successfully");
         loadMessage();
 
         return view;
@@ -96,7 +97,7 @@ public class ChatsFragment extends Fragment {
 
                     // get the one who sends message to the current user
                     if (messageObject.getReceiver().equals(currentVendor.getUserName())){
-                        clientsList.add(messageObject.getReceiver());
+                        clientsList.add(messageObject.getSender());
                     }
                 }
 
@@ -131,7 +132,7 @@ public class ChatsFragment extends Fragment {
                 ){
                     client = ds.toObject(Client.class);
 
-                    Log.d(TAG, "vendor: " + client.toString());
+                    Log.d(TAG, "client: " + client.toString());
                     for (String userName: clientsList){
                         if (userName.equals(client.getUserName())){
                             mClients.add(client);
@@ -139,7 +140,7 @@ public class ChatsFragment extends Fragment {
                     }
                 }
 
-                Log.d(TAG, "mVendors: size " + mClients.size());
+                Log.d(TAG, "mClients: size " + mClients.size());
                 clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, true);
                 recyclerView.setAdapter(clientAdapter);
 

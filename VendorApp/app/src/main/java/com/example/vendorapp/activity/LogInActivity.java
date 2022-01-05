@@ -22,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -109,7 +111,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         userCollection.addSnapshotListener((value, error) -> {
             if (value != null) {
                 for (QueryDocumentSnapshot doc : value) {
-                    Log.d(TAG, "onEvent: " + doc.get("name"));
+                    Log.d(TAG, "onEvent: " + doc.get("userName"));
                 }
             }
         });
@@ -152,7 +154,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //        password = "222222";
 //        username = "";
 
-        email = "v4@gmail.com";
+        email = "v1@gmail.com";
         password = "111111";
         username = "";
 
@@ -229,19 +231,34 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private void getFirebaseVendorByEmail(String email) {
 
         Log.d(TAG, "getFirebaseVendorByEmail: " + email);
+//        fireStore.collection("vendors")
+//                .whereEqualTo("email", email)
+//                .addSnapshotListener((value, e) -> {
+//                    if (e != null) {
+//                        Log.w(TAG, "Listen failed.", e);
+//                        return;
+//                    }
+//
+//                    Log.d(TAG, "value size: " + value.size());
+//                    if (value != null) {
+//                        DocumentSnapshot doc = value.getDocuments().get(0);
+//                        if (doc != null) {
+//                            vendor = doc.toObject(Vendor.class);
+//                            Log.d(TAG, "Query Vendor by email="+vendor.toString());
+//
+//                            updateUI();
+//                        }
+//                    }
+//                });
+
         fireStore.collection("vendors")
                 .whereEqualTo("email", email)
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-
-                    Log.d(TAG, "value size: " + value.size());
-                    if (value != null) {
-                        DocumentSnapshot doc = value.getDocuments().get(0);
-                        if (doc != null) {
-                            vendor = doc.toObject(Vendor.class);
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        vendor = queryDocumentSnapshots.getDocuments().get(0).toObject(Vendor.class);
+                        if (vendor != null) {
                             Log.d(TAG, "Query Vendor by email="+vendor.toString());
 
                             updateUI();
@@ -325,6 +342,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // update UI
     private void updateUI() {
+
+
+        // going into main
         Intent intent = new Intent(LogInActivity.this, MainActivity.class);
         intent.putExtra("vendor", vendor);
         Log.d(TAG, "LoginActivity, send parcel to MainActivity: updateUI=" + vendor.toString());
@@ -365,6 +385,13 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             handleSignInResult(result);
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        email = "";
+        password = "";
     }
 
     public void signUpActivity(View view) {

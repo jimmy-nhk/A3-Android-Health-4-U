@@ -9,11 +9,14 @@ import com.example.clientapp.model.Vendor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,7 +53,7 @@ public class MessageActivity extends AppCompatActivity {
     ImageButton btn_send;
     EditText text_send;
 
-    EventListener seenListener;
+
 
 
     Intent intent;
@@ -58,9 +61,7 @@ public class MessageActivity extends AppCompatActivity {
     private int messageSize ;
     private FirebaseFirestore fireStore;
     private CollectionReference messageCollection;
-    private CollectionReference vendorCollection;
 
-    private final String VENDOR_COLLECTION = "vendors";
     private final String MESSAGE_COLLECTION = "messages";
     private final String TAG = "MessageActivity";
 
@@ -115,7 +116,6 @@ public class MessageActivity extends AppCompatActivity {
         // init service
         fireStore = FirebaseFirestore.getInstance();
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
-        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
 
 
         intent = getIntent();
@@ -132,46 +132,45 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-//    private void seenMessage(){
-//
-//        seenListener = (EventListener) messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//
-//                MessageObject messageObject;
-//                assert value != null;
-//                for (DocumentSnapshot ds: value
-//                     ) {
-//                    messageObject = ds.toObject(MessageObject.class);
-//
-//                    // check the message is alraedy read
-//                    if (messageObject.getReceiver().equals(currentClient.getUserName())
-//                        && messageObject.getSender().equals(currentVendor.getUserName())){
-//
-//                        // set the isSeen to true
-//                        HashMap<String , Object> hashMap = new HashMap<>();
-//                        hashMap.put("isSeen", true);
-//
-//                        // update db
-//                        ds.getReference().update(hashMap);
-//                    }
-//                }
-//            }
-//        });
-//    }
+    private void seenMessage(){
+
+        messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                MessageObject messageObject;
+                assert value != null;
+                for (DocumentSnapshot ds: value
+                     ) {
+                    messageObject = ds.toObject(MessageObject.class);
+
+                    // check the message is alraedy read
+                    if (messageObject.getReceiver().equals(currentClient.getUserName())
+                        && messageObject.getSender().equals(currentVendor.getUserName())){
+
+                        // set the isSeen to true
+                        HashMap<String , Object> hashMap = new HashMap<>();
+                        hashMap.put("isSeen", true);
+
+                        // update db
+                        ds.getReference().update(hashMap);
+                    }
+                }
+            }
+        });
+    }
 
     private void sendMessage(String sender, String receiver, String message){
 
         messageSize++;
         // init message
-        MessageObject messageObject = new MessageObject( messageSize,sender, receiver, message , false);
+        MessageObject messageObject = new MessageObject( messageSize,sender, receiver, message , false, true);
 
         // add message to db
         messageCollection.document(messageObject.getId() + "")
                 .set(messageObject.toMap())
                 .addOnSuccessListener(unused -> {
                     Log.d(TAG, "Successfully added Message to FireStore: " + messageObject.toString());
-
 
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add Message to FireStore: " + messageObject.toString()));
@@ -183,66 +182,47 @@ public class MessageActivity extends AppCompatActivity {
 
 
         // load items
-        messageCollection.addSnapshotListener((value, error) -> {
+        messageCollection.orderBy("id").addSnapshotListener((value, error) -> {
             messageObjectList = new ArrayList<>();
 
             messageSize = value.size();
 
             MessageObject messageObject;
+
+
             //scan the value from db
-            for (int i = value.size() - 1 ; i >= 0; i--){
-                messageObject = value.getDocuments().get(i).toObject(MessageObject.class);
+            for (DocumentSnapshot ds: value
+            ) {
+                messageObject = ds.toObject(MessageObject.class);
 
 
                 //validate the condition to add the message to the list
                 if (messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName()) ||
-                    messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName())){
+                        messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName())) {
 
-                    // add message
                     messageObjectList.add(messageObject);
+
+
                 }
-
-
             }
             // set reverse the collection
-            Collections.reverse(messageObjectList);
+//            Collections.reverse(messageObjectList);
             messageAdapter = new MessageAdapter(MessageActivity.this, messageObjectList, currentClient , currentVendor);
             recyclerView.setAdapter(messageAdapter);
 
         });
     }
 
-    private void toggleStatus(String status){
-
-        // update vendor
-        vendorCollection.document(currentVendor.getId()+"")
-                .update("status", status)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated status!");
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "DocumentSnapshot fail updated status!");
-
-                    }
-                });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        toggleStatus("online");
-    }
-
     @Override
     protected void onPause() {
+        finish();
         super.onPause();
+    }
 
-        toggleStatus("offline");
+    @Override
+    public void onBackPressed() {
+
+        finish();
+        super.onBackPressed();
     }
 }
