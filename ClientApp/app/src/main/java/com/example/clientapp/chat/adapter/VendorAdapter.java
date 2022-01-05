@@ -20,12 +20,14 @@ import java.util.List;
 
 public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder> {
 
+    // attributes
     private Context mContext;
     private List<Vendor> mVendors;
     private final static String TAG = "UserAdapter";
     private Client client;
     private boolean isChat;
 
+    // constructor
     public VendorAdapter(Context mContext, List<Vendor> vendors, Client currentClient, boolean isChat){
         this.mContext = mContext;
         this.mVendors = vendors;
@@ -44,6 +46,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        // set components
         Vendor vendor = mVendors.get(position);
         holder.username.setText("vendor name: " + vendor.getUserName());
         holder.profile_image.setImageResource(R.mipmap.ic_launcher);

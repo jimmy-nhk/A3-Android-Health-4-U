@@ -27,6 +27,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
     private Context context;
     private LayoutInflater mLayoutInflater;
 
+    // constructor
     public HistoryRecyclerViewAdapter(List<Cart> cartList, Context context) {
         this.cartList = cartList;
         this.context = context;
@@ -54,8 +55,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         // take the cart
         Cart cart = cartList.get(position);
 
+        // orderList
         List<Order> orderList = cart.getOrderList();
 
+        // idString
         String idString = "";
         for (Order order: orderList){
             String id = idString + " " + String.valueOf(order.getId());

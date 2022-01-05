@@ -134,6 +134,8 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+
+
     private void seenMessage(){
 
         messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {

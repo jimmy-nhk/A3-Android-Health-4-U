@@ -92,6 +92,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
 
+        // get item view type
         if (messageObjectList.get(position).getSender().equals(client.getUserName())){
             return MSG_TYPE_RIGHT;
         } else

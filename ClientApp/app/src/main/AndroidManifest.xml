@@ -22,8 +22,7 @@
             android:exported="false" />
         <activity
             android:name=".chat.MainChatActivity"
-            android:exported="false"
-            android:parentActivityName=".activity.MainActivity" />
+            android:exported="false" />
 
         <service
             android:name=".helper.broadcast.NotificationService"
