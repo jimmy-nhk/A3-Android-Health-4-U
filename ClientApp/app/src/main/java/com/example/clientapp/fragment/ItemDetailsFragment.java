@@ -26,7 +26,12 @@ public class ItemDetailsFragment extends Fragment {
 
     // Views
     TextView itemNameTxt;
+    TextView itemPriceTxt;
+    TextView itemDescriptionTxt;
+    TextView itemCategoryTxt;
+    TextView itemCaloriesTxt;
     TextView storeNameTxt;
+    TextView itemExpirationDateTxt;
 
     private String mParam1;
     private String mParam2;
@@ -79,8 +84,6 @@ public class ItemDetailsFragment extends Fragment {
         Fragment fragment = new StoreDetailsFragment();
         fragment.setArguments(bundle);
 
-
-
         try {
             // Go to item detail fragment
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -93,13 +96,23 @@ public class ItemDetailsFragment extends Fragment {
     }
 
     private void displayItemDetail() {
-        itemNameTxt.setText(item.toString());
-        storeNameTxt.setText(("Click here to go to Store profile: " + (item.getVendorID())));
+//        itemNameTxt.setText(item.getName());
+        itemPriceTxt.setText(("₫ " + item.getPrice()));
+//        itemDescriptionTxt.setText(item.getDescription());
+        itemCategoryTxt.setText(item.getCategory());
+        itemCaloriesTxt.setText((item.getCalories() + " cal"));
+        itemExpirationDateTxt.setText(item.getExpireDate());
+        storeNameTxt.setText(("Store profile: " + (item.getVendorID())));
     }
 
     private void getViews(View view) {
         itemNameTxt = view.findViewById(R.id.itemNameText);
         storeNameTxt = view.findViewById(R.id.storeNameText);
+        itemPriceTxt = view.findViewById(R.id.itemPriceText);
+        itemDescriptionTxt = view.findViewById(R.id.itemDescriptionText);
+        itemCaloriesTxt = view.findViewById(R.id.itemCaloriesText);
+        itemCategoryTxt = view.findViewById(R.id.itemCategoryText);
+        itemExpirationDateTxt = view.findViewById(R.id.itemExpirationDateText);
 
         // Set store on click listener
         storeNameTxt.setOnClickListener(v -> handleStoreClick());

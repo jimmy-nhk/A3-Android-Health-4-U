@@ -1,22 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.ItemDetailsFragment"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/itemNameText"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="name"/>
+        android:layout_height="300sp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        android:layout_marginTop="-10dp"
+        android:paddingTop="10dp">
+        <ImageView
+            android:id="@+id/storeCoverImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/food"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/item_image"/>
+    </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/storeNameText"
-        android:layout_marginTop="30dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_blue"
-        android:clickable="true"/>
+        android:padding="20dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="20dp"
+            android:backgroundTint="@color/primary_blue_light_transparent">
+            <TextView
+                android:id="@+id/itemCategoryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="20dp"
+                android:text="Salad"
+                android:textSize="14sp"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="20dp"
+            android:backgroundTint="@color/primary_blue_light_transparent">
+            <TextView
+                android:id="@+id/itemCaloriesText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="20dp"
+                android:text="500 cal"
+                android:textSize="15sp"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
+        <TextView
+            android:id="@+id/itemNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item name"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/itemPriceText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="₫ 250.000"
+            android:textSize="24sp"
+            android:textColor="@color/primary_blue_light"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/storeNameText"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary_blue"
+            android:clickable="true"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="19sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/itemDescriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A Caesar salad is a green salad of romaine lettuce and croutons dressed with lemon juice, olive oil, egg, Worcestershire sauce, anchovies, garlic, Dijon mustard, Parmesan cheese, and black pepper. In its original form, this salad was prepared and served tableside."
+            android:textSize="15sp"/>
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:text="Category"-->
+<!--            android:textSize="19sp"-->
+<!--            android:textStyle="bold"/>-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Expiration date"
+            android:textSize="19sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/itemExpirationDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="02/03/2022"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
 </LinearLayout>
