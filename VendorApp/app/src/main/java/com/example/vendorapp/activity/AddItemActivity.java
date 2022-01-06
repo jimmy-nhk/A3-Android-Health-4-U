@@ -156,6 +156,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
                     updateUI(item);
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "Fail to add vendor to FireStore: " + item.toString()));
+
     }
 
     private boolean validate() {
