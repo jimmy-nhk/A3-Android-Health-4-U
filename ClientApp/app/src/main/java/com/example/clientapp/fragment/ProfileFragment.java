@@ -3,9 +3,11 @@ package com.example.clientapp.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,6 +17,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clientapp.R;
+import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Client;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -162,6 +167,7 @@ public class ProfileFragment extends Fragment {
         dobTextView.setText(dob);
         weightTextView.setText(String.valueOf(weight));
         heightTextView.setText(String.valueOf(height));
+        setStoreImage(client.getImage());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -288,5 +294,31 @@ public class ProfileFragment extends Fragment {
                     Toast.makeText(getContext(), "Error updating document path=" + path, Toast.LENGTH_SHORT).show();
                 });
 
+    }
+
+    private void setStoreImage(String imageUrl) {
+        try {
+            if (imageUrl.length() > 0) {
+//                Log.d("setClientImage", imageUrl);
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(imageUrl);
+
+                final long ONE_MEGABYTE = 1024 * 1024;
+                // Handle any errors
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            ((Activity) requireContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            profileImage.setMinimumHeight(dm.heightPixels);
+                            profileImage.setMinimumWidth(dm.widthPixels);
+                            profileImage.setImageBitmap(bm);
+                        }).addOnFailureListener(Throwable::printStackTrace);
+            }
+        } catch (Exception e) {
+//            .setImageResource(R.drawable.bun); //Set something else
+            e.printStackTrace();
+        }
     }
 }
