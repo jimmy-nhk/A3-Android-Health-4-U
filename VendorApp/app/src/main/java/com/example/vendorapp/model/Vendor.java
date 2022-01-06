@@ -40,7 +40,7 @@ public class Vendor implements Parcelable {
 
     }
 
-    public Vendor(int id, String storeName, String fullName, String userName, String email, String phone, String address, int rating, int totalSale, String image, String status) {
+    public Vendor(int id, String storeName, String fullName, String userName, String email, String phone, String address, double rating, int totalSale, String image, String status) {
         this.id = id;
         this.storeName = storeName;
         this.fullName = fullName;
@@ -158,19 +158,17 @@ public class Vendor implements Parcelable {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(id);
         dest.writeString(storeName);
         dest.writeString(fullName);
-        dest.writeString(email);
         dest.writeString(userName);
+        dest.writeString(email);
         dest.writeString(phone);
         dest.writeString(address);
         dest.writeDouble(rating);
         dest.writeInt(totalSale);
-        dest.writeString(image );
+        dest.writeString(image);
         dest.writeString(status);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -178,11 +176,11 @@ public class Vendor implements Parcelable {
         id = in.readInt();
         storeName = in.readString();
         fullName = in.readString();
-        email = in.readString();
         userName = in.readString();
+        email = in.readString();
         phone = in.readString();
         address = in.readString();
-        rating=in.readInt();
+        rating=in.readDouble();
         totalSale=in.readInt();
         image = in.readString();
         status = in.readString();
