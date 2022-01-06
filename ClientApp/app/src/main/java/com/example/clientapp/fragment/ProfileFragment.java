@@ -1,12 +1,20 @@
 package com.example.clientapp.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,11 +22,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.clientapp.R;
 import com.example.clientapp.model.Client;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +49,6 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "ProfileFragment";
-
 
     private TextView fullNameTextView;
     private TextView usernameTextView;
@@ -53,7 +68,15 @@ public class ProfileFragment extends Fragment {
     private double height;
 
     private FirebaseFirestore fireStore;
+    private DocumentReference clientDocRef;
     private Client client;
+
+    // Upload pfp
+    // Uri indicates, where the image will be picked from
+    private Uri filePath;
+    // instance for firebase storage and StorageReference
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -103,10 +126,14 @@ public class ProfileFragment extends Fragment {
     private void initService(View view) {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
-        DocumentReference docRef = fireStore.collection("clients").document(username);
+        clientDocRef = fireStore.collection("clients").document(client.getId() + "");
+
+        // get the Firebase storage reference
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         // load items
-        docRef.addSnapshotListener((value, error) -> {
+        clientDocRef.addSnapshotListener((value, error) -> {
             if (value != null) {
                 Log.d(TAG, "value != null");
                 Client c = value.toObject(Client.class);
@@ -168,10 +195,6 @@ public class ProfileFragment extends Fragment {
         selectImage();
     }
 
-    private void updateImage() {
-
-    }
-
     // Select Image method
     private void selectImage() {
         // Defining Implicit Intent to mobile gallery
@@ -183,5 +206,87 @@ public class ProfileFragment extends Fragment {
                         intent,
                         "Select Image from here..."),
                 PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            uploadImage();
+            try {
+                Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), filePath);
+                profileImage.setImageBitmap(bitmapImg);
+                profileImage.setVisibility(View.VISIBLE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // UploadImage method
+    private void uploadImage() {
+        if (filePath != null) {
+
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(getContext());
+            progressDialog.setTitle("Adding item...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = storageReference
+                    .child(
+                            "items/"
+                                    + UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            // Progress Listener for loading
+// percentage on the dialog box
+            ref.putFile(filePath)
+                    .addOnSuccessListener(
+                            taskSnapshot -> {
+                                // get path to add to item ọbject
+                                String path = taskSnapshot.getStorage().getPath();
+                                // Call function to upload item to DB
+                                updateProfileImage(path);
+
+                                // Image uploaded successfully, turn off the process dialog
+                                progressDialog.dismiss();
+                            })
+
+                    .addOnFailureListener(e -> {
+                        // Error, Image not uploaded
+                        progressDialog.dismiss();
+                    })
+                    .addOnProgressListener(
+                            taskSnapshot -> {
+                                double progress
+                                        = (100.0
+                                        * taskSnapshot.getBytesTransferred()
+                                        / taskSnapshot.getTotalByteCount());
+                                progressDialog.setMessage(
+                                        "Added "
+                                                + (int) progress + "%");
+                            });
+        }
+    }
+
+    private void updateProfileImage(String path) {
+//        Toast.makeText(getContext(), "path=" + path, Toast.LENGTH_SHORT).show();
+
+        clientDocRef
+                .update("image", path)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    Toast.makeText(getContext(), "update succeeded", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error updating document", e);
+                    Toast.makeText(getContext(), "Error updating document path=" + path, Toast.LENGTH_SHORT).show();
+                });
+
     }
 }
