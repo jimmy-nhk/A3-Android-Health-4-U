@@ -13,28 +13,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VendorApp">
+        <receiver
+            android:name=".helper.NotificationReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".chat.MessageActivity"
             android:exported="false" />
         <activity
             android:name=".chat.MainChatActivity"
             android:exported="false" />
-
         <activity
             android:name=".activity.OrderDetailActivity"
             android:exported="false"
-            android:parentActivityName=".activity.MainActivity"
-            />
+            android:parentActivityName=".activity.MainActivity" />
 
         <service
             android:name=".helper.NotificationService"
-            android:label="@string/app_name"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
-                <action
-                    android:name = "app.com.notifyme.NotificationService" />
-                <category android:name= "android.intent.category.DEFAULT" />
+                <action android:name="app.com.notifyme.NotificationService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 

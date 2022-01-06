@@ -22,6 +22,7 @@
             android:exported="false" />
         <activity
             android:name=".chat.MainChatActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:exported="false" />
 
         <service

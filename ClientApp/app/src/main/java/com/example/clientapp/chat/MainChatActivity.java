@@ -3,12 +3,17 @@ package com.example.clientapp.chat;
 import com.example.clientapp.R;
 import com.example.clientapp.chat.fragments.ChatsFragment;
 import com.example.clientapp.chat.fragments.VendorsFragment;
+import com.example.clientapp.chat.model.MessageObject;
 import com.example.clientapp.model.Client;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,10 +39,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainChatActivity extends AppCompatActivity {
 
+    // attributes
     CircleImageView profile_image;
     TextView username;
-
-    private FirebaseFirestore fireStore;
 
     private Client currentClient;
 
@@ -71,7 +75,6 @@ public class MainChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-        fireStore = FirebaseFirestore.getInstance();
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -85,8 +88,8 @@ public class MainChatActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
 
-
     }
+
 
 
     @Override

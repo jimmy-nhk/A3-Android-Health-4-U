@@ -13,6 +13,7 @@ import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
@@ -30,12 +32,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.chat.MainChatActivity;
+import com.example.vendorapp.chat.model.MessageObject;
 import com.example.vendorapp.fragment.ItemListFragment;
 import com.example.vendorapp.fragment.HomeFragment;
 import com.example.vendorapp.fragment.OrderListFragment;
 import com.example.vendorapp.fragment.ProfileFragment;
+import com.example.vendorapp.helper.NotificationReceiver;
 import com.example.vendorapp.helper.NotificationService;
 import com.example.vendorapp.helper.OrderViewModel;
+import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Order;
 import com.example.vendorapp.model.Vendor;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,23 +49,39 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private NotificationReceiver notificationReceiver;
+    private IntentFilter intentFilter;
     private static final String TAG = "MainActivity";
-    private static final String ORDER_COMING = "New order needs processing!";
+    public static final String ORDER_COMING = "New order needs processing!";
+    public static final String NEW_MESSAGE = "New message is coming";
     private Vendor vendor;
     private FragmentTransaction transaction;
     private static final String ORDER_COLLECTION = "orders";
     private static final String VENDOR_COLLECTION = "vendors";
     private List<Order> orderList;
+
+    // init firestore
     private FirebaseFirestore fireStore;
     private CollectionReference orderCollection;
     private CollectionReference vendorCollection;
+
+    private CollectionReference messageCollection;
+    private final String MESSAGE_COLLECTION = "messages";
+    private CollectionReference clientCollection;
+    private final String CLIENT_COLLECTION = "clients";
+
     private OrderViewModel orderViewModel;
 
     private BottomNavigationView bottomNavigationView;
@@ -84,11 +105,87 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null) {
             vendor = (Vendor) intent.getParcelableExtra("vendor");
         }
+        Log.d(TAG, "vendor passing from Login: " + vendor.toString());
 
         initService();
+        listenMessage();
     }
 
-    // on chat btn
+    private void listenMessage() {
+
+        messageCollection = fireStore.collection(MESSAGE_COLLECTION);
+        clientCollection = fireStore.collection(CLIENT_COLLECTION);
+
+        // listen for messages
+        messageCollection
+                .orderBy("id")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        // check not null
+
+//                        for (DocumentSnapshot ds: value.getDocuments()
+//                             ) {
+//                            MessageObject messageObject = ds.toObject(MessageObject.class);
+//                            Log.d(TAG, "message newest: " + messageObject.toString());
+//
+//                        }
+                        try {
+
+                            Log.d(TAG, "message size: " + value.getDocuments().size());
+                            int size = value.getDocuments().size() - 1;
+
+                            DocumentSnapshot ds = value.getDocuments().get(size);
+                            if (ds != null) {
+                                MessageObject messageObject = ds.toObject(MessageObject.class);
+                                Log.d(TAG, "message newest: " + messageObject.toString());
+
+                                try {
+                                    if (messageObject.isNewestMessage()) {
+
+                                        // get the vendor object
+                                        clientCollection.whereEqualTo("username", messageObject.getSender() + "")
+                                                .get()
+                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        try {
+                                                            Client client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
+
+                                                            Log.d(TAG, "client who just sent message: " + client.toString());
+                                                            // TODO: send notification here
+                                                            Log.d(TAG, "New noti");
+
+                                                            Intent intent = new Intent(NEW_MESSAGE);
+                                                            intent.putExtra("message", messageObject.getMessage());
+                                                            intent.putExtra("client", client);
+                                                            intent.putExtra("vendor", vendor);
+                                                            sendBroadcast(intent);
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+
+
+                                    }
+
+                                    // validate the error
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+    }
+
+        // on chat btn
     public void onChatBtnClick(View view){
 
         // pass to new intent
@@ -174,6 +271,34 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+
+
+    private void registerService(){
+        notificationReceiver = new NotificationReceiver();
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(ORDER_COMING);
+        intentFilter.addAction(NEW_MESSAGE);
+        this.registerReceiver(notificationReceiver, intentFilter);
+    }
+
+    private Order orderPassed;
+
+    public Order getOrderPassed() {
+        return orderPassed;
+    }
+
+    public void setOrderPassed(Order orderPassed) {
+        this.orderPassed = orderPassed;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
+
     // init service
     public void initService() {
         orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
@@ -193,32 +318,57 @@ public class MainActivity extends AppCompatActivity {
 //                    Log.d(TAG, "orderCollectionLoadDb: listSize: " + value.size());
 
                     // validate 0 case
-                    if (value.size() == 0) {
+                    assert value != null;
+                    if (value.getDocuments().size() == 0) {
                         return;
                     }
+
+                    for (DocumentSnapshot ds: value.getDocuments()
+                             ) {
+                            Order messageObject = ds.toObject(Order.class);
+                            Log.d(TAG, "order newest: " + messageObject.toString());
+
+                        }
+
+
+                    int valueSize = value.getDocuments().size();
+                    Log.d(TAG, "orderList size: " + valueSize);
 
                     Order orderModified = null;
                     String currentTime = filterDateOrder(LocalDateTime.now().toString()).substring(0, filterDateOrder(LocalDateTime.now().toString()).length() - 3);
                     Log.d(TAG, "current time changed: " + currentTime);
 
                     // Check if modified
-                    for (DocumentChange documentChange : value.getDocumentChanges()) {
-                        if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                            orderModified = documentChange.getDocument().toObject(Order.class);
+                    for (DocumentChange dc : value.getDocumentChanges()) {
+
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            orderModified = dc.getDocument().toObject(Order.class);
 
                             //FIXME: Cannot receive noti here
                             Log.d(TAG, "order time: " + orderModified.getDate());
 
-                            if (orderModified.getDate().substring(0, orderModified.getDate().length() - 3).equals(currentTime)) {
-                                Log.d(TAG, "order changed: " + orderModified.toString());
-                                Intent intent = new Intent(this, NotificationService.class);
-                                intent.putExtra("message", ORDER_COMING);
+                            if (orderModified.isNewestOrder()) {
+
+                                orderPassed = orderModified;
+                                Intent intent = new Intent(ORDER_COMING);
+                                intent.putExtra("message", ORDER_COMING + "");
                                 intent.putExtra("order", orderModified);
                                 intent.putExtra("vendor",vendor);
-                                intent.setPackage(this.getPackageName());
-                                startService(intent);
+                                sendBroadcast(intent);
+
+
+                                /**Service*/
+//                                Log.d(TAG, "order changed: " + orderModified.toString());
+//                                Intent intent = new Intent(this, NotificationService.class);
+//                                intent.putExtra("message", ORDER_COMING + "");
+//                                intent.putExtra("order", orderModified);
+//                                intent.putExtra("vendor",vendor);
+//                                intent.setPackage(this.getPackageName());
+//                                startService(intent);
                                 break;
                             }
+
+
                         }
                     }
 
@@ -247,6 +397,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                 });
+
+        registerService();
     }
 
     // onStart
@@ -258,29 +410,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    //    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-//        toggleStatus("offline");
-//        finish();
-//
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//        toggleStatus("offline");
-//    }
-//
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        toggleStatus("offline");
-//        finish();
-//
-//    }
 
     // toggle status
     private void toggleStatus(String status){

@@ -61,6 +61,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         MessageObject messageObject = messageObjectList.get(position);
 
+        // set views
         holder.show_message.setText(messageObject.getMessage());
 
 //        if (imageUrl.equals("default")){
@@ -69,19 +70,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 //            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
 //        }
 
-        holder.txt_seen.setVisibility(View.GONE);
+//        holder.txt_seen.setVisibility(View.GONE);
 
         // check for the last message
-//        if (position == messageObjectList.size() - 1){
-//
-//            if (messageObject.getIsSeen()){
-//                holder.txt_seen.setText("Seen");
-//            } else {
-//                holder.txt_seen.setText("Delivered");
-//            }
-//        } else {
-//            holder.txt_seen.setVisibility(View.GONE);
-//        }
+        if (position == messageObjectList.size() - 1){
+
+            if (messageObject.getIsSeen()){
+                holder.txt_seen.setText("Seen");
+            } else {
+                holder.txt_seen.setText("Delivered");
+            }
+        } else {
+            holder.txt_seen.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -101,19 +102,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        // attributes
         private TextView show_message;
         private ImageView profile_image;
         private TextView txt_seen;
 
-
-
+        // constructor
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             show_message = itemView.findViewById(R.id.show_message);
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
-
 
         }
 

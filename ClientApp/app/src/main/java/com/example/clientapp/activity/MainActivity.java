@@ -3,6 +3,7 @@ import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import com.example.clientapp.R;
 import com.example.clientapp.chat.MainChatActivity;
+import com.example.clientapp.chat.model.MessageObject;
 import com.example.clientapp.fragment.CartFragment;
 import com.example.clientapp.fragment.HistoryFragment;
 import com.example.clientapp.fragment.ItemListFragment;
@@ -16,12 +17,14 @@ import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
+import com.example.clientapp.model.Vendor;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CANCEL_NOTIFICATION = "Your order is cancelled!\nCheck it out!";
     public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
     public static final String PROCESS_NOTIFICATION = "Your order is successfully processed!\nCheck it out!";
+    public static final String NEW_MESSAGE = "New Message is coming!";
 
     private NotificationReceiver notificationReceiver;
     private IntentFilter intentFilter;
@@ -118,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
             loadOrderList();
             Log.d(TAG, "onCreate: client=" + client);
         }
+
+        listenMessage();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -356,7 +362,89 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(ORDER_NOTIFICATION);
         intentFilter.addAction(CANCEL_NOTIFICATION);
         intentFilter.addAction(PROCESS_NOTIFICATION);
+        intentFilter.addAction(NEW_MESSAGE);
         this.registerReceiver(notificationReceiver, intentFilter);
+    }
+
+    private CollectionReference messageCollection;
+    private CollectionReference vendorCollection;
+    private final String MESSAGE_COLLECTION = "messages";
+    private final String VENDOR_COLLECTION = "vendors";
+
+    private void listenMessage(){
+
+        messageCollection = fireStore.collection(MESSAGE_COLLECTION);
+        vendorCollection = fireStore.collection(VENDOR_COLLECTION);
+
+        // listen for messages
+        messageCollection
+                .orderBy("id")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        // check not null
+
+//                        for (DocumentSnapshot ds: value.getDocuments()
+//                             ) {
+//                            MessageObject messageObject = ds.toObject(MessageObject.class);
+//                            Log.d(TAG, "message newest: " + messageObject.toString());
+//
+//                        }
+                        try {
+
+                            Log.d(TAG, "message size: " + value.getDocuments().size());
+                            int size = value.getDocuments().size() - 1;
+
+                            DocumentSnapshot ds = value.getDocuments().get(size);
+                            if (ds != null){
+                                MessageObject messageObject = ds.toObject(MessageObject.class);
+                                Log.d(TAG, "message newest: " + messageObject.toString());
+
+                                try {
+                                    if (messageObject.isNewestMessage()){
+
+                                        // get the vendor object
+                                        vendorCollection.whereEqualTo(Vendor.VENDOR_USERNAME +"", messageObject.getSender() + "")
+                                                .get()
+                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        try {
+                                                            Vendor vendor = queryDocumentSnapshots.getDocuments().get(0).toObject(Vendor.class);
+
+                                                            // TODO: send notification here
+                                                            Log.d(TAG, "New noti");
+
+                                                            Intent intent = new Intent(NEW_MESSAGE);
+                                                            intent.putExtra("message", messageObject.getMessage());
+                                                            intent.putExtra("client", client);
+                                                            intent.putExtra("vendor", vendor);
+                                                            sendBroadcast(intent);
+                                                        } catch (Exception e)
+                                                        {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+
+
+                                    }
+
+                                    // validate the error
+                                } catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+
+
+                    }
+                });
     }
 
     // filter the string date

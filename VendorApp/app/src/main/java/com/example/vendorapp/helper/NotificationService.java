@@ -39,6 +39,10 @@ public class NotificationService extends Service {
         Log.e(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
 
+        if (intent == null){
+            Log.d(TAG, "intent null");
+            return START_STICKY;
+        }
         sendNotification(intent);
 
         return START_STICKY;
@@ -68,6 +72,7 @@ public class NotificationService extends Service {
             public void run() {
 
                 String message = intent.getStringExtra("message");
+//                String message = "Hello";
                 createNotificationWithIntent(message, 1, intent);
             }
         });

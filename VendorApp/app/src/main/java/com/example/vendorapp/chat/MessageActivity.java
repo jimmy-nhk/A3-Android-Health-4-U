@@ -32,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
@@ -132,33 +133,43 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void seenMessage(){
-
-        messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                MessageObject messageObject;
-                assert value != null;
-                for (DocumentSnapshot ds: value
-                     ) {
-                    messageObject = ds.toObject(MessageObject.class);
-
-                    // check the message is alraedy read
-                    if (messageObject.getReceiver().equals(currentClient.getUserName())
-                        && messageObject.getSender().equals(currentVendor.getUserName())){
-
-                        // set the isSeen to true
-                        HashMap<String , Object> hashMap = new HashMap<>();
-                        hashMap.put("isSeen", true);
-
-                        // update db
-                        ds.getReference().update(hashMap);
-                    }
-                }
-            }
-        });
-    }
+//    private ListenerRegistration listenerRegistration;
+//
+//    private void seenMessage(){
+//
+//        listenerRegistration = messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//
+//                MessageObject messageObject;
+//                assert value != null;
+//                for (DocumentSnapshot ds: value
+//                     ) {
+//                    messageObject = ds.toObject(MessageObject.class);
+//
+//                    // check the message is alraedy read
+//                    if (messageObject.getReceiver().equals(currentClient.getUserName())
+//                        && messageObject.getSender().equals(currentVendor.getUserName())){
+//
+//                        // set the isSeen to true
+//                        HashMap<String , Object> hashMap = new HashMap<>();
+//                        hashMap.put("isSeen", true);
+//
+//                        // update db
+//                        Log.d(TAG, "updated isSeen here");
+//
+//                        ds.getReference().update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void unused) {
+//                                Log.d(TAG, "successfully update seen");
+//
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
+//    }
 
     private void sendMessage(String sender, String receiver, String message){
 
@@ -246,7 +257,6 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         toggleStatus("offline");
     }
 }
