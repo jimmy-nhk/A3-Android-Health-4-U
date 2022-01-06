@@ -4,19 +4,21 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.clientapp.R;
-import com.example.clientapp.activity.MainActivity;
+import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
-
-import java.util.Objects;
+import com.example.clientapp.model.Vendor;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ItemDetailsFragment extends Fragment {
 
@@ -26,7 +28,13 @@ public class ItemDetailsFragment extends Fragment {
 
     // Views
     TextView itemNameTxt;
+    TextView itemPriceTxt;
+    TextView itemDescriptionTxt;
+    TextView itemCategoryTxt;
+    TextView itemCaloriesTxt;
     TextView storeNameTxt;
+    TextView itemExpirationDateTxt;
+    Button addToCardButton;
 
     private String mParam1;
     private String mParam2;
@@ -79,8 +87,6 @@ public class ItemDetailsFragment extends Fragment {
         Fragment fragment = new StoreDetailsFragment();
         fragment.setArguments(bundle);
 
-
-
         try {
             // Go to item detail fragment
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
@@ -92,17 +98,60 @@ public class ItemDetailsFragment extends Fragment {
         }
     }
 
+    private void getStoreName(String vendorID) {
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = fireStore.collection("vendors").document(vendorID);
+        docRef.addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Log.w("ItemDetailsFragment", "Listen failed.", e);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+//                    Log.d("ItemDetailsFragment", "Current data: " + snapshot.getData());
+                try {
+                    Vendor vendor = snapshot.toObject(Vendor.class);
+                    storeNameTxt.setText(vendor != null ? vendor.getStoreName() : "");
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            } else {
+                Log.d("ItemDetailsFragment", "Current data: null");
+            }
+        });
+
+    }
+
     private void displayItemDetail() {
-        itemNameTxt.setText(item.toString());
-        storeNameTxt.setText(("Click here to go to Store profile: " + (item.getVendorID())));
+        itemNameTxt.setText(item.getName());
+        itemPriceTxt.setText(("$ " + item.getPrice()));
+        itemDescriptionTxt.setText(item.getDescription());
+        itemCategoryTxt.setText(item.getCategory());
+        itemCaloriesTxt.setText((item.getCalories() + " cal"));
+        itemExpirationDateTxt.setText(item.getExpireDate());
+        getStoreName(item.getVendorID() + "");
     }
 
     private void getViews(View view) {
         itemNameTxt = view.findViewById(R.id.itemNameText);
         storeNameTxt = view.findViewById(R.id.storeNameText);
+        itemPriceTxt = view.findViewById(R.id.itemPriceText);
+        itemDescriptionTxt = view.findViewById(R.id.itemDescriptionText);
+        itemCaloriesTxt = view.findViewById(R.id.itemCaloriesText);
+        itemCategoryTxt = view.findViewById(R.id.itemCategoryText);
+        itemExpirationDateTxt = view.findViewById(R.id.itemExpirationDateText);
+        addToCardButton = view.findViewById(R.id.addToCartBtn);
+
+        // addToCardButton onClick
+        addToCardButton.setOnClickListener(v -> handleAddItemToCardClick(item));
 
         // Set store on click listener
         storeNameTxt.setOnClickListener(v -> handleStoreClick());
     }
 
+    private void handleAddItemToCardClick(Item item) {
+        if (item == null) return;
+        ItemViewModel viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
+        viewModel.addItem(item);
+    }
 }
