@@ -1,13 +1,18 @@
 package com.example.clientapp.fragment;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.clientapp.R;
@@ -21,6 +26,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+    // request code
+    private final int PICK_IMAGE_REQUEST = 22;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +42,7 @@ public class ProfileFragment extends Fragment {
     private TextView dobTextView;
     private TextView weightTextView;
     private TextView heightTextView;
+    private ImageView profileImage;
 
     private String fullName;
     private String username;
@@ -129,6 +137,7 @@ public class ProfileFragment extends Fragment {
         heightTextView.setText(String.valueOf(height));
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void getViews(View view) {
         fullNameTextView = view.findViewById(R.id.fullNameTxt);
         usernameTextView = view.findViewById(R.id.usernameTxt);
@@ -137,5 +146,42 @@ public class ProfileFragment extends Fragment {
         dobTextView = view.findViewById(R.id.dobTxt);
         weightTextView = view.findViewById(R.id.weightTxt);
         heightTextView = view.findViewById(R.id.heightTxt);
+        CardView whiteCover = view.findViewById(R.id.whiteCoverCard);
+
+        profileImage = view.findViewById(R.id.profileImage);
+        profileImage.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                whiteCover.setVisibility(View.VISIBLE);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                whiteCover.setVisibility(View.GONE);
+            }
+            return false;
+        });
+        profileImage.setOnLongClickListener(v -> {
+            whiteCover.setVisibility(View.VISIBLE);
+            return false;
+        });
+        profileImage.setOnClickListener(v -> handleProfileImageClick());
+    }
+
+    private void handleProfileImageClick() {
+        selectImage();
+    }
+
+    private void updateImage() {
+
+    }
+
+    // Select Image method
+    private void selectImage() {
+        // Defining Implicit Intent to mobile gallery
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(
+                Intent.createChooser(
+                        intent,
+                        "Select Image from here..."),
+                PICK_IMAGE_REQUEST);
     }
 }

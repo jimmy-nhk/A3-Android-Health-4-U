@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -85,12 +86,12 @@ public class SignUpStep2Activity extends AppCompatActivity {
             updateDobLabel();
         };
 
-//        dobText.setOnTouchListener((v, event) -> {
-//            new DatePickerDialog(this, date, calendar
-//                    .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-//                    calendar.get(Calendar.DAY_OF_MONTH)).show();
-//            return true;
-//        });
+        editDob.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.performClick();
+            }
+            return true;
+        });
 
         editDob.setOnClickListener(v -> new DatePickerDialog(this, date, calendar
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH),

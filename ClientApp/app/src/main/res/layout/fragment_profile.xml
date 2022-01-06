@@ -27,6 +27,7 @@
             android:layout_width="106dp"
             android:layout_height="106dp"
             app:cardCornerRadius="50dp"
+            app:cardBackgroundColor="@color/white"
             android:layout_marginTop="0dp">
         </androidx.cardview.widget.CardView>
 
@@ -38,10 +39,22 @@
             android:clickable="true">
 
             <ImageView
+                android:id="@+id/profileImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/food"
                 android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/whiteCoverCard"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            app:cardCornerRadius="50dp"
+            android:layout_marginTop="-102dp"
+            android:backgroundTint="@color/white_transparent"
+            android:clickable="true"
+            android:visibility="gone">
         </androidx.cardview.widget.CardView>
 
         <ImageView
