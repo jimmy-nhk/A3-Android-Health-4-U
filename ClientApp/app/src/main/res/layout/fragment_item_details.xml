@@ -129,7 +129,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:clickable="true"
-                    android:textColor="@color/primary_blue"/>
+                    android:textColor="@color/primary_blue_light"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="match_parent"
