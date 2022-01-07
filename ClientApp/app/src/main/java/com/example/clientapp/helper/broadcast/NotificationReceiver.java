@@ -51,7 +51,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         // to chat
         if (intent.getAction().equals(MainActivity.NEW_MESSAGE)){
             String message = intent.getStringExtra("message");
-            createNotificationToChat(message+"", context , 0, intent);
+            createNotificationToChat(message+"", context , 1, intent);
             return;
         }
 
@@ -99,7 +99,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(mainActivity);
 
             // add with parent stack
-            stackBuilder.addNextIntentWithParentStack(new Intent(mainActivity, MainChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK )); // add main activity
+            stackBuilder.addNextIntentWithParentStack(new Intent(mainActivity, MainChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP )); // add main activity
             stackBuilder.addNextIntent(intent);
 
             stackBuilder.editIntentAt(0).putExtra("client", client);
@@ -108,6 +108,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 // Get the PendingIntent containing the entire back stack
             pendingIntent =
                     stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
+            int numMessages = 0;
 
             builder.setContentTitle(""+ vendor.getUserName())                            // required
                     .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
@@ -115,6 +116,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
+                    .setNumber(++ numMessages)
                     .setTicker(aMessage)
                     .setVibrate(new long[]{100, 200, 300});
 
@@ -135,8 +137,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
             Notification notification = builder.build();
-            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
-            notifManager.notify(oneTimeID, notification); // Notify by id and built notification
+//            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
+            notifManager.notify(notifyId, notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();

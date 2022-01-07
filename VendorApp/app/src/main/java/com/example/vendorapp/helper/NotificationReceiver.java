@@ -81,7 +81,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(mainActivity);
 
             // add with parent stack
-            stackBuilder.addNextIntentWithParentStack(new Intent(mainActivity, MainChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK )); // add main activity
+            stackBuilder.addNextIntentWithParentStack(new Intent(mainActivity, MainChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP )); // add main activity
             stackBuilder.addNextIntent(intent);
 
             stackBuilder.editIntentAt(0).putExtra("vendor", vendor);
@@ -118,7 +118,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             Notification notification = builder.build();
             int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
-            notifManager.notify(oneTimeID, notification); // Notify by id and built notification
+            notifManager.notify(notifyId, notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();
@@ -190,5 +190,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             ignored.printStackTrace();
         }
     }
+
+
 
 }

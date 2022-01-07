@@ -79,6 +79,11 @@ public class MessageObject {
         Log.d("MessageObject", "currentTime in int: " + convertInt(currentTime));
         Log.d("MessageObject", "message object currentTime in int: " + convertInt(timeStamp));
 
+        // check if the date is current
+        if (!this.timeStamp.substring(0, 11).equals(currentTime.substring(0, 11))){
+            return false;
+        }
+
         // check if the time is current
         if (convertInt(timeStamp) >= currentTimeInt - 5){
             return true;

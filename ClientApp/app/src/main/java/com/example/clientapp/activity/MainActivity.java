@@ -248,6 +248,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        toggleStatus("online");
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
 
         try {
@@ -263,7 +269,8 @@ public class MainActivity extends AppCompatActivity {
 //        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
 //            finish();
 //        } else {
-            super.onBackPressed();
+        toggleStatus("offline");
+        super.onBackPressed();
 //        }
     }
 

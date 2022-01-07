@@ -131,14 +131,33 @@ public class MainActivity extends AppCompatActivity {
 //                            Log.d(TAG, "message newest: " + messageObject.toString());
 //
 //                        }
+
+                        try {
+                            DocumentChange dc = value.getDocumentChanges().get(value.getDocumentChanges().size() - 1);
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         try {
 
                             Log.d(TAG, "message size: " + value.getDocuments().size());
                             int size = value.getDocuments().size() - 1;
 
                             DocumentSnapshot ds = value.getDocuments().get(size);
+                            DocumentChange dc = value.getDocumentChanges().get(value.getDocumentChanges().size() - 1);
+
+                            if (dc.getType() == DocumentChange.Type.ADDED){
+
+                            } else {
+                                return;
+                            }
+
                             if (ds != null) {
-                                MessageObject messageObject = ds.toObject(MessageObject.class);
+//                                MessageObject messageObject = ds.toObject(MessageObject.class);
+
+                                MessageObject messageObject = dc.getDocument().toObject(MessageObject.class);
+                                Log.d(TAG, "dc type " + messageObject.toString());
+
                                 Log.d(TAG, "message newest: " + messageObject.toString());
 
                                 try {
@@ -162,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                                                             intent.putExtra("client", client);
                                                             intent.putExtra("vendor", vendor);
                                                             sendBroadcast(intent);
+                                                            return;
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
@@ -184,7 +204,32 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+    @Override
+    protected void onResume() {
+        toggleStatus("online");
+        super.onResume();
+    }
 
+    @Override
+    public void onBackPressed() {
+
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+
+            Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
+
+
+        } catch (Exception e){
+
+        }
+//        // validate the back button in the device
+//        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+//            finish();
+//        } else {
+        toggleStatus("offline");
+        super.onBackPressed();
+//        }
+    }
         // on chat btn
     public void onChatBtnClick(View view){
 

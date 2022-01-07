@@ -62,7 +62,12 @@ public class Order implements Parcelable {
         Log.d("OrderClass", "currentTime: " + currentTime);
         Log.d("OrderClass", "OrderClass object currentTime: " + this.date);
 
-        // check if the time is current
+        // check if the date is current
+        if (!this.date.substring(0, 11).equals(currentTime.substring(0, 11))){
+            return false;
+        }
+
+        // if yes, check the time is close to current
         if (convertInt(this.date) >= currentTimeInt - 60){
             return true;
         }
@@ -100,15 +105,20 @@ public class Order implements Parcelable {
 
     // convert time to integer
     private int convertInt(String currentTime) {
-        String withoutDate = currentTime.substring(11, currentTime.length());
-        Log.d("OrderClass", "without date:" + withoutDate);
-        int hour = Integer.parseInt(withoutDate.substring(0,2));
-        int min = Integer.parseInt(withoutDate.substring(3,5));
-        int second = Integer.parseInt(withoutDate.substring(6,8));
+       try {
+           String withoutDate = currentTime.substring(11, currentTime.length() );
+           Log.d("OrderClass", "without date:" + withoutDate);
+           int hour = Integer.parseInt(withoutDate.substring(0,2));
+           int min = Integer.parseInt(withoutDate.substring(3,5));
+           int second = Integer.parseInt(withoutDate.substring(6,8));
 
-        Log.d("OrderClass", "time second: " + hour +" " + min + " " + second);
+           Log.d("OrderClass", "time second: " + hour +" " + min + " " + second);
 
-        return hour * 3600 + min * 60 + second;
+           return hour * 3600 + min * 60 + second;
+       } catch (Exception e){
+           return 0;
+       }
+
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {

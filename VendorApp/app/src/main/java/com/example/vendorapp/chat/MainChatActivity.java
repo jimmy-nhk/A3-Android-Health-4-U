@@ -103,33 +103,8 @@ public class MainChatActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
     }
 
-
-    //
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Log.d(TAG, "onDestroy");
-//
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        toggleStatus("online");
-//        Log.d(TAG, "onResume");
-//
-//    }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        toggleStatus("offline");
-//        Log.d(TAG, "onPause");
-//
-//    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter{
 
