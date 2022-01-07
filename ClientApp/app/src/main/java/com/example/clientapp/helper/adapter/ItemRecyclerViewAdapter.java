@@ -95,7 +95,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         // init final position for on click
         holder.addBtn.setOnClickListener(v -> {
             viewModel.addItem(item);
-            Toast.makeText(v.getContext(), "Added item" + item.getName() + "to card", Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "Added item " + item.getName() + " to card", Toast.LENGTH_SHORT).show();
         });
 
         //TODO: Image and Button

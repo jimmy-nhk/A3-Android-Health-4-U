@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_margin="30dp">
+        android:layout_margin="20dp">
 
         <Button
             android:id="@+id/btnOrder"
@@ -28,9 +28,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp" />
-
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 
