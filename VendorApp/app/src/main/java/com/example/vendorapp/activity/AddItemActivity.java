@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private static final int vendorID = 1;
+    private int vendorID;
     private EditText nameTxt, descriptionTxt, categoryTxt, priceTxt, quantityTxt, caloriesTxt, expireDateTxt;
     private ImageView addedImageListview;
     private Button addImageBtn;
@@ -70,6 +70,9 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         Log.d(TAG, "on Login AddItemActivity Create");
+
+        Intent intent = getIntent();
+        vendorID = intent.getIntExtra("vendorID", 0);
 
         // init services
         getViews();

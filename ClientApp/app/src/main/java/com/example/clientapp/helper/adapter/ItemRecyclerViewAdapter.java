@@ -45,7 +45,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         Log.d("ItemRecyclerViewAdapter" , "constructor");
         this.context = context;
         this.itemList = data;
-        this.mLayoutInflater = LayoutInflater.from(context);
+//        this.mLayoutInflater = LayoutInflater.from(context);
+        this.mLayoutInflater =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.viewModel = viewModel;
     }
 

@@ -509,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
+            intent.putExtra("vendorID", vendor.getId());
             startActivityForResult(intent, R.integer.intentMainAdditem);
         } catch (Exception e) {
             Log.d(TAG, "Cannot change to Add Item Activity");
