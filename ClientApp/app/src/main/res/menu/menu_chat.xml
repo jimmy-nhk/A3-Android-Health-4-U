@@ -7,8 +7,8 @@
         android:title="Chats" />
 
     <item
-        android:id="@+id/clientNav"
+        android:id="@+id/vendorNav"
         android:icon="@drawable/items_nav"
-        android:title="Clients" />
+        android:title="Vendors" />
 
 </menu>

@@ -102,8 +102,8 @@ public class MainChatActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // attaching bottom sheet behaviour - hide / show on scroll
-//        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
-//        layoutParams.setBehavior(new BottomNavigationBehavior());
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationBehavior());
 
         // init home fragment
         loadFragment(new ChatsFragment());
@@ -138,7 +138,7 @@ public class MainChatActivity extends AppCompatActivity {
                 fragment = new ChatsFragment();
                 loadFragment(fragment);
                 return true;
-            case R.id.vendorNav:
+            case R.id.clientNav:
                 fragment = new ClientsFragment();
                 loadFragment(fragment);
                 return true;

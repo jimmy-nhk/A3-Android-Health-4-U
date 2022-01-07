@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.vendorapp.R;
 import com.example.vendorapp.helper.adapter.ItemRecyclerViewAdapter;
 import com.example.vendorapp.model.Item;
+import com.example.vendorapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -30,6 +31,8 @@ public class ItemListFragment extends Fragment {
     private static final String ITEM_COLLECTION = "items";
     private FirebaseFirestore fireStore;
     private CollectionReference itemCollection;
+    private Vendor vendor;
+
     public ItemListFragment(){
 
         Log.d(TAG, "FoodListFragment: onCreate");
@@ -51,7 +54,14 @@ public class ItemListFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.fragment_food_list, container, false);
+
+        assert getArguments() != null;
+        vendor = getArguments().getParcelable("vendor");
+
+
         initService(view);
+
+
 
 
         // grid styles
@@ -73,7 +83,9 @@ public class ItemListFragment extends Fragment {
         itemList = new ArrayList<>(); //Reset value of item List
 
         // load items
-        itemCollection.addSnapshotListener((value, error) -> {
+        itemCollection
+                .whereEqualTo("vendorID" , vendor.getId() )
+                .addSnapshotListener((value, error) -> {
 
             // clear to list
             itemList = new ArrayList<>();

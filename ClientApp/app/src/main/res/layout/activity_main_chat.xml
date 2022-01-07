@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/coordinator_layout"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".chat.MainChatActivity">
+    tools:context=".activity.MainActivity">
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--    xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    android:orientation="vertical"-->
+    <!--    android:background="@color/white"-->
+    <!--    tools:context=".chat.MainChatActivity">-->
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -36,23 +44,44 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <com.google.android.material.tabs.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tab_layout"
-            android:background="@color/primary_blue_light"
-            app:tabSelectedTextColor="@color/white"
-            app:tabIndicator="@color/white"
-            app:tabTextColor="#fff"/>
+        <!--        <com.google.android.material.tabs.TabLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:id="@+id/tab_layout"-->
+        <!--            android:background="@color/primary_blue_light"-->
+        <!--            app:tabSelectedTextColor="@color/white"-->
+        <!--            app:tabIndicator="@color/white"-->
+        <!--            app:tabTextColor="#fff"/>-->
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!--    <androidx.viewpager.widget.ViewPager-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:id="@+id/view_pager"-->
+    <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
 
-
-    <androidx.viewpager.widget.ViewPager
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_pager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        />
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_container"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        app:menu="@menu/menu_chat"
+        android:background="@color/blue_phantom"
+        app:itemBackground="@drawable/bottom_nav_tab_background"
+        app:itemIconTint="@drawable/nav_selector"
+        app:itemHorizontalTranslationEnabled="true"
+        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView"
+        app:itemTextColor="@drawable/nav_selector" />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

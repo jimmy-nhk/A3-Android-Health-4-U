@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.helper.OrderViewModel;
+import com.example.vendorapp.helper.viewModel.OrderViewModel;
 import com.example.vendorapp.helper.adapter.OrderRecyclerViewAdapter;
 import com.example.vendorapp.model.Order;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

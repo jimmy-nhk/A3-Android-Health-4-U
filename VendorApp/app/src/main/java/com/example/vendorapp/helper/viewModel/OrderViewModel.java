@@ -1,4 +1,4 @@
-package com.example.vendorapp.helper;
+package com.example.vendorapp.helper.viewModel;
 
 import android.util.Log;
 

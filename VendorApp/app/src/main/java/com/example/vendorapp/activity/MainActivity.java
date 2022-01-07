@@ -39,7 +39,7 @@ import com.example.vendorapp.fragment.OrderListFragment;
 import com.example.vendorapp.fragment.ProfileFragment;
 import com.example.vendorapp.helper.NotificationReceiver;
 import com.example.vendorapp.helper.NotificationService;
-import com.example.vendorapp.helper.OrderViewModel;
+import com.example.vendorapp.helper.viewModel.OrderViewModel;
 import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Order;
 import com.example.vendorapp.model.Vendor;
@@ -123,6 +123,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.itemsNav:
                 fragment = new ItemListFragment();
+
+                // pass vendor
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("vendor", vendor);
+                fragment.setArguments(bundle);
+
                 loadFragment(fragment);
                 return true;
             case R.id.orderNav:
