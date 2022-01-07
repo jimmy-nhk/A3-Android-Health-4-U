@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VendorApp</string>
+    <string name="app_name">Health4U-Store</string>
     <string name="web_client_id">AIzaSyAUpHZwlTRdXa-axvoI0T1cLXjrJwBHUzs</string>
     <integer name="intentLoginMain">1</integer>
     <integer name="intentMainAdditem">2</integer>

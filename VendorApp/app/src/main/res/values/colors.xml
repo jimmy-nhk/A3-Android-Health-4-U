@@ -17,6 +17,9 @@
     <color name="primary_blue">#01579b</color>
     <color name="primary_blue_light">#4f83cc</color>
     <color name="primary_blue_dark">#002f6c</color>
+    <color name="primary_pink">#c1185b</color>
+    <color name="primary_pink_light">#f95688</color>
+    <color name="primary_pink_dark">#8b0032</color>
     <color name="secondary_teal">#26a69a</color>
     <color name="secondary_teal_dark">#64d8cb</color>
     <color name="secondary_teal_light">#00766c</color>

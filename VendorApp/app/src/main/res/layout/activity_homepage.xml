@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         app:menu="@menu/menu"
-        android:background="@color/blue_phantom"
+        android:background="@color/primary_pink"
         app:itemBackground="@drawable/bottom_nav_tab_background"
         app:itemIconTint="@drawable/nav_selector"
         app:itemHorizontalTranslationEnabled="true"
