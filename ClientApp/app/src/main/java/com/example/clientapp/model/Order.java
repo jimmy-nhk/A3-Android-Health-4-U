@@ -2,7 +2,9 @@ package com.example.clientapp.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,6 @@ public class Order implements Parcelable {
     private int clientID;
     private double price;
 
-
     protected Order(Parcel in) {
         id = in.readInt();
         date = in.readString();
@@ -31,6 +32,8 @@ public class Order implements Parcelable {
         vendorID = in.readInt();
         clientID = in.readInt();
         price = in.readDouble();
+        Log.e("OrderClass", "Constructor : " + this.toString());
+
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -44,6 +47,77 @@ public class Order implements Parcelable {
         dest.writeInt(vendorID);
         dest.writeInt(clientID);
         dest.writeDouble(price);
+
+        Log.e("OrderClass", "write : " + this.toString());
+
+    }
+
+    // is new message
+    public boolean isNewestOrder(){
+
+        String currentTime = filterDate(LocalDateTime.now().toString());
+        int currentTimeInt = convertInt(currentTime);
+
+        Log.d("OrderClass", "currentTime: " + currentTime);
+        Log.d("OrderClass", "OrderClass object currentTime: " + this.date);
+
+        // check if the date is current
+        if (!this.date.substring(0, 11).equals(currentTime.substring(0, 11))){
+            return false;
+        }
+
+        // if yes, check the time is close to current
+        if (convertInt(this.date) >= currentTimeInt - 60){
+            return true;
+        }
+        return false;
+
+    }
+
+    // filter the string date
+    public String filterDate (String rawString){
+
+        Log.d("OrderClass" , "timestamp before changed: " + rawString);
+        // initialize the new string
+        char [] filterString = new char[rawString.length()];
+
+
+        // iterate through each character in the string
+        for (int i = 0 ; i < rawString.length(); i++){
+
+            // check if the character is T then replace it with T
+            if (rawString.charAt(i) == 'T'){
+                filterString[i] = ' ';
+                continue;
+            }
+
+            // check if the character is :
+            if(rawString.charAt(i) == '.'){
+                return String.valueOf(filterString).trim();
+            }
+
+            filterString[i] = rawString.charAt(i);
+        }
+
+        return null;
+    }
+
+    // convert time to integer
+    private int convertInt(String currentTime) {
+        try {
+            String withoutDate = currentTime.substring(11, currentTime.length() );
+            Log.d("OrderClass", "without date:" + withoutDate);
+            int hour = Integer.parseInt(withoutDate.substring(0,2));
+            int min = Integer.parseInt(withoutDate.substring(3,5));
+            int second = Integer.parseInt(withoutDate.substring(6,8));
+
+            Log.d("OrderClass", "time second: " + hour +" " + min + " " + second);
+
+            return hour * 3600 + min * 60 + second;
+        } catch (Exception e){
+            return 0;
+        }
+
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {

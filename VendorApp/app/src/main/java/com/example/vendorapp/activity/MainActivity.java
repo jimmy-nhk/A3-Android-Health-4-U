@@ -111,6 +111,30 @@ public class MainActivity extends AppCompatActivity {
         listenMessage();
     }
 
+    // bottom navigation
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = item -> {
+        Fragment fragment;
+
+        switch (item.getItemId()) {
+            case R.id.homePageNav:
+                fragment = new HomeFragment();
+                loadFragment(fragment);
+                return true;
+            case R.id.itemsNav:
+                fragment = new ItemListFragment();
+                loadFragment(fragment);
+                return true;
+            case R.id.orderNav:
+                Log.d(TAG, "vendor: " + vendor.toString());
+                fragment = new OrderListFragment(vendor.getId());
+                loadFragment(fragment);
+                return true;
+
+        }
+        return false;
+    };
+
     private void listenMessage() {
 
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
@@ -230,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
 //        }
     }
-        // on chat btn
+    // on chat btn
     public void onChatBtnClick(View view){
 
         // pass to new intent
@@ -238,31 +262,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("vendor", vendor);
         startActivity(intent);
     }
-
-
-    // bottom navigation
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = item -> {
-        Fragment fragment;
-
-        switch (item.getItemId()) {
-            case R.id.homePageNav:
-                fragment = new HomeFragment();
-                loadFragment(fragment);
-                return true;
-            case R.id.itemsNav:
-                fragment = new ItemListFragment();
-                loadFragment(fragment);
-                return true;
-            case R.id.orderNav:
-                Log.d(TAG, "vendor: " + vendor.toString());
-                fragment = new OrderListFragment(vendor.getId());
-                loadFragment(fragment);
-                return true;
-
-        }
-        return false;
-    };
 
     // load fragment
     public void loadFragment(Fragment fragment) {
