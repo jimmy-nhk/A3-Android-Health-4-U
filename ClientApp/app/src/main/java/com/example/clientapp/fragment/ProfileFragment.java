@@ -280,12 +280,16 @@ public class ProfileFragment extends Fragment {
                 mImageRef.getBytes(ONE_MEGABYTE)
                         .addOnSuccessListener(bytes -> {
                             Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            DisplayMetrics dm = new DisplayMetrics();
-                            ((Activity) requireContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-                            profileImage.setMinimumHeight(dm.heightPixels);
-                            profileImage.setMinimumWidth(dm.widthPixels);
-                            profileImage.setImageBitmap(bm);
+                            if (isAdded()){
+                                DisplayMetrics dm = new DisplayMetrics();
+                                ((Activity) requireContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                                profileImage.setMinimumHeight(dm.heightPixels);
+                                profileImage.setMinimumWidth(dm.widthPixels);
+                                profileImage.setImageBitmap(bm);
+                            }
+
                         }).addOnFailureListener(Throwable::printStackTrace);
             }
         } catch (Exception e) {
