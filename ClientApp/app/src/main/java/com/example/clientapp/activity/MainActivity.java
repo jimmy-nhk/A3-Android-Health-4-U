@@ -1,4 +1,5 @@
 package com.example.clientapp.activity;
+
 import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import com.example.clientapp.R;
@@ -35,12 +36,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -63,7 +66,7 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity {
     private final String ORDER_COLLECTION = "orders";
     private final String TAG = MainActivity.class.getSimpleName();
-    private FragmentTransaction transaction;
+    private FragmentTransaction transactionFragment;
 
     // the item model list
     private ItemViewModel viewModel;
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        requestPermission();
         viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(this, item -> {
             // Perform an action with the latest item data
@@ -126,40 +129,49 @@ public class MainActivity extends AppCompatActivity {
         listenMessage();
     }
 
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+
+                1);
+
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
-                Fragment fragment;
+        Fragment fragment;
 
-                switch (item.getItemId()) {
-                    case R.id.homePageNav:
-                        fragment = new HomeFragment();
-                        loadFragment(fragment);
-                        return true;
-                    case R.id.itemsNav:
-                        fragment = new ItemListFragment();
-                        // Put item in bundle to send to ItemDetails fragment
-                        // send the string to ItemList Fragment
-                        try {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("category", selectedCategory);
-                            fragment.setArguments(bundle);
-                            loadFragment(fragment);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        return true;
-                    case R.id.cartNav:
-                        fragment = new CartFragment();
-                        loadFragment(fragment);
-                        return true;
-                    case R.id.historyNav:
-                        fragment = new HistoryFragment(client.getId());
-                        loadFragment(fragment);
-                        return true;
+        switch (item.getItemId()) {
+            case R.id.homePageNav:
+                fragment = new HomeFragment();
+                loadFragment(fragment);
+                return true;
+            case R.id.itemsNav:
+                fragment = new ItemListFragment();
+                // Put item in bundle to send to ItemDetails fragment
+                // send the string to ItemList Fragment
+                try {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("category", selectedCategory);
+                    fragment.setArguments(bundle);
+                    loadFragment(fragment);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                return false;
-            };
+
+                return true;
+            case R.id.cartNav:
+                fragment = new CartFragment();
+                loadFragment(fragment);
+                return true;
+            case R.id.historyNav:
+                fragment = new HistoryFragment(client.getId());
+                loadFragment(fragment);
+                return true;
+        }
+        return false;
+    };
 
 
     public void loadFragment(Fragment fragment) {
@@ -167,9 +179,9 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager fm = getSupportFragmentManager();
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
-            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+            for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
                 Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
-                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStackImmediate(null, POP_BACK_STACK_INCLUSIVE);
                 Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
             }
         } catch (Exception e) {
@@ -177,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // load fragment
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-//        transaction.addToBackStack(null);
-        transaction.commit();
+        transactionFragment = getSupportFragmentManager().beginTransaction();
+        transactionFragment.replace(R.id.fragment_container, fragment);
+//        transactionFragment.addToBackStack(null);
+        transactionFragment.commit();
     }
 
     @Override
@@ -196,21 +208,21 @@ public class MainActivity extends AppCompatActivity {
         clientCollection.document(client.getId() + "")
                 .set(client.toMap())
                 .addOnSuccessListener(unused -> {
-                    Log.d(TAG, "DocumentSnapshot successfully updated offline status! " );
+                    Log.d(TAG, "DocumentSnapshot successfully updated offline status! ");
                     FirebaseAuth.getInstance().signOut();
                     finish();
                 })
                 .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
     }
 
-    public void loadFragmentWithBackStack(Fragment fragment){
+    public void loadFragmentWithBackStack(Fragment fragment) {
         try {
             FragmentManager fm = getSupportFragmentManager();
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
-            for(int entry = 0; entry<fm.getBackStackEntryCount(); entry++){
+            for (int entry = 0; entry < fm.getBackStackEntryCount(); entry++) {
                 Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getId());
-                fm.popBackStackImmediate( null, POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStackImmediate(null, POP_BACK_STACK_INCLUSIVE);
                 Log.i(TAG, "Pop successfully : " + fm.getBackStackEntryAt(entry).getId());
 
             }
@@ -221,10 +233,10 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        transactionFragment = getSupportFragmentManager().beginTransaction();
+        transactionFragment.replace(R.id.fragment_container, fragment);
+        transactionFragment.addToBackStack(null);
+        transactionFragment.commit();
     }
 
     private void toggleStatus(String status) {
@@ -262,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 //        // validate the back button in the device
@@ -286,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void onChatBtnClick(View view){
+    public void onChatBtnClick(View view) {
         Intent intent = new Intent(this, MainChatActivity.class);
         intent.putExtra("client", client);
         startActivity(intent);
@@ -300,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(cartList);
 
         // create multimap and store the value of list
-        Map<Integer, List<Item> >
+        Map<Integer, List<Item>>
                 multimap = cartList
                 .stream()
                 .collect(
@@ -319,10 +331,10 @@ public class MainActivity extends AppCompatActivity {
 
         double price = 0;
         // iterate through the list of the cart
-        for (List<Item> list: multimap.values()){
+        for (List<Item> list : multimap.values()) {
 
             // iterate through the item in the list
-            for (int i = 0; i < list.size(); i++ ){
+            for (int i = 0; i < list.size(); i++) {
                 // take the frequency
                 occurrences = Collections.frequency(list, list.get(i));
                 // add to the list
@@ -335,24 +347,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
             orderSize++;
-            order = new Order(orderSize, filterDateOrder(LocalDateTime.now().toString()), false, itemOrder, quantity , list.get(0).getVendorID(), client.getId(), price);
+            order = new Order(orderSize, filterDateOrder(LocalDateTime.now().toString()), false, itemOrder, quantity, list.get(0).getVendorID(), client.getId(), price);
 
             Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
             Order finalOrder = order;
             orderCollection.document(order.getId() + "")
-                .set(order.toMap())
-                .addOnSuccessListener(unused -> {
-                    Log.d(TAG, "Successfully added Order to FireStore: " + finalOrder.toString());
+                    .set(order.toMap())
+                    .addOnSuccessListener(unused -> {
+                        Log.d(TAG, "Successfully added Order to FireStore: " + finalOrder.toString());
 
-                    // reset the cart
-                    viewModel.resetMutableItemList();
+                        // reset the cart
+                        viewModel.resetMutableItemList();
 
-                    //TODO: add notification here (use broadcast)
-                    Intent intent = new Intent(ORDER_NOTIFICATION);
-                    sendBroadcast(intent);
+                        //TODO: add notification here (use broadcast)
+                        Intent intent = new Intent(ORDER_NOTIFICATION);
+                        sendBroadcast(intent);
 
-                })
-                .addOnFailureListener(e -> Log.d(TAG, "Fail to add order to FireStore: " + finalOrder.toString()));
+                    })
+                    .addOnFailureListener(e -> Log.d(TAG, "Fail to add order to FireStore: " + finalOrder.toString()));
 
 
             // re-init the variables
@@ -363,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void registerService(){
+    private void registerService() {
         notificationReceiver = new NotificationReceiver();
         intentFilter = new IntentFilter();
         intentFilter.addAction(ORDER_NOTIFICATION);
@@ -378,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
     private final String MESSAGE_COLLECTION = "messages";
     private final String VENDOR_COLLECTION = "vendors";
 
-    private void listenMessage(){
+    private void listenMessage() {
 
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
         vendorCollection = fireStore.collection(VENDOR_COLLECTION);
@@ -404,15 +416,15 @@ public class MainActivity extends AppCompatActivity {
                             int size = value.getDocuments().size() - 1;
 
                             DocumentSnapshot ds = value.getDocuments().get(size);
-                            if (ds != null){
+                            if (ds != null) {
                                 MessageObject messageObject = ds.toObject(MessageObject.class);
                                 Log.d(TAG, "message newest: " + messageObject.toString());
 
                                 try {
-                                    if (messageObject.isNewestMessage()){
+                                    if (messageObject.isNewestMessage()) {
 
                                         // get the vendor object
-                                        vendorCollection.whereEqualTo(Vendor.VENDOR_USERNAME +"", messageObject.getSender() + "")
+                                        vendorCollection.whereEqualTo(Vendor.VENDOR_USERNAME + "", messageObject.getSender() + "")
                                                 .get()
                                                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                                     @Override
@@ -428,8 +440,7 @@ public class MainActivity extends AppCompatActivity {
                                                             intent.putExtra("client", client);
                                                             intent.putExtra("vendor", vendor);
                                                             sendBroadcast(intent);
-                                                        } catch (Exception e)
-                                                        {
+                                                        } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
                                                     }
@@ -439,15 +450,13 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                     // validate the error
-                                } catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-
 
 
                     }
@@ -455,23 +464,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // filter the string date
-    public String filterDateOrder (String rawString){
+    public String filterDateOrder(String rawString) {
 
         // initialize the new string
-        char [] filterString = new char[rawString.length()];
+        char[] filterString = new char[rawString.length()];
 
 
         // iterate through each character in the string
-        for (int i = 0 ; i < rawString.length(); i++){
+        for (int i = 0; i < rawString.length(); i++) {
 
             // check if the character is T then replace it with T
-            if (rawString.charAt(i) == 'T'){
+            if (rawString.charAt(i) == 'T') {
                 filterString[i] = ' ';
                 continue;
             }
 
             // check if the character is :
-            if(rawString.charAt(i) == '.'){
+            if (rawString.charAt(i) == '.') {
                 return String.valueOf(filterString).trim();
             }
 
@@ -501,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 orderSize = value.size();
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 orderSize = 1;
             }
 
@@ -512,19 +521,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         // load orders
-        orderCollection.whereEqualTo("clientID" , client.getId())
+        orderCollection.whereEqualTo("clientID", client.getId())
                 .addSnapshotListener((value, error) -> {
 
 
                     Log.d(TAG, "loadCart: value.getDocumentChanges size: " + value.getDocumentChanges().size());
 
                     Order orderModified = null;
-                    for (DocumentChange documentChange: value.getDocumentChanges()){
-                            if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
-                                orderModified =  documentChange.getDocument().toObject(Order.class);
-                                Log.d(TAG, "order changed: " + orderModified.toString());
-                                break;
-                            }
+                    for (DocumentChange documentChange : value.getDocumentChanges()) {
+                        if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
+                            orderModified = documentChange.getDocument().toObject(Order.class);
+                            Log.d(TAG, "order changed: " + orderModified.toString());
+                            break;
+                        }
                     }
 
                     // clear to list
@@ -542,16 +551,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "loadCart: value size: " + value.getDocuments().size());
 
                     //scan the value from db
-                    for (int i = value.size() - 1 ; i >= 0; i--){
+                    for (int i = value.size() - 1; i >= 0; i--) {
                         orderList.add(value.getDocuments().get(i).toObject(Order.class));
                     }
 
                     // sort reverse way
                     orderList.sort((o1, o2) -> {
                         // reverse sort
-                        if (o1.getId() < o2.getId()){
+                        if (o1.getId() < o2.getId()) {
                             return 1; // normal will return -1
-                        } else if (o1.getId() > o2.getId()){
+                        } else if (o1.getId() > o2.getId()) {
                             return -1; // reverse
                         }
                         return 0;
@@ -559,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d(TAG, "loadCart: orderList.size(): " + orderList.size());
 
-                    for (int i = 0 ; i < orderList.size(); i++){
+                    for (int i = 0; i < orderList.size(); i++) {
 
                         Log.d(TAG, "loadCart: order: " + orderList.get(i).toString());
                         Log.d(TAG, "loadCart: iTh: " + i);
@@ -573,45 +582,45 @@ public class MainActivity extends AppCompatActivity {
 //                            Log.d(TAG, "filter: " + order.getDate().trim().equals(time));
 //                            Log.d(TAG, "filter: isProcessed: " + order.getIsProcessed());
 //                            Log.d(TAG, "filter: object " + order.toString() + " orderList size: " + orderList.size());
-                            return order.getDate().trim().equals(time) ;
+                            return order.getDate().trim().equals(time);
                         }).collect(Collectors.toList());
 
                         Log.d(TAG, "loadCart: orderByDate size: " + orderByDate.size());
 
 
                         // create cart object
-                        currentCart = new Cart(countCart, time ,orderByDate );
+                        currentCart = new Cart(countCart, time, orderByDate);
 
 
                         // init count processed
                         countProcessed = 0;
                         countCancel = 0;
                         isModified = false;
-                        for (Order order: orderByDate){
+                        for (Order order : orderByDate) {
 
                             // validate if the orderModified is null
                             try {
+                                if (orderModified != null && order != null)
+                                    if (orderModified.getId() == order.getId()) {
+                                        isModified = true;
+                                        Log.d(TAG, "loadCart: orderModified : " + orderModified.toString());
+                                    }
 
-                                if (orderModified.getId() == order.getId()){
-                                    isModified = true;
-                                    Log.d(TAG, "loadCart: orderModified : " + orderModified.toString());
-                                }
-
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 isModified = false;
                             }
 
                             // validate if the order is cancel
-                            if (order.getIsCancelled()){
+                            if (order.getIsCancelled()) {
                                 countCancel++;
                                 continue;
                             }
 
 //                            Log.d(TAG, "filter-condition: isProcess: " + order.getIsProcessed());
                             // check if processed yet ?
-                            if (order.getIsProcessed()){
-                                countProcessed ++;
+                            if (order.getIsProcessed()) {
+                                countProcessed++;
                             }
                         }
 //                        Log.d(TAG, "loadCart: orderByDate size: " +orderByDate.size());
@@ -619,14 +628,14 @@ public class MainActivity extends AppCompatActivity {
 
 
                         // validate if the order is already processed.
-                        if ((countProcessed + countCancel) == orderByDate.size()){
+                        if ((countProcessed + countCancel) == orderByDate.size()) {
                             currentCart.setIsFinished(true);
                         }
 
                         countCart++;
 
                         // validate if the order is changed
-                        if (isModified){
+                        if (isModified) {
 
                             Log.d(TAG, "isModified: currentCart : " + currentCart.toString());
                             Log.d(TAG, "isModified: orderModified.getIsProcessed() : " + orderModified.getIsProcessed());
@@ -645,19 +654,18 @@ public class MainActivity extends AppCompatActivity {
 //                            sendBroadcast(intent);
 
                             /** Using service*/
-                            if (orderModified.getIsProcessed() || orderModified.getIsCancelled()){
+                            if (orderModified.getIsProcessed() || orderModified.getIsCancelled()) {
                                 Intent intent = new Intent(this, NotificationService.class);
-                                intent.putExtra("message",orderModified.getIsProcessed()? PROCESS_NOTIFICATION : CANCEL_NOTIFICATION  );
+                                intent.putExtra("message", orderModified.getIsProcessed() ? PROCESS_NOTIFICATION : CANCEL_NOTIFICATION);
                                 intent.putExtra("client", client);
                                 intent.putExtra("cart", currentCart);
                                 intent.setPackage(this.getPackageName());
-                                startService( intent) ;
+                                startService(intent);
                             }
 
 
                             isModified = false;
                         }
-
 
 
                         // add cart to cartList
@@ -676,31 +684,31 @@ public class MainActivity extends AppCompatActivity {
 
 
                     boolean successAddCart = cartViewModel.addListCarts(cartList);
-                    Log.d(TAG, "loadCart: add successfully ? " +successAddCart);
-                    Log.d(TAG, "loadCart: cartViewModel size:  " +cartViewModel.getListCart().size());
+                    Log.d(TAG, "loadCart: add successfully ? " + successAddCart);
+                    Log.d(TAG, "loadCart: cartViewModel size:  " + cartViewModel.getListCart().size());
 
                 });
     }
 
     // filter the string date
-    public String filterDate (String rawString){
+    public String filterDate(String rawString) {
 
         // initialize the new string
-        char [] filterString = new char[rawString.length()];
+        char[] filterString = new char[rawString.length()];
 
         int countColon = 0;
 
         // iterate through each character in the string
-        for (int i = 0 ; i < rawString.length(); i++){
+        for (int i = 0; i < rawString.length(); i++) {
 
 
             // check if the character is :
-            if(rawString.charAt(i) == ':'){
+            if (rawString.charAt(i) == ':') {
                 countColon++;
-                if (countColon == 2){
+                if (countColon == 2) {
                     filterString[i] = rawString.charAt(i);
-                    filterString[i+1] = rawString.charAt(i+1);
-                    filterString[i+2] = rawString.charAt(i+2);
+                    filterString[i + 1] = rawString.charAt(i + 1);
+                    filterString[i + 2] = rawString.charAt(i + 2);
                     return String.valueOf(filterString).trim();
                 }
 

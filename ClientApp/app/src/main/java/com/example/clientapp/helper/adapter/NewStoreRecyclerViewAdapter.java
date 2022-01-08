@@ -84,12 +84,12 @@ public class NewStoreRecyclerViewAdapter extends
 
     private void setStoreImage(ViewHolder holder, String imageUrl) {
         try {
-            if (imageUrl.length() > 0) {
+            if (imageUrl!=null && imageUrl.length() > 0) {
 //                Log.d("setStoreImage", imageUrl);
                 StorageReference mImageRef =
                         FirebaseStorage.getInstance().getReference(imageUrl);
 
-                final long ONE_MEGABYTE = 1024 * 1024;
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
                 mImageRef.getBytes(ONE_MEGABYTE)
                         .addOnSuccessListener(bytes -> {
                             Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

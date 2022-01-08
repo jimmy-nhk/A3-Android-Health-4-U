@@ -83,32 +83,43 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+        try {
+
 //        Log.d("ItemRecyclerViewAdapter" , "render");
-        Item item =  itemList.get(position);
+            Item item =  itemList.get(position);
 
-        holder.name.setText((item.getName()));
-        holder.price.setText((item.getPrice() + "$"));
-        holder.vendorName.setText(("VendorID: " + item.getVendorID()));
-        holder.category.setText(("Category: " + item.getCategory()));
-        setItemImage(holder, item.getImage());
+            holder.name.setText((item.getName()));
+            holder.price.setText((item.getPrice() + "$"));
+            holder.vendorName.setText(("VendorID: " + item.getVendorID()));
+            holder.category.setText(("Category: " + item.getCategory()));
+            setItemImage(holder, item.getImage());
 
+            // init final position for on click
+            holder.addBtn.setOnClickListener(v -> {
+                viewModel.addItem(item);
+                Toast.makeText(v.getContext(), "Added item" + item.getName() + "to card", Toast.LENGTH_SHORT).show();
+            });
         // init final position for on click
         holder.addBtn.setOnClickListener(v -> {
             viewModel.addItem(item);
             Toast.makeText(v.getContext(), "Added item " + item.getName() + " to card", Toast.LENGTH_SHORT).show();
         });
 
-        //TODO: Image and Button
-        holder.image.setImageResource(R.drawable.food);
+            //TODO: Image and Button
+            holder.image.setImageResource(R.drawable.food);
+        } catch (Exception exception){
+
+        }
     }
 
     private void setItemImage(ItemViewHolder holder, String imageUrl) {
         try {
-            if (imageUrl.length() > 0) {
+
+            if (imageUrl!=null && imageUrl.length() > 0) {
                 StorageReference mImageRef =
                         FirebaseStorage.getInstance().getReference(imageUrl);
 
-                final long ONE_MEGABYTE = 1024 * 1024;
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
                 // Handle any errors
                 mImageRef.getBytes(ONE_MEGABYTE)
                         .addOnSuccessListener(bytes -> {

@@ -23,6 +23,7 @@ import java.util.List;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
+    private static final String TAG = "HistoryRecyclerViewAdapter";
     private List<Cart> cartList;
     private Context context;
     private LayoutInflater mLayoutInflater;
@@ -33,7 +34,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         this.context = context;
         this.mLayoutInflater = LayoutInflater.from(context);
 
-        Log.d("HistoryRecycler" , "constructor");
+        Log.d("HistoryRecycler", "constructor");
 
     }
 
@@ -66,7 +67,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         }
 
         // set the value to the xml file
-        holder.historyId.setText("OrderIdList: " + idString );
+        holder.historyId.setText("OrderIdList: " + idString);
         holder.historyDate.setText("Date: " + cart.getDate());
         holder.cartPrice.setText("Total Price: " + cart.getPrice() + "$");
 
@@ -74,7 +75,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         holder.isProcessing.setTextColor(cart.getIsFinished() ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.black));
 
         //TODO: Show order in the cart
-        Log.d("HistoryRecycler" , "onBindViewHolder: load data");
+        Log.d("HistoryRecycler", "onBindViewHolder: load data");
         holder.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
