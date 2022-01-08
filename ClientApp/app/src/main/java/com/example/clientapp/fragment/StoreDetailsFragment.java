@@ -179,7 +179,7 @@ public class StoreDetailsFragment extends Fragment {
                                     StorageReference mImageRef =
                                             FirebaseStorage.getInstance().getReference(vendor.getImage());
 
-                                    final long ONE_MEGABYTE = 1024 * 1024;
+                                    final long ONE_MEGABYTE = 1024 * 1024 *5;
                                     mImageRef.getBytes(ONE_MEGABYTE)
                                             .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                                 @Override

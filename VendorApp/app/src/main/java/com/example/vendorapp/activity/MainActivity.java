@@ -2,7 +2,7 @@ package com.example.vendorapp.activity;
 
 //TODO: List of works needing doing
 // Search (query) item -> finished
-// HomePage (2 app) -> reminder drinking water
+// HomePage (2 app) -> reminder drinking water -> finished
 // Billing Page -> Download Bill
 // Cart Detail Page -> see the list of bought items
 // Item details in Vendor app

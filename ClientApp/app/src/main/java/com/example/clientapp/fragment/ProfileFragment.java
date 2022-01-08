@@ -303,7 +303,7 @@ public class ProfileFragment extends Fragment {
                 StorageReference mImageRef =
                         FirebaseStorage.getInstance().getReference(imageUrl);
 
-                final long ONE_MEGABYTE = 1024 * 1024;
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
                 // Handle any errors
                 mImageRef.getBytes(ONE_MEGABYTE)
                         .addOnSuccessListener(bytes -> {

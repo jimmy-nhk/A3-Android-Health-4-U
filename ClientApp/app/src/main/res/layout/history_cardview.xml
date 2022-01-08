@@ -123,12 +123,14 @@
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:text="Order ID"/>
+
                 <TextView
                     android:id="@+id/historyDate"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginTop="8dp"
                     android:text="Date"/>
+
                 <TextView
                     android:id="@+id/isProcessingTxt"
                     android:layout_width="wrap_content"
