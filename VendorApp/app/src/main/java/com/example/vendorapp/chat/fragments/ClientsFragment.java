@@ -119,8 +119,11 @@ public class ClientsFragment extends Fragment {
         }
 
         // set layout
-        clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, false);
-        recyclerView.setAdapter(clientAdapter);
+        if (isAdded()){
+            clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, false);
+            recyclerView.setAdapter(clientAdapter);
+        }
+
 
     }
 
@@ -146,8 +149,11 @@ public class ClientsFragment extends Fragment {
                     Log.d(TAG, "mVendors: size" + mClients.size());
 
                     // set view
-                    clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, false);
-                    recyclerView.setAdapter(clientAdapter);
+                    if (isAdded()){
+                        clientAdapter = new ClientAdapter(getContext(), mClients, currentVendor, false);
+                        recyclerView.setAdapter(clientAdapter);
+                    }
+
                 }
 
             }

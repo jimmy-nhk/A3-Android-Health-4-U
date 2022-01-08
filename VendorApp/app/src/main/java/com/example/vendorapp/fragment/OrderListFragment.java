@@ -93,16 +93,19 @@ public class OrderListFragment extends Fragment {
         orderViewModel.getSelectedListOrder().observe(getViewLifecycleOwner(), orders -> {
             recyclerView = view.findViewById(R.id.recycler_view);
 
-            mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orders);
+            if (isAdded()){
+                mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orders);
 
 
-            // linear styles
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setNestedScrollingEnabled(true);
-            recyclerView.setAdapter(mAdapter);
+                // linear styles
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setNestedScrollingEnabled(true);
+                recyclerView.setAdapter(mAdapter);
+            }
+
 
         });
 

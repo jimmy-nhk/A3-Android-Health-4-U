@@ -240,18 +240,21 @@ public class ItemListFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void initListAdapter(View view) {
-        mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
+        if (isAdded()){
+            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
 
-        // linear styles
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setNestedScrollingEnabled(true);
-        recyclerView.setAdapter(mAdapter);
+            // linear styles
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setNestedScrollingEnabled(true);
+            recyclerView.setAdapter(mAdapter);
 //            Log.d(TAG, "searchStr: " + searchValue);
 
-        mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
+        }
+
 
         //This set list adapter for category
         ArrayList<String> listCategoryValue = new ArrayList<>();

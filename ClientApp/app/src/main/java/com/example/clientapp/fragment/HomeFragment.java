@@ -1,5 +1,6 @@
 package com.example.clientapp.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -107,10 +108,10 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         getViews(view);
         initService(view);
@@ -223,10 +224,15 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
         newStoreRecyclerView.setLayoutManager(horizontalLayoutManager);
-        newStoresAdapter = new NewStoreRecyclerViewAdapter(view.getContext(), newStoreList);
-        newStoreRecyclerView.setAdapter(newStoresAdapter);
+
+        if (isAdded()){
+            newStoresAdapter = new NewStoreRecyclerViewAdapter(view.getContext(), newStoreList);
+            newStoreRecyclerView.setAdapter(newStoresAdapter);
+        }
+
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initNewItemListAdapter(View view, ArrayList<Item> newItemList) {
         // sort again
         newItemList.sort((o1, o2) -> {
@@ -243,16 +249,23 @@ public class HomeFragment extends Fragment {
         newItemRecyclerView = view.findViewById(R.id.recyclerNewItems);
 
         // Initialize list adapter
-        mAdapter = new ItemRecyclerViewAdapter(getActivity(), newItemList, viewModel);
+        if (isAdded())
+        {
+            mAdapter = new ItemRecyclerViewAdapter(getActivity(), newItemList, viewModel);
+            mAdapter.notifyDataSetChanged();
+            // linear styles
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            newItemRecyclerView.setLayoutManager(linearLayoutManager);
+            newItemRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            newItemRecyclerView.setHasFixedSize(true);
+            newItemRecyclerView.setAdapter(mAdapter);
+        }
 
-        // linear styles
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        newItemRecyclerView.setLayoutManager(linearLayoutManager);
-        newItemRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        newItemRecyclerView.setHasFixedSize(true);
-        newItemRecyclerView.setAdapter(mAdapter);
+
+
     }
+
 
     private void loadNewStoreList(View view) {
         try {

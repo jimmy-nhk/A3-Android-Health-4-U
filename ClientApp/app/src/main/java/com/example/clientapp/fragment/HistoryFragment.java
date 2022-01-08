@@ -95,168 +95,25 @@ public class HistoryFragment extends Fragment {
             cartList = cartList1;
             setLayout(view);
         });
-//        List<Order> orderList = new ArrayList<>();
-//
-//
-//        // load orders
-//        orderCollection.whereEqualTo("clientID" , currentClientId)
-//                .addSnapshotListener((value, error) -> {
-//
-//            // clear to list
-//            cartList = new ArrayList<>();
-//
-//            // init necessary variable for doing logic
-//            int countCart = 0;
-//            Cart currentCart = new Cart();
-//            int countProcessed;
-//            double originalPrice = 0;
-//            int countCancel;
-//
-//
-//            //scan the value from db
-//            for (int i = value.size() - 1 ; i >= 0; i--){
-//                orderList.add(value.getDocuments().get(i).toObject(Order.class));
-//            }
-//
-//            // sort reverse way
-//            orderList.sort((o1, o2) -> {
-//                // reverse sort
-//                if (o1.getId() < o2.getId()){
-//                    return 1; // normal will return -1
-//                } else if (o1.getId() > o2.getId()){
-//                    return -1; // reverse
-//                }
-//                return 0;
-//            });
-//
-//
-//            for (int i = 0 ; i < orderList.size(); i++){
-//
-//                Log.d(TAG, "loadCart: order: " + orderList.get(i).toString());
-//
-//
-//                String time = filterDate(orderList.get(i).getDate());
-//                Log.d(TAG, "loadCart: time: " + time);
-//
-//                // take the list of order in the same time
-//                List<Order> orderByDate = orderList.stream().filter(order -> {
-//                    Log.d(TAG, "filter: " + order.getDate().trim().equals(time));
-//                    Log.d(TAG, "filter: isProcessed: " + order.getIsProcessed());
-//                    Log.d(TAG, "filter: object " + order.toString() + " orderList size: " + orderList.size());
-//                    return order.getDate().trim().equals(time) ;
-//                }).collect(Collectors.toList());
-//
-//
-//                // create cart object
-//                currentCart = new Cart(countCart, time ,orderByDate );
-//
-//                originalPrice = currentCart.getPrice();
-//
-//                // init count processed
-//                countProcessed = 0;
-//                countCancel = 0;
-//                for (Order order: orderByDate){
-//
-//                    // validate if the order is cancel
-//                    if (order.getIsCancelled()){
-//                        countCancel++;
-//                        continue;
-//                    }
-//
-//                    Log.d(TAG, "filter-condition: isProcess: " + order.getIsProcessed());
-//                    // check if processed yet ?
-//                    if (order.getIsProcessed()){
-//                        countProcessed ++;
-//                    }
-//                }
-//                Log.d(TAG, "loadCart: orderByDate size: " +orderByDate.size());
-//                Log.d(TAG, "loadCart: countProcessed : " +countProcessed);
-//
-//
-//                // validate if the order is already processed.
-//                if ((countProcessed + countCancel) == orderByDate.size()){
-//                    currentCart.setIsFinished(true);
-//                }
-//
-//                countCart++;
-//
-//                // add cart to cartList
-//                cartList.add(currentCart);
-//
-//
-//                i += orderByDate.size() - 1;
-//
-//
-//            }
-//
-//            //TODO: send notification when the order is cancelled
-//
-////            if (originalPrice > currentCart.getPrice()){
-////
-////                //TODO: send noti here
-////                Intent intent = new Intent(MainActivity.CANCEL_NOTIFICATION);
-////                intent.putExtra("cart",  currentCart);
-////                getContext().sendBroadcast(intent);
-////                Log.d(TAG,"your cart has some orders cancelled: original: "+ originalPrice + " with current: " + currentCart.getPrice());
-////            }
-//            // reset the list
-//            orderList.clear();
-//            currentCart = new Cart();
-//
-//            Log.d(TAG, "loadCart: cardList size: " +cartList.size());
-//
-//            // set layout
-//            setLayout(view);
-//
-//            // reset
-//
-//        });
-    }
-
-
-    // filter the string date
-    public String filterDate (String rawString){
-
-        // initialize the new string
-        char [] filterString = new char[rawString.length()];
-
-        int countColon = 0;
-
-        // iterate through each character in the string
-        for (int i = 0 ; i < rawString.length(); i++){
-
-
-            // check if the character is :
-            if(rawString.charAt(i) == ':'){
-                countColon++;
-                if (countColon == 2){
-                    filterString[i] = rawString.charAt(i);
-                    filterString[i+1] = rawString.charAt(i+1);
-                    filterString[i+2] = rawString.charAt(i+2);
-                    return String.valueOf(filterString).trim();
-                }
-
-            }
-
-            filterString[i] = rawString.charAt(i);
-        }
-
-        return null;
     }
 
     // set layout
     public void setLayout(View view){
         recyclerView = view.findViewById(R.id.history_recycler_view);
 
-        mAdapter = new HistoryRecyclerViewAdapter(cartList, getActivity());
+        // validate the activity is not null
+        if (isAdded()){
+            mAdapter = new HistoryRecyclerViewAdapter(cartList, getActivity());
 
-        // linear styles
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setNestedScrollingEnabled(true);
-        recyclerView.setAdapter(mAdapter);
+            // linear styles
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setNestedScrollingEnabled(true);
+            recyclerView.setAdapter(mAdapter);
+        }
+
     }
 
     @Override

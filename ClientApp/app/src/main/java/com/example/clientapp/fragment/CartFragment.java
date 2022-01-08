@@ -91,15 +91,18 @@ public class CartFragment extends Fragment {
         viewModel.getSelectedItem().observe(getViewLifecycleOwner(), itemList -> {
 
 
-            mAdapter = new CartItemRecyclerViewAdapter(getActivity(), itemList , viewModel);
+            if (isAdded()){
+                mAdapter = new CartItemRecyclerViewAdapter(getActivity(), itemList , viewModel);
 
-            // linear styles
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setNestedScrollingEnabled(true);
-            recyclerView.setAdapter(mAdapter);
+                // linear styles
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setNestedScrollingEnabled(true);
+                recyclerView.setAdapter(mAdapter);
+            }
+
 
         });
 

@@ -88,35 +88,41 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 //                }
 //            }
 //        }.execute("IMAGE_URL");
-        if (item.getImage().length() > 0) {
-            try {
-                StorageReference mImageRef =
-                        FirebaseStorage.getInstance().getReference(item.getImage());
-                final long ONE_MEGABYTE = 1024 * 1024;
-                mImageRef.getBytes(ONE_MEGABYTE)
-                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                DisplayMetrics dm = new DisplayMetrics();
-                                ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-                                holder.image.setMinimumHeight(dm.heightPixels);
-                                holder.image.setMinimumWidth(dm.widthPixels);
-                                holder.image.setImageBitmap(bm);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
-            } catch (Exception e){
+        try {
+            if (item.getImage().length() > 0) {
+                try {
+                    StorageReference mImageRef =
+                            FirebaseStorage.getInstance().getReference(item.getImage());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    mImageRef.getBytes(ONE_MEGABYTE)
+                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    DisplayMetrics dm = new DisplayMetrics();
+                                    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                                    holder.image.setMinimumHeight(dm.heightPixels);
+                                    holder.image.setMinimumWidth(dm.widthPixels);
+                                    holder.image.setImageBitmap(bm);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                } catch (Exception e){
+
+                }
+
 
             }
-
-
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
 
         holder.name.setText(item.getName());
         holder.price.setText(item.getPrice() + "");

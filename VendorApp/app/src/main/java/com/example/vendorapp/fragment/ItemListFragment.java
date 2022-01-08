@@ -109,17 +109,20 @@ public class ItemListFragment extends Fragment {
 
             recyclerView = view.findViewById(R.id.recycler_view);
 
-            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList);
+            if (isAdded()){
+                mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList);
 
-            Log.d(TAG, "initService: itemList size: " + itemList.size());
+                Log.d(TAG, "initService: itemList size: " + itemList.size());
 
-            // linear styles
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setNestedScrollingEnabled(true);
-            recyclerView.setAdapter(mAdapter);
+                // linear styles
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setNestedScrollingEnabled(true);
+                recyclerView.setAdapter(mAdapter);
+            }
+
         });
     }
     @Override

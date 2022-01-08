@@ -109,22 +109,6 @@ public class MainChatActivity extends AppCompatActivity {
         loadFragment(new ChatsFragment());
 
 
-//        TabLayout tabLayout = findViewById(R.id.tab_layout);
-//        ViewPager viewPager = findViewById(R.id.view_pager);
-//
-//        // setup view pager adapter
-//        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-//
-//        Log.d(TAG, "received vendor from MainChat: " + currentVendor.toString());
-//
-////        // set up fragments
-////        viewPagerAdapter.addFragment(new ChatsFragment(), "Chats");
-////        viewPagerAdapter.addFragment(new ClientsFragment(), "Clients");
-////
-//        viewPager.setAdapter(viewPagerAdapter);
-//
-//        tabLayout.setupWithViewPager(viewPager);
-
 
     }
 
@@ -183,41 +167,6 @@ public class MainChatActivity extends AppCompatActivity {
         finish();
     }
 
-
-    class ViewPagerAdapter extends FragmentPagerAdapter{
-
-        private ArrayList<Fragment> fragments;
-        private ArrayList<String> titles;
-
-
-        public ViewPagerAdapter(@NonNull FragmentManager fm) {
-            super(fm);
-            this.fragments = new ArrayList<>();
-            this.titles = new ArrayList<>();
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        public void addFragment(Fragment fragment, String title){
-            fragments.add(fragment);
-            titles.add(title);
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
-        }
-    }
 
 
 }

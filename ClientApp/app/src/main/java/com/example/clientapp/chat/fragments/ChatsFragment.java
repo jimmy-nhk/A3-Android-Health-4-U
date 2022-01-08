@@ -145,8 +145,12 @@ public class ChatsFragment extends Fragment {
                 }
 
                 Log.d(TAG, "mVendors: size " + mVendors.size());
-                vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, true);
-                recyclerView.setAdapter(vendorAdapter);
+
+                if (isAdded()){
+                    vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, true);
+                    recyclerView.setAdapter(vendorAdapter);
+                }
+
 
             }
         });

@@ -133,16 +133,19 @@ public class StoreDetailsFragment extends Fragment {
                             // Get recycler view
                             recycler_view_store = view.findViewById(R.id.recycler_view_store);
 
-                            // Initialize list adapter
-                            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
+                            if (isAdded()){
+                                // Initialize list adapter
+                                mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
 
-                            // linear styles
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-                            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                            recycler_view_store.setLayoutManager(linearLayoutManager);
-                            recycler_view_store.setItemAnimator(new DefaultItemAnimator());
-                            recycler_view_store.setHasFixedSize(true);
-                            recycler_view_store.setAdapter(mAdapter);
+                                // linear styles
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                recycler_view_store.setLayoutManager(linearLayoutManager);
+                                recycler_view_store.setItemAnimator(new DefaultItemAnimator());
+                                recycler_view_store.setHasFixedSize(true);
+                                recycler_view_store.setAdapter(mAdapter);
+                            }
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }

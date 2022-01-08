@@ -140,8 +140,11 @@ public class VendorsFragment extends Fragment {
 
                     searchVendorList = mVendors;
                     Log.d(TAG, "mVendors: size" + mVendors.size());
-                    vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, false);
-                    recyclerView.setAdapter(vendorAdapter);
+                    if (isAdded()){
+                        vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, false);
+                        recyclerView.setAdapter(vendorAdapter);
+                    }
+
                 }
 
             }
