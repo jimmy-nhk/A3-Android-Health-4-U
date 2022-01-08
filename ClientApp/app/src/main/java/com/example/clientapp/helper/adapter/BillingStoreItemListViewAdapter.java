@@ -24,7 +24,6 @@ public class BillingStoreItemListViewAdapter extends BaseAdapter {
     private FirebaseFirestore fireStore;
 
     //Params
-    Item item;
 
     public BillingStoreItemListViewAdapter(List<Item> itemList,List<Integer> quantityList, Context context) {
         this.itemList = itemList;
@@ -50,7 +49,7 @@ public class BillingStoreItemListViewAdapter extends BaseAdapter {
         }
 
         // take the cart
-        item = itemList.get(position);
+        Item item = itemList.get(position);
         Log.d(TAG,"Item "+itemList.get(0).toString());
         if (item== null){
             Log.d(TAG,"Item "+itemList.get(0).toString());
@@ -59,7 +58,7 @@ public class BillingStoreItemListViewAdapter extends BaseAdapter {
 
         holder.billingstoreItemName.setText(item.getName());
         holder.billingstoreItemQuantity.setText(quantityList.get(position)+"");
-        holder.billingstoreItemPrice.setText(item.getPrice()+" đồng");
+        holder.billingstoreItemPrice.setText(item.getPrice()+" $");
 
         return convertView;
     }
@@ -76,7 +75,7 @@ public class BillingStoreItemListViewAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return  itemList.get(position).getId();
+        return  position;
     }
     static class BillingStoreItemRecycleViewHolder {
 

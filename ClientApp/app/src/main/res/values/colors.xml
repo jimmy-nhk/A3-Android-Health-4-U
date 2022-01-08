@@ -13,7 +13,7 @@
     <color name="main_blue">#40beee</color>
     <color name="yellow">#c4c400</color>
     <color name="white_transparent">#5FFFFFFF</color>
-
+    <color name="grey">#959595</color>
 
     <color name="primary_blue">#01579b</color>
     <color name="primary_blue_light">#4f83cc</color>

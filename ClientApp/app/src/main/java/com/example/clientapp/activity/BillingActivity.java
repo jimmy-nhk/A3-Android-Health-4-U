@@ -1,8 +1,10 @@
 package com.example.clientapp.activity;
 
+import com.example.clientapp.BuildConfig;
 import com.example.clientapp.R;
 import com.example.clientapp.helper.adapter.BillingStoreRecycleViewAdapter;
 import com.example.clientapp.model.Cart;
+import androidx.core.content.FileProvider;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -20,6 +22,7 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,6 +43,7 @@ public class BillingActivity extends AppCompatActivity {
     private RecyclerView billingRecycleView;
     private TextView billingStoreDate;
     private TextView billingStoreIsProcessed;
+    private TextView billingMoneyTotal;
     private Bitmap bitmap;
     // params init
     private Cart cart;
@@ -60,18 +64,19 @@ public class BillingActivity extends AppCompatActivity {
         billingRecycleView = findViewById(R.id.billingRecycleView);
         billingStoreDate = findViewById(R.id.billingstoreDate);
         billingStoreIsProcessed = findViewById(R.id.billingstoreIsProcessed);
+        billingMoneyTotal = findViewById(R.id.billingMoneyTotal);
     }
 
     // save pdf
     public void savePdfOnClick(View view) {
         try {
-            LinearLayout llScroll = findViewById(R.id.outputLinearLayout);
-            bitmap = loadBitmapFromView(llScroll, llScroll.getWidth(), llScroll.getHeight());
+
             createPdf();
         } catch (Exception ignored) {
 
         }
     }
+
 
     // save img
     public void saveImageOnClick(View view) {
@@ -84,7 +89,7 @@ public class BillingActivity extends AppCompatActivity {
 
     // screenshot
     private Bitmap screenShot(View view) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
         return bitmap;
@@ -94,7 +99,7 @@ public class BillingActivity extends AppCompatActivity {
     private void share(Bitmap bitmap){
         String pathofBmp=
                 MediaStore.Images.Media.insertImage(getContentResolver(),
-                        bitmap,"title", null);
+                        bitmap, "title", null);
         Uri uri = Uri.parse(pathofBmp);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
@@ -117,7 +122,8 @@ public class BillingActivity extends AppCompatActivity {
             billingStoreIsProcessed.setText("PROCESSING");
             billingStoreIsProcessed.setTextColor(getResources().getColor(R.color.red));
         }
-
+        //Set total money
+        billingMoneyTotal.setText(cart.getPrice()+" $");
         //Embed list view form list order of cart
         try {
             // linear styles
@@ -143,18 +149,15 @@ public class BillingActivity extends AppCompatActivity {
     }
 
     // create pdf
-    private void createPdf(){
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        //  Display display = wm.getDefaultDisplay();
+     private void createPdf() {
+        LinearLayout llScroll = findViewById(R.id.outputLinearLayout);
+        bitmap = loadBitmapFromView(llScroll, llScroll.getWidth(), llScroll.getHeight());
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        float height = displaymetrics.heightPixels ;
-        float width = displaymetrics.widthPixels ;
+        float hight = bitmap.getHeight();
+        float width = bitmap.getWidth();
 
-        int convertHeight = (int) height, convertWidth = (int) width;
-
-//        Resources mResources = getResources();
-//        Bitmap bitmap = BitmapFactory.decodeResource(mResources, R.drawable.screenshot);
+        int convertHeight = (int) hight, convertWidth = (int) width;
 
         // pdf
         PdfDocument document = new PdfDocument();
@@ -170,12 +173,12 @@ public class BillingActivity extends AppCompatActivity {
         bitmap = Bitmap.createScaledBitmap(bitmap, convertWidth, convertHeight, true);
 
         paint.setColor(Color.BLUE);
-        canvas.drawBitmap(bitmap, 0, 0 , null);
+        canvas.drawBitmap(bitmap, 0, 0, null);
         document.finishPage(page);
 
         // write the document content
         File filePath = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS), getString(R.string.app_name)+"_billing_"+cart.getId()+".pdf");
+                Environment.DIRECTORY_DOWNLOADS), getString(R.string.app_name) + "_billing_" + cart.getId() + ".pdf");
         try {
             document.writeTo(new FileOutputStream(filePath));
 
@@ -186,35 +189,41 @@ public class BillingActivity extends AppCompatActivity {
 
         // close the document
         document.close();
-//        Toast.makeText(this, "PDF of Scroll is created!!!", Toast.LENGTH_SHORT).show();
 
+        // open generated pdf file
         openGeneratedPDF(filePath);
 
     }
 
-    // open generated pdf
-    private void openGeneratedPDF(File path ){
-        if (path.exists())
-        {
-            // open intent
-            Intent intent=new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.fromFile(path);
-            Log.d(TAG,"URI: "+uri.getPath());
-            intent.setDataAndType(uri, "application/pdf");
-            // set attributes
-            intent.putExtra(Intent.EXTRA_SUBJECT, R.string.app_name);
-            intent.putExtra(Intent.EXTRA_TEXT, "");
-            intent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP);
+    // Function open generated pdf file
+    private void openGeneratedPDF(File path) {
+        if (path.exists()) {
+            // Create intent to open file
+            Intent intent = new Intent(Intent.ACTION_VIEW);
 
-            try
-            {
-                Toast.makeText(BillingActivity.this, "Export pdf", Toast.LENGTH_LONG).show();
-                startActivity(Intent.createChooser(intent, getString(R.string.app_name)));
-            }
-            catch(ActivityNotFoundException e)
-            {
+            //Get view from URI using File Provider configured in manifest and filepaths.xml
+            Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID
+                    + ".fileprovider", path);
+            Log.d(TAG, "URI: " + uri); // Printout the path for checking
+            //Set flags for intent, without this, cannot access file
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //set datatype as pdf and uri to pdf file for the content
+            intent.setDataAndType(uri, "application/pdf");
+            try {
+                //condition check if intent has package manager
+                if (intent.resolveActivity(getPackageManager()) == null) {
+                    // Show an error
+                } else {
+                    Toast.makeText(BillingActivity.this, "Export pdf", Toast.LENGTH_LONG).show();
+                    startActivity(intent); //Start intent to show pdf file
+                }
+            } catch (ActivityNotFoundException e) {
                 Toast.makeText(BillingActivity.this, "No Application available to view pdf", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public void finishIntentOnClick(View view) {
+        this.finish();
     }
 }
