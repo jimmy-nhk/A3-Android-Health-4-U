@@ -1,14 +1,10 @@
 package com.example.clientapp.activity;
 
-import com.example.clientapp.BuildConfig;
 import com.example.clientapp.R;
 import com.example.clientapp.helper.adapter.BillingStoreRecycleViewAdapter;
-import com.example.clientapp.helper.adapter.HistoryRecyclerViewAdapter;
 import com.example.clientapp.model.Cart;
-import com.example.clientapp.model.Order;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,26 +25,21 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 
 public class BillingActivity extends AppCompatActivity {
     private static final String TAG = "BillingActivity";
     private BillingStoreRecycleViewAdapter mAdapter;
     // views init
     private RecyclerView billingRecycleView;
-    private TextView billingstoreDate;
-    private TextView billingstoreIsProcessed;
+    private TextView billingStoreDate;
+    private TextView billingStoreIsProcessed;
     private Bitmap bitmap;
     // params init
     private Cart cart;
@@ -67,8 +58,8 @@ public class BillingActivity extends AppCompatActivity {
     private void initViews() {
         // billings recycler
         billingRecycleView = findViewById(R.id.billingRecycleView);
-        billingstoreDate = findViewById(R.id.billingstoreDate);
-        billingstoreIsProcessed = findViewById(R.id.billingstoreIsProcessed);
+        billingStoreDate = findViewById(R.id.billingstoreDate);
+        billingStoreIsProcessed = findViewById(R.id.billingstoreIsProcessed);
     }
 
     // save pdf
@@ -115,16 +106,16 @@ public class BillingActivity extends AppCompatActivity {
     // set layout
     public void setLayout() {
         //Set date
-        billingstoreDate.setText(cart.getDate());
+        billingStoreDate.setText(cart.getDate());
 
         //Check to check Processing condition
         if (cart.getIsFinished()) {
-            billingstoreIsProcessed.setText("FINISHED");
-            billingstoreIsProcessed.setTextColor(getResources().getColor(R.color.green));
+            billingStoreIsProcessed.setText("FINISHED");
+            billingStoreIsProcessed.setTextColor(getResources().getColor(R.color.green));
         } else {
 
-            billingstoreIsProcessed.setText("PROCESSING");
-            billingstoreIsProcessed.setTextColor(getResources().getColor(R.color.red));
+            billingStoreIsProcessed.setText("PROCESSING");
+            billingStoreIsProcessed.setTextColor(getResources().getColor(R.color.red));
         }
 
         //Embed list view form list order of cart
@@ -157,16 +148,17 @@ public class BillingActivity extends AppCompatActivity {
         //  Display display = wm.getDefaultDisplay();
         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        float hight = displaymetrics.heightPixels ;
+        float height = displaymetrics.heightPixels ;
         float width = displaymetrics.widthPixels ;
 
-        int convertHighet = (int) hight, convertWidth = (int) width;
+        int convertHeight = (int) height, convertWidth = (int) width;
 
 //        Resources mResources = getResources();
 //        Bitmap bitmap = BitmapFactory.decodeResource(mResources, R.drawable.screenshot);
 
+        // pdf
         PdfDocument document = new PdfDocument();
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(convertWidth, convertHighet, 1).create();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(convertWidth, convertHeight, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
 
         // create canvas
@@ -175,7 +167,7 @@ public class BillingActivity extends AppCompatActivity {
         Paint paint = new Paint();
         canvas.drawPaint(paint);
 
-        bitmap = Bitmap.createScaledBitmap(bitmap, convertWidth, convertHighet, true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, convertWidth, convertHeight, true);
 
         paint.setColor(Color.BLUE);
         canvas.drawBitmap(bitmap, 0, 0 , null);
