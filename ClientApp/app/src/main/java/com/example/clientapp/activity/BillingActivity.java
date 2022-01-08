@@ -63,12 +63,15 @@ public class BillingActivity extends AppCompatActivity {
         setLayout();
     }
 
+    // init views
     private void initViews() {
+        // billings recycler
         billingRecycleView = findViewById(R.id.billingRecycleView);
         billingstoreDate = findViewById(R.id.billingstoreDate);
         billingstoreIsProcessed = findViewById(R.id.billingstoreIsProcessed);
     }
 
+    // save pdf
     public void savePdfOnClick(View view) {
         try {
             LinearLayout llScroll = findViewById(R.id.outputLinearLayout);
@@ -78,6 +81,8 @@ public class BillingActivity extends AppCompatActivity {
 
         }
     }
+
+    // save img
     public void saveImageOnClick(View view) {
         try {
             share(screenShot(findViewById(R.id.outputLinearLayout)));
@@ -85,6 +90,8 @@ public class BillingActivity extends AppCompatActivity {
         }
 
     }
+
+    // screenshot
     private Bitmap screenShot(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -92,6 +99,7 @@ public class BillingActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    // share
     private void share(Bitmap bitmap){
         String pathofBmp=
                 MediaStore.Images.Media.insertImage(getContentResolver(),
@@ -134,6 +142,7 @@ public class BillingActivity extends AppCompatActivity {
         }
     }
 
+    // load bit map
     public static Bitmap loadBitmapFromView(View v, int width, int height) {
         Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
@@ -142,6 +151,7 @@ public class BillingActivity extends AppCompatActivity {
         return b;
     }
 
+    // create pdf
     private void createPdf(){
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         //  Display display = wm.getDefaultDisplay();
@@ -159,6 +169,7 @@ public class BillingActivity extends AppCompatActivity {
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(convertWidth, convertHighet, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
 
+        // create canvas
         Canvas canvas = page.getCanvas();
 
         Paint paint = new Paint();
@@ -189,13 +200,16 @@ public class BillingActivity extends AppCompatActivity {
 
     }
 
+    // open generated pdf
     private void openGeneratedPDF(File path ){
         if (path.exists())
         {
+            // open intent
             Intent intent=new Intent(Intent.ACTION_VIEW);
             Uri uri = Uri.fromFile(path);
             Log.d(TAG,"URI: "+uri.getPath());
             intent.setDataAndType(uri, "application/pdf");
+            // set attributes
             intent.putExtra(Intent.EXTRA_SUBJECT, R.string.app_name);
             intent.putExtra(Intent.EXTRA_TEXT, "");
             intent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP);

@@ -22,9 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ItemDetailsFragment extends Fragment {
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
 
     // Views
     TextView itemNameTxt;
@@ -36,29 +34,13 @@ public class ItemDetailsFragment extends Fragment {
     TextView itemExpirationDateTxt;
     Button addToCardButton;
 
-    private String mParam1;
-    private String mParam2;
     private Item item;
 
-    public ItemDetailsFragment() {
-        // Required empty public constructor
-    }
-
-    public static ItemDetailsFragment newInstance(String param1, String param2) {
-        ItemDetailsFragment fragment = new ItemDetailsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             item = getArguments().getParcelable("item");
         }
     }
@@ -98,6 +80,7 @@ public class ItemDetailsFragment extends Fragment {
         }
     }
 
+    //get store name
     private void getStoreName(String vendorID) {
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         final DocumentReference docRef = fireStore.collection("vendors").document(vendorID);
@@ -122,6 +105,7 @@ public class ItemDetailsFragment extends Fragment {
 
     }
 
+    // display item details
     private void displayItemDetail() {
         itemNameTxt.setText(item.getName());
         itemPriceTxt.setText(("$ " + item.getPrice()));
@@ -132,6 +116,7 @@ public class ItemDetailsFragment extends Fragment {
         getStoreName(item.getVendorID() + "");
     }
 
+    // get views
     private void getViews(View view) {
         itemNameTxt = view.findViewById(R.id.itemNameText);
         storeNameTxt = view.findViewById(R.id.storeNameText);

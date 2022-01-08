@@ -89,10 +89,12 @@ public class OrderListFragment extends Fragment {
 
         Log.d(TAG, "initService: vendorId: " + vendorID);
 
+        // order view
         orderViewModel = new ViewModelProvider(requireActivity()).get(OrderViewModel.class);
         orderViewModel.getSelectedListOrder().observe(getViewLifecycleOwner(), orders -> {
             recyclerView = view.findViewById(R.id.recycler_view);
 
+            // check not null
             if (isAdded()){
                 mAdapter = new OrderRecyclerViewAdapter(requireActivity(), orders);
 

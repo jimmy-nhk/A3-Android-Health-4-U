@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 public class ChatsFragment extends Fragment {
 
+    // attributes
     private FirebaseFirestore fireStore;
     private CollectionReference vendorCollection;
     private final String VENDOR_COLLECTION = "vendors";
@@ -79,13 +80,15 @@ public class ChatsFragment extends Fragment {
     }
 
 
-
+// load messages
     private void loadMessage() {
 
+        // message collection
         messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
+                // clear vendor
                 vendorList = new ArrayList<>();
 
                 MessageObject messageObject;
@@ -112,7 +115,7 @@ public class ChatsFragment extends Fragment {
         });
     }
 
-
+    // load vendors
     private void loadVendors() {
 
 

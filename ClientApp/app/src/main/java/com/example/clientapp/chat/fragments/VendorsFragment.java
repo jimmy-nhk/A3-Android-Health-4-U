@@ -123,6 +123,7 @@ public class VendorsFragment extends Fragment {
 
     }
 
+    // load vendors
     private void loadVendors() {
 
 

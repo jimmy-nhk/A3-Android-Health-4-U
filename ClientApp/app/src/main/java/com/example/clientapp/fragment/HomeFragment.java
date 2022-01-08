@@ -46,11 +46,9 @@ import java.util.Calendar;
 
 public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     private static final int ALARM_REQUEST_CODE = 100;
-    private String mParam1;
-    private String mParam2;
+
     private static final String TAG = HomeFragment.class.getSimpleName();
 
     // Views & Adapters
@@ -80,27 +78,6 @@ public class HomeFragment extends Fragment {
     private AlarmManager alarmManager;
     private PendingIntent alarmIntent;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,6 +148,8 @@ public class HomeFragment extends Fragment {
                 runAlarm(remindInterval); // Run alarm with selected interval, from the dismissed time
             }
         });
+
+        // alert dialog
         AlertDialog alertDialog = d.create(); // create AlertDialog from builder
         alertDialog.setCanceledOnTouchOutside(true); // Dismiss the dialog when touch outside the dialog
         alertDialog.show(); // Show the dialog
@@ -202,6 +181,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    // init category list
     private void initCategoryListAdapter(View view) {
         //This set list adapter for category
         ArrayList<String> listCategoryValue = new ArrayList<>();

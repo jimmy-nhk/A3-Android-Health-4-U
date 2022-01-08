@@ -151,6 +151,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 //        textView.setText("Sign in with Google");
     }
 
+    // normal log in
     public void normalLogIn(View view) {
 
         // validate in case it cannot sign in with authentication
@@ -236,6 +237,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    // get firebase client by email
     private void getFirebaseClientByEmail(String email) {
 //        fireStore.collection("clients")
 //                .whereEqualTo("email", email)
@@ -276,6 +278,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    // add client to fire store
     private void addClientToFireStore(String displayedName) {
         // create Client
         String fullName = displayedName;
@@ -327,6 +330,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
+    // sign up
     public void signUpActivity(View view) {
         Intent intent = new Intent(LogInActivity.this, SignUpStep1Activity.class);
         startActivityForResult(intent, REGISTER_CODE);

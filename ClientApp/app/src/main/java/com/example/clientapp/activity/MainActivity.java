@@ -84,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
     private String selectedCategory;
     private List<Cart> cartList;
 
+    private CollectionReference messageCollection;
+    private CollectionReference vendorCollection;
+    private final String MESSAGE_COLLECTION = "messages";
+    private final String VENDOR_COLLECTION = "vendors";
+
 
     public static final String CANCEL_NOTIFICATION = "Your order is cancelled!\nCheck it out!";
     public static final String ORDER_NOTIFICATION = "Successfully checked out!\nWaiting for processing!";
@@ -215,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
     }
 
+    // load fragment with backstack
     public void loadFragmentWithBackStack(Fragment fragment) {
         try {
             FragmentManager fm = getSupportFragmentManager();
@@ -239,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         transactionFragment.commit();
     }
 
+    // toggle
     private void toggleStatus(String status) {
         client.setStatus(status);
         clientCollection.document(client.getId() + "")
@@ -286,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
+    // on profile btn click
     public void onProfileBtnClick(View view) {
         Fragment fragment = new ProfileFragment();
         if (client != null) {
@@ -298,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // on chat btn click
     public void onChatBtnClick(View view) {
         Intent intent = new Intent(this, MainChatActivity.class);
         intent.putExtra("client", client);
@@ -385,11 +394,9 @@ public class MainActivity extends AppCompatActivity {
         this.registerReceiver(notificationReceiver, intentFilter);
     }
 
-    private CollectionReference messageCollection;
-    private CollectionReference vendorCollection;
-    private final String MESSAGE_COLLECTION = "messages";
-    private final String VENDOR_COLLECTION = "vendors";
 
+
+    // listen message
     private void listenMessage() {
 
         messageCollection = fireStore.collection(MESSAGE_COLLECTION);
@@ -435,6 +442,7 @@ public class MainActivity extends AppCompatActivity {
                                                             // TODO: send notification here
                                                             Log.d(TAG, "New noti");
 
+                                                            // create new intent
                                                             Intent intent = new Intent(NEW_MESSAGE);
                                                             intent.putExtra("message", messageObject.getMessage());
                                                             intent.putExtra("client", client);
@@ -491,6 +499,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // load order list
     private void loadOrderList() {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();

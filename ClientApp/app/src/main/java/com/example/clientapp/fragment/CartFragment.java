@@ -87,6 +87,7 @@ public class CartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // view model
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(getViewLifecycleOwner(), itemList -> {
 

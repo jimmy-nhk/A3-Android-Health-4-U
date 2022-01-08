@@ -137,6 +137,7 @@ public class ItemListFragment extends Fragment {
         fetchItemsToListView(view);
     }
 
+    // fetch items to list view
     private void fetchItemsToListView(View view) {
         // Init conditions
         String searchValue = searchTxt.getQuery().toString();

@@ -69,6 +69,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
 
         }
 
+        // set onclick holder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +88,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        // attributes
         TextView username;
         ImageView profile_image;
         ImageView img_on;

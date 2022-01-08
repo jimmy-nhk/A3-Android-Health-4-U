@@ -98,6 +98,7 @@ public class StoreDetailsFragment extends Fragment {
 
     }
 
+    // init service
     private void initService(View view) {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
@@ -119,6 +120,7 @@ public class StoreDetailsFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 itemList.add(document.toObject(Item.class));
                             }
+
                             // sort again
                             itemList.sort((o1, o2) -> {
                                 // reverse sort
