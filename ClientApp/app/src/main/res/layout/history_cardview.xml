@@ -6,70 +6,167 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5sp"
-    app:cardBackgroundColor="#FAF5F5">
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/primary_blue_light_transparent">
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:padding="10dp">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+<!--                <TextView-->
+<!--                    android:id="@+id/historyDate"-->
+<!--                    android:layout_width="120dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:text="History date" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/historyId"-->
+<!--                    android:layout_width="120dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:layout_marginTop="30dp"-->
+<!--                    android:text="History Id" />-->
+<!--            </LinearLayout>-->
+
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                >-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/cartPrice"-->
+<!--                    android:layout_width="120dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:text="Total Price: 10$" />-->
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                >-->
+<!--                <TextView-->
+<!--                    android:id="@+id/isProcessingTxt"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:text="isProcessing"/>-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/detailBtn"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:text="@string/detail" />-->
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+<!--    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:elevation="0dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp">
 
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="94dp"-->
+<!--            android:layout_height="94dp"-->
+<!--            app:cardCornerRadius="10dp"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            app:cardElevation="0dp"-->
+<!--            android:layout_gravity="center">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/itemImage"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:scaleType="centerCrop"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:contentDescription="@string/item_image"-->
+<!--                android:elevation="0dp"-->
+<!--                android:src="@drawable/food" />-->
+<!--        </androidx.cardview.widget.CardView>-->
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-
+            android:layout_height="match_parent">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/historyDate"
-                    android:layout_width="120dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="History date" />
-
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp">
                 <TextView
                     android:id="@+id/historyId"
-                    android:layout_width="120dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="History Id" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/primary_blue_light"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:text="Order ID"/>
+
                 <TextView
-                    android:id="@+id/cartPrice"
-                    android:layout_width="120dp"
+                    android:id="@+id/historyDate"
+                    android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Total Price: 10$" />
-            </LinearLayout>
+                    android:layout_marginTop="8dp"
+                    android:text="Date"/>
 
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="50sp"
-                >
                 <TextView
                     android:id="@+id/isProcessingTxt"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="isProcessing"/>
-
+                    android:layout_height="20dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Status"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textSize="16sp"
+                        android:text="Total:"/>
+                    <TextView
+                        android:id="@+id/cartPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginStart="6dp"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:text="10$"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
                 <Button
                     android:id="@+id/detailBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Detail"
-                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center"
-                    android:backgroundTint="@color/red" />
+                    android:text="@string/detail" />
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 
