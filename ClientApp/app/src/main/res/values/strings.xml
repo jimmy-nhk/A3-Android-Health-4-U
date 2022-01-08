@@ -98,4 +98,5 @@
     <string name="add_icon">Add Icon</string>
     <string name="view_details"><u>View details</u></string>
     <string name="remove">Remove</string>
+    <string name="detail">Detail</string>
 </resources>

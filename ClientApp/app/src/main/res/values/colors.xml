@@ -11,7 +11,9 @@
     <color name="red">#b21f1f</color>
     <color name="green">#00FF59</color>
     <color name="main_blue">#40beee</color>
-    <color name="white_transparent">#D0FFFFFF</color>
+    <color name="yellow">#c4c400</color>
+    <color name="white_transparent">#5FFFFFFF</color>
+
 
     <color name="primary_blue">#01579b</color>
     <color name="primary_blue_light">#4f83cc</color>
