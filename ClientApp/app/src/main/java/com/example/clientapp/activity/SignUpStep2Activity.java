@@ -44,7 +44,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
     // Views
     private final Calendar calendar = Calendar.getInstance();
     private EditText editDob, editDoorNo, editStreet, editWard, editDistrict, editCity, editPhone,
-            editWeight, editHeight, errorTxt;
+            editWeight, editHeight;
 
     // Firebase
     private FirebaseFirestore fireStore;

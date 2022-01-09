@@ -41,11 +41,9 @@ public class SignUpStep1Activity extends AppCompatActivity {
     private final String TAG ="RegisterActivity";
 
     // Views
-    private EditText emailText, usernameText, passwordText, confirmPasswordText
-            , fullNameText;
+    private EditText emailText, usernameText, passwordText, confirmPasswordText ;
     private TextView errorTxt;
-    private LinearLayout nextLayoutBtn;
-    private String fullName, username, email;
+     private String fullName, username, email;
     private int clientSize;
 
     // Firebase
@@ -134,14 +132,7 @@ public class SignUpStep1Activity extends AppCompatActivity {
         finish();
     }
 
-    // Validate client's fullname
-    private boolean isFullNameValid(String fullName) {
-        if (fullName.isEmpty()) {
-            fullNameText.setError("Full name cannot be empty");
-            return false;
-        }
-        return true;
-    }
+
 
     // Validate client's username
     private boolean isUsernameValid(String username) {
@@ -221,15 +212,13 @@ public class SignUpStep1Activity extends AppCompatActivity {
     }
 
     // Validate input
-    private boolean validateInput(String fullName,
-                                  String username,
+    private boolean validateInput(String username,
                                   String email,
                                   String password,
                                   String confirmPassword) {
 
         //validate
-        return isFullNameValid(fullName)
-                && isUsernameValid(username)
+        return  isUsernameValid(username)
                 && isEmailValid(email)
                 && isPasswordValid(password, confirmPassword);
     }
@@ -255,17 +244,14 @@ public class SignUpStep1Activity extends AppCompatActivity {
         errorTxt = findViewById(R.id.errorTxt);
         errorTxt.setVisibility(View.INVISIBLE);
 
-        fullNameText = findViewById(R.id.editFullName);
-        emailText = findViewById(R.id.editEmail);
-        usernameText = findViewById(R.id.editUserName);
-        passwordText = findViewById(R.id.editPassword);
-        confirmPasswordText = findViewById(R.id.editConfirmPassword);
-        nextLayoutBtn = findViewById(R.id.nextLinearLayoutBtn);
+        emailText = findViewById(R.id.editEmailSignUpTxt);
+        usernameText = findViewById(R.id.editUserNameSignUpTxt);
+        passwordText = findViewById(R.id.editPasswordSignUpTxt);
+        confirmPasswordText = findViewById(R.id.editConfirmPasswordSignUpTxt);
     }
 
     public void onNextBtnClick(View view) {
         username = usernameText.getText().toString().trim();
-        fullName = fullNameText.getText().toString().trim();
         email = emailText.getText().toString().trim();
         String password = passwordText.getText().toString().trim();
         String confirmPassword = confirmPasswordText.getText().toString().trim();
@@ -276,7 +262,7 @@ public class SignUpStep1Activity extends AppCompatActivity {
 //        password = "111111";
 //        confirmPassword = "111111";
 
-        if (validateInput(fullName, username, email, password, confirmPassword)) {
+        if (validateInput( username, email, password, confirmPassword)) {
             // Add client to authentication & firebase collection & go to next sign up step
             addClientToAuthentication(email, password);
         }

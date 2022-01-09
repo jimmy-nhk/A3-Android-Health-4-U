@@ -25,17 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpStep1Activity extends AppCompatActivity {
     // Constants
     private final String emailRegex = "^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
             + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$";
     private final String TAG ="RegisterActivity";
 
     // Views
-    private EditText emailText, usernameText, passwordText, confirmPasswordText,storenameText
-            , fullNameText, phoneText, dobText, addressText;
+    private EditText emailText, usernameText, fullnameText, storenameText, passwordText, confirmPasswordText ;
     private TextView errorTxt;
-    private Button signUpBtn;
+    private String fullName, username, email;
     private int vendorSize ;
 
 
@@ -51,47 +50,13 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_sign_up_step1);
 
         //Init necessary components
         getViews();
         initService();
         loadVendorData();
         loadSizeClient();
-
-        signUpBtn.setOnClickListener(v -> {
-            Log.d(TAG, "signUpBtn");
-
-//            // validate name
-//            if (!isUsernameUnique(usernameText.getText().toString())){
-////                usernameText.setError("Username already existed");
-//                Log.d(TAG, "Username already exists");
-//                return;
-//            }
-//
-//            // validate mail
-//            if (!isEmailUnique(emailText.getText().toString())){
-////                emailText.setError("Email already existed");
-//                Log.d(TAG, "Email already exists");
-//                return;
-//            }
-//
-//            // validate the password
-//            if (!isPasswordValid(passwordText.getText().toString(), confirmPasswordText.getText().toString())){
-//                Log.d(TAG, "Password does not match or less than 6 characters ");
-//                return;
-//            }
-            String username = usernameText.getText().toString().trim();
-            String fullName = "fullname";
-            String storeName = storenameText.getText().toString().trim();
-            String email = emailText.getText().toString().trim();
-            String phone = "123456789" ;
-            String dob = "123456789";
-            String password = passwordText.getText().toString().trim();
-            String confirmPassword = confirmPasswordText.getText().toString().trim();
-            if (validateInput(username,storeName, email, password, confirmPassword, fullName, phone, dob))
-                addVendorToAuthentication(emailText.getText().toString(),  confirmPasswordText.getText().toString());
-        });
 
     }
 
@@ -138,13 +103,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void addVendorToFireStore() {
         // create Vendor
-        String username = usernameText.getText().toString().trim();
         Vendor c = new Vendor();
         c.setId(vendorSize);
         c.setEmail(emailText.getText().toString().trim());
         c.setUserName(usernameText.getText().toString().trim());
+        c.setFullName(fullnameText.getText().toString().trim());
         c.setStoreName(storenameText.getText().toString().trim());
-//        c.setFullName(fullNameText.getText().toString().trim());
 
         vendorCollection.document(vendorSize+"")
                 .set(c.toMap())
@@ -168,46 +132,46 @@ public class SignUpActivity extends AppCompatActivity {
 
     //update ui
     private void updateUI(Vendor vendor) {
-        Intent intent = new Intent(SignUpActivity.this , LogInActivity.class);
-        intent.putExtra("email" , vendor.getEmail());
-        setResult(RESULT_OK , intent);
+        Intent intent = new Intent(this, SignUpStep2Activity.class);
+        intent.putExtra("vendor", vendor);
+        startActivity(intent);
         finish();
     }
 
-    // Validate vendor's fullname
-    private boolean isFullNameValid(String fullName) {
-        if (fullName.isEmpty()) {
-            passwordText.setError("Name cannot be empty");
-            return false;
-        }
-        return true;
-    }
+//    // Validate vendor's fullname
+//    private boolean isFullNameValid(String fullName) {
+//        if (fullName.isEmpty()) {
+//            passwordText.setError("Name cannot be empty");
+//            return false;
+//        }
+//        return true;
+//    }
 
-    // Validate vendor's phone
-    private boolean isPhoneValid(String phone) {
-        if (phone.isEmpty()) {
-            String EMPTY_PHONE = "Phone cannot be empty. Please try again!";
-            fullNameText.setError(EMPTY_PHONE);
-            return false;
-        } else if (phone.length() != 9) {
-            String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
-                    "of your phone number!";
-            fullNameText.setError(INVALID_PHONE);
-            return false;
-        }
+//    // Validate vendor's phone
+//    private boolean isPhoneValid(String phone) {
+//        if (phone.isEmpty()) {
+//            String EMPTY_PHONE = "Phone cannot be empty. Please try again!";
+//            fullNameText.setError(EMPTY_PHONE);
+//            return false;
+//        } else if (phone.length() != 9) {
+//            String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
+//                    "of your phone number!";
+//            fullNameText.setError(INVALID_PHONE);
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
-        return true;
-    }
-
-    // Validate vendor's dob
-    private boolean isDobValid(String dob) {
-        if (dob.isEmpty()) {
-            String EMPTY_DOB = "Date of birth cannot be empty. Please try again!";
-            dobText.setError(EMPTY_DOB);
-            return false;
-        }
-        return true;
-    }
+//    // Validate vendor's dob
+//    private boolean isDobValid(String dob) {
+//        if (dob.isEmpty()) {
+//            String EMPTY_DOB = "Date of birth cannot be empty. Please try again!";
+//            dobText.setError(EMPTY_DOB);
+//            return false;
+//        }
+//        return true;
+//    }
 
     // Validate vendor's username
     private boolean isUsernameValid(String username) {
@@ -223,6 +187,22 @@ public class SignUpActivity extends AppCompatActivity {
 
         return true;
     }
+    // Validate vendor's fullName
+    private boolean isFullNameValid(String fullName) {
+        if (fullName.isEmpty()) {
+            fullnameText.setError("fullName cannot be empty");
+            return false;
+        }
+        return true;
+    }
+    // Validate vendor's username
+    private boolean isStoreNameValid(String storeName) {
+        if (storeName.isEmpty()) {
+            storenameText.setError("storeName cannot be empty");
+            return false;
+        }
+        return true;
+    }
 
     // Check if username is unique
     private boolean isUsernameUnique(String username){
@@ -232,29 +212,29 @@ public class SignUpActivity extends AppCompatActivity {
         return true;
     }
 
-    // Validate vendor's storeName
-    private boolean isStoreNameValid(String storeName) {
-        if (storeName.isEmpty()) {
-            storenameText.setError("storeName cannot be empty");
-            return false;
-        }
+//    // Validate vendor's storeName
+//    private boolean isStoreNameValid(String storeName) {
+//        if (storeName.isEmpty()) {
+//            storenameText.setError("storeName cannot be empty");
+//            return false;
+//        }
+//
+//        if (!isStoreNameUnique(storeName)) {
+//            usernameText.setError("This storeName was already used by another account");
+//            return false;
+//        }
+//
+//        return true;
+//    }
+//    // Check if storeName is unique
+//    private boolean isStoreNameUnique(String storeName){
+//        for (Vendor vendor: vendorList) {
+//            if (storeName.equals(vendor.getStoreName())) return false;
+//        }
+//        return true;
+//    }
 
-        if (!isStoreNameUnique(storeName)) {
-            usernameText.setError("This storeName was already used by another account");
-            return false;
-        }
 
-        return true;
-    }
-    // Check if storeName is unique
-    private boolean isStoreNameUnique(String storeName){
-        for (Vendor vendor: vendorList) {
-            if (storeName.equals(vendor.getStoreName())) return false;
-        }
-        return true;
-    }
-
-    // Check if username is unique
     private boolean isEmailValid(String email) {
         if (email.isEmpty()) {
             emailText.setError("Email cannot be empty. Please try again!");
@@ -311,81 +291,19 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateInput(String username,
                                   String storeName,
+                                  String fullName,
                                   String email,
                                   String password,
-                                  String confirmPassword,
-                                  String fullName,
-                                  String phone,
-                                  String dob) {
+                                  String confirmPassword) {
 //        boolean isValid = true;
 
         return isUsernameValid(username)
                 && isStoreNameValid(storeName)
                 && isFullNameValid(fullName)
-                && isDobValid(dob)
-                && isPhoneValid(phone)
+//                && isDobValid(dob)
+//                && isPhoneValid(phone)
                 && isEmailValid(email)
                 && isPasswordValid(password, confirmPassword);
-
-
-//        if (phone.length() < 4 && isValid) {
-//            warningMsg = EMPTY_PHONE;
-//            isValid = false;
-//        }
-//        // Phone number format
-//        if (phone.length() != 12 && isValid) {
-//            warningMsg = INVALID_PHONE;
-//            isValid = false;
-//        }
-
-
-//        if (dob.isEmpty() && isValid) {
-//            warningMsg = EMPTY_DOB;
-//            isValid = false;
-//        }
-//        try {
-//            int year = Integer.parseInt(dob.substring(6, 10));
-//            if ((2021 - year < 18) && isValid) {
-//                warningMsg = INVALID_DOB;
-//                isValid = false;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-//        if (email.isEmpty() && isValid) {
-//            warningMsg = EMPTY_EMAIL;
-//            isValid = false;
-//        }
-//        // Email format
-//        if (!isPatternValid(email, EMAIL_REGEX) && isValid) {
-//            warningMsg = INVALID_EMAIL;
-//            isValid = false;
-//        }
-//
-//
-//        if (password.isEmpty() && isValid) {
-//            warningMsg = EMPTY_PASSWORD;
-//            isValid = false;
-//        }
-//        if (password.length() < 6 && isValid) {
-//            warningMsg = INVALID_PASSWORD;
-//            isValid = false;
-//        }
-//        if (confirmPassword.isEmpty() && isValid) {
-//            warningMsg = EMPTY_CONFIRM_PASSWORD;
-//            isValid = false;
-//        }
-//        if (!confirmPassword.equals(password) && isValid) {
-//            warningMsg = INVALID_CONFIRM_PASSWORD;
-//            isValid = false;
-//        }
-//
-//        if (!isValid) {
-//            warningTextView.setText(warningMsg);
-//            warningTextView.setVisibility(View.VISIBLE);
-//            return false;
-//        }
     }
 
     // init service
@@ -408,11 +326,28 @@ public class SignUpActivity extends AppCompatActivity {
         errorTxt = findViewById(R.id.errorTxt);
         errorTxt.setVisibility(View.INVISIBLE);
 
-        emailText = findViewById(R.id.editEmail);
-        storenameText=findViewById(R.id.editStorename);
-        usernameText = findViewById(R.id.editUsername);
-        passwordText = findViewById(R.id.editPassword);
-        confirmPasswordText = findViewById(R.id.editConfirmPassword);
-        signUpBtn = findViewById(R.id.signUpBtn);
+        emailText = findViewById(R.id.editEmailSignUpTxt);
+        usernameText = findViewById(R.id.editUserNameSignUpTxt);
+        storenameText = findViewById(R.id.editStoreNameSignUpTxt);
+        fullnameText = findViewById(R.id.editFullNameSignUpTxt);
+        passwordText = findViewById(R.id.editPasswordSignUpTxt);
+        confirmPasswordText = findViewById(R.id.editConfirmPasswordSignUpTxt);
+
+    }
+
+    public void onNextBtnClick(View view) {
+        try {
+            String username = usernameText.getText().toString().trim();
+            String storeName = storenameText.getText().toString().trim();
+            String fullName = fullnameText.getText().toString().trim();
+            String email = emailText.getText().toString().trim();
+            String password = passwordText.getText().toString().trim();
+            String confirmPassword = confirmPasswordText.getText().toString().trim();
+
+            if (validateInput(username,storeName, fullName, email, password, confirmPassword))
+                addVendorToAuthentication(emailText.getText().toString(), confirmPasswordText.getText().toString());
+        } catch (Exception ignored){
+
+        }
     }
 }

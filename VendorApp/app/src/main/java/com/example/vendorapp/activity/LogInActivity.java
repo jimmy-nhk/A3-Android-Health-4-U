@@ -22,21 +22,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class LogInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     public final static int REGISTER_CODE = 101;
@@ -60,7 +57,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // Google sign-in
     String idToken;
-    private SignInButton signInGoogleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,21 +112,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.web_client_id))//you can also use R.string.default_web_vendor_id
-                .requestEmail()
-                .build();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        // sign in gg btn
-        signInGoogleButton.setOnClickListener(view -> {
-            Log.d(TAG, "Before going into google");
-            Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            startActivityForResult(intent, GOOGLE_SUCCESSFULLY_SIGN_IN);
-        });
 
     }
 
@@ -140,33 +121,42 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         emailText = findViewById(R.id.editEmailLogInTxt);
         errorLoginTxt = findViewById(R.id.errorLoginTxt);
         errorLoginTxt.setVisibility(View.INVISIBLE);
-        signInGoogleButton = findViewById(R.id.signInWithGoogle);
-
-        TextView textView = (TextView) signInGoogleButton.getChildAt(0);
-        textView.setText("Sign in with Google");
     }
 
-    // on log in btn click
-    public void onLogInBtnClick(View view) {
-//        email = emailText.getText().toString().trim();
-//        password = passwordText.getText().toString().trim();
-//        username= "";
-//        email = "afc.luan2508@gmail.com";
-//        password = "222222";
-//        username = "";
+    // normal log in
+    public void normalLogIn(View view) {
 
-        email = "v3@gmail.com";
-        password = "111111";
-        username = "";
+        // validate in case it cannot sign in with authentication
+        try {
 
-        if (!email.contains("@")) {
-            username = email;
-            logInWithUsername(username);
-        } else {
-            logInWithEmail(email, password);
+            firebaseAuth.signInWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+//                                Toast.makeText(LogInActivity.this, "Authentication success", Toast.LENGTH_SHORT).show();
+                            FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+
+                            Log.d(TAG, userFirebase.getEmail() + " mail1");
+
+                            try {
+                                getFirebaseVendorByEmail(userFirebase.getEmail());
+                            } catch (Exception e){
+                                Log.d(TAG, "Cannot validate the user in firestore");
+                            }
+                        } else {
+                            // if sign in fails, display a message to the user
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+        } catch (Exception e){
+            errorLoginTxt.setVisibility(View.VISIBLE);
+            errorLoginTxt.setText("Please enter your mail and password.");
+            return;
         }
     }
-
     // log in with email
     private void logInWithEmail(String email, String password) {
         // validate in case it cannot sign in with authentication
@@ -207,28 +197,6 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
             errorLoginTxt.setText("Please enter your mail and password.");
             return;
         }
-    }
-
-    // log in with user name
-    private void logInWithUsername(String username) {
-        fireStore.collection("vendors")
-                .document(username)
-                .addSnapshotListener((value, e) -> {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-
-                    if (value != null) {
-                        vendor = value.toObject(Vendor.class);
-                        if (vendor != null) {
-                            email = vendor.getEmail();
-                            logInWithEmail(email, password);
-                        }
-//                        Log.d(TAG, "vendor by username="+vendor.toString());
-//                        Log.d(TAG, "getFirebaseVendorByUsername email="+email);
-                    }
-                });
     }
 
     // get firebase vendor
@@ -384,7 +352,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     public void signUpActivity(View view) {
         try {
-            Intent intent = new Intent(LogInActivity.this, SignUpActivity.class);
+            Intent intent = new Intent(LogInActivity.this, SignUpStep1Activity.class);
             startActivityForResult(intent, REGISTER_CODE);
         } catch (Exception e){
             Log.d(TAG, "Cannot change to SignUp Activity");

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SignUpStep2Activity"
+    android:orientation="vertical"
+    android:padding="30dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="One more step...."
+            android:textColor="@color/primary_blue_light"
+            android:textAlignment="textStart"
+            android:textSize="30sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:textStyle="bold"
+            android:textColor="#AEAEAE"
+            android:text="Provide your background information"
+            android:textAlignment="textStart"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="12">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="48dp"
+                android:layout_height="50dp"
+                android:inputType="date"
+                android:gravity="center"
+                android:text="+84"
+                android:enabled="false"/>
+
+            <EditText
+                android:id="@+id/editPhone"
+                android:layout_marginStart="6dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="phone"
+                android:maxLength="50"
+                android:hint="Phone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/editDoorNo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:inputType="textPostalAddress"
+                android:hint="Door number"/>
+            <EditText
+                android:id="@+id/editStreet"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:inputType="textPostalAddress"
+                android:hint="Street"/>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editWard"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="textPostalAddress"
+            android:hint="Ward"/>
+
+        <EditText
+            android:id="@+id/editDistrict"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="textPostalAddress"
+            android:hint="District"/>
+
+        <EditText
+            android:id="@+id/editCity"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="textPostalAddress"
+            android:hint="City/Province"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_blue"
+            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
+            android:text="Create Account"
+            android:onClick="onSignUpBtnClick"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:text="SKIP"
+            android:clickable="true"
+            android:onClick="onSkipBtnClick"/>
+    </LinearLayout>
+</LinearLayout>

@@ -53,12 +53,67 @@
             android:hint="Username" />
 
         <EditText
+            android:id="@+id/editStoreNameSignUpTxt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:maxLength="50"
+            android:hint="Store Name" />
+
+        <EditText
             android:id="@+id/editEmailSignUpTxt"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:inputType="textEmailAddress"
             android:maxLength="50"
             android:hint="Email" />
+
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content">-->
+        <!--            <EditText-->
+        <!--                android:layout_width="48dp"-->
+        <!--                android:layout_height="60dp"-->
+        <!--                android:inputType="date"-->
+        <!--                android:gravity="center"-->
+        <!--                android:text="+84"-->
+        <!--                android:enabled="false"/>-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/editPhone"-->
+        <!--                android:layout_marginStart="6dp"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="60dp"-->
+        <!--                android:inputType="phone"-->
+        <!--                android:maxLength="50"-->
+        <!--                android:hint="Phone" />-->
+        <!--        </LinearLayout>-->
+
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content">-->
+
+        <!--            <EditText-->
+        <!--                android:id="@+id/editDob"-->
+        <!--                android:layout_width="150dp"-->
+        <!--                android:layout_height="60dp"-->
+        <!--                android:inputType="date"-->
+        <!--                android:hint="Date of birth"-->
+        <!--                android:clickable="true"/>-->
+
+        <!--            <EditText-->
+        <!--                android:layout_marginStart="10dp"-->
+        <!--                android:id="@+id/editWeight"-->
+        <!--                android:layout_width="90dp"-->
+        <!--                android:layout_height="60dp"-->
+        <!--                android:hint="Weight"/>-->
+
+        <!--            <EditText-->
+        <!--                android:layout_marginStart="10dp"-->
+        <!--                android:id="@+id/editHeight"-->
+        <!--                android:layout_width="90dp"-->
+        <!--                android:layout_height="60dp"-->
+        <!--                android:hint="Height"/>-->
+        <!--        </LinearLayout>-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

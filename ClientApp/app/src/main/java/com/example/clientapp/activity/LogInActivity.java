@@ -270,7 +270,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                         client = queryDocumentSnapshots.getDocuments().get(0).toObject(Client.class);
                         if (client != null) {
-                            Log.d(TAG, "Query Vendor by email="+client.toString());
+                            Log.d(TAG, "Query Client by email="+client.toString());
 
                             updateUI();
                         }
@@ -332,8 +332,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // sign up
     public void signUpActivity(View view) {
-        Intent intent = new Intent(LogInActivity.this, SignUpStep1Activity.class);
-        startActivityForResult(intent, REGISTER_CODE);
+        try {
+            Intent intent = new Intent(LogInActivity.this, SignUpStep1Activity.class);
+            startActivityForResult(intent, REGISTER_CODE);
+        } catch (Exception e){
+            Log.d(TAG, "Cannot change to SignUp Activity");
+        }
     }
 
     @Override
