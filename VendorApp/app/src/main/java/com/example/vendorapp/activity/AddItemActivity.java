@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    // attributes
     private int vendorID;
     private EditText nameTxt, descriptionTxt, categoryTxt, priceTxt, quantityTxt, caloriesTxt, expireDateTxt;
     private ImageView addedImageListview;
@@ -79,6 +81,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
         initService();
     }
 
+    // init service
     private void initService() {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
@@ -105,6 +108,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
         storageReference = storage.getReference();
     }
 
+    //get views
     private void getViews() {
         nameTxt = findViewById(R.id.nameAdditemTxt);
 //        categoryTxt = findViewById(R.id.categoryAdditemTxt);
@@ -128,7 +132,8 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
         spinner.setAdapter(adapter);
     }
 
-    public void addAddItemOnClick(View view) {
+    // add item
+    public void addItemOnClick(View view) {
         // Add item on ADD button clicked
         //Validation
         if (!validate())
@@ -162,6 +167,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
+    // validate item
     private boolean validate() {
 
         return isItemNameValid()
@@ -252,6 +258,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
     //update ui
     private void updateUI(Item item) {
         try {
+            // passing intent
             Intent intent = new Intent(AddItemActivity.this, MainActivity.class);
             setResult(RESULT_OK, intent);
             finish();
@@ -328,12 +335,14 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
         }
     }
 
+    // on activity result
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             filePath = data.getData();
             try {
+                // bitmap
                 Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 addedImageListview.setImageBitmap(bitmapImg);
                 addedImageListview.setVisibility(View.VISIBLE);
@@ -346,6 +355,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // category selected
         category = parent.getItemAtPosition(position).toString();
         Toast.makeText(this, category, Toast.LENGTH_SHORT).show();
     }

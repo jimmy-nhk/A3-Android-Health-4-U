@@ -45,6 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageActivity extends AppCompatActivity {
 
+    // attributes
     CircleImageView profile_image;
     TextView username;
 
@@ -77,6 +78,16 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
+        getViews();
+
+        readMessages();
+
+//        seenMessage();
+
+    }
+
+    // get views
+    private void getViews(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -125,51 +136,9 @@ public class MessageActivity extends AppCompatActivity {
 
         username.setText("username: " + currentClient.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
-        readMessages();
-
-//        seenMessage();
         //FIXME: fix image
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);
-
     }
-
-//    private ListenerRegistration listenerRegistration;
-//
-//    private void seenMessage(){
-//
-//        listenerRegistration = messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//
-//                MessageObject messageObject;
-//                assert value != null;
-//                for (DocumentSnapshot ds: value
-//                     ) {
-//                    messageObject = ds.toObject(MessageObject.class);
-//
-//                    // check the message is alraedy read
-//                    if (messageObject.getReceiver().equals(currentClient.getUserName())
-//                        && messageObject.getSender().equals(currentVendor.getUserName())){
-//
-//                        // set the isSeen to true
-//                        HashMap<String , Object> hashMap = new HashMap<>();
-//                        hashMap.put("isSeen", true);
-//
-//                        // update db
-//                        Log.d(TAG, "updated isSeen here");
-//
-//                        ds.getReference().update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void unused) {
-//                                Log.d(TAG, "successfully update seen");
-//
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        });
-//    }
 
     private void sendMessage(String sender, String receiver, String message){
 
@@ -201,7 +170,6 @@ public class MessageActivity extends AppCompatActivity {
             Log.d(TAG, "messageSize:  " +messageSize);
 
 
-
             MessageObject messageObject;
             //scan the value from db
             for (DocumentSnapshot ds: value
@@ -227,6 +195,7 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+    // toggle
     private void toggleStatus(String status){
 
         // update vendor

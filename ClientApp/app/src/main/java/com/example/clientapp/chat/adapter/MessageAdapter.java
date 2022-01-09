@@ -72,11 +72,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 //            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
 //        }
 
+        //TODO: set up image here
 //        holder.txt_seen.setVisibility(View.GONE);
 
         // check for the last message
         if (position == messageObjectList.size() - 1){
 
+            // get is seen
             if (messageObject.getIsSeen()){
                 holder.txt_seen.setText("Seen");
             } else {

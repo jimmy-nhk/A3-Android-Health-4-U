@@ -373,6 +373,7 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
+                    // listen for all values
                     for (DocumentSnapshot ds: value.getDocuments()
                              ) {
                             Order messageObject = ds.toObject(Order.class);
@@ -394,11 +395,11 @@ public class MainActivity extends AppCompatActivity {
                         if (dc.getType() == DocumentChange.Type.ADDED) {
                             orderModified = dc.getDocument().toObject(Order.class);
 
-                            //FIXME: Cannot receive noti here
                             Log.d(TAG, "order time: " + orderModified.getDate());
 
                             if (orderModified.isNewestOrder()) {
 
+                                // send noti
                                 orderPassed = orderModified;
                                 Intent intent = new Intent(ORDER_COMING);
                                 intent.putExtra("message", ORDER_COMING + "");
@@ -448,6 +449,7 @@ public class MainActivity extends AppCompatActivity {
 
                 });
 
+        // register service
         registerService();
     }
 
@@ -464,6 +466,7 @@ public class MainActivity extends AppCompatActivity {
     // toggle status
     private void toggleStatus(String status){
 
+        // vendor collection
         vendorCollection.document(vendor.getId() + "")
                 .update("status", status)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

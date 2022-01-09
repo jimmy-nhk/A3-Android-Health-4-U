@@ -62,6 +62,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
         getIntentData();
     }
 
+    // get views
     private void getViews() {
         editDob = findViewById(R.id.editDob);
         editPhone = findViewById(R.id.editPhone);
@@ -79,6 +80,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initDatePicker() {
+        // date picker dialog
         DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, monthOfYear);
@@ -86,6 +88,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
             updateDobLabel();
         };
 
+        //edit dob
         editDob.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 v.performClick();
@@ -131,6 +134,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
         return true;
     }
 
+    // count digits
     private int countDigits(String stringToSearch) {
         Pattern digitRegex = Pattern.compile("\\d");
         Matcher countEmailMatcher = digitRegex.matcher(stringToSearch);
@@ -191,6 +195,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
         return true;
     }
 
+    // validate input
     private boolean validateInput(String phone,
                                   String address,
                                   String dob,
@@ -204,6 +209,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
                 && isHeightValid(heightStr);
     }
 
+    // get intent
     private void getIntentData() {
         Intent intent = getIntent();
         client = intent.getParcelableExtra("client");
@@ -212,7 +218,10 @@ public class SignUpStep2Activity extends AppCompatActivity {
         }
     }
 
+    // update fire store client
     private void updateFirestoreClient(String phone, String address, String dob, String weightStr, String heightStr) {
+
+        // set up client
         client.setPhone(phone);
         client.setDob(dob);
         client.setAddress(address);
@@ -228,6 +237,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
+    // sign up button
     public void onSignUpBtnClick(View view) {
         phone = editPhone.getText().toString().trim();
         dob = editDob.getText().toString().trim();

@@ -33,18 +33,6 @@ public class ItemListFragment extends Fragment {
     private CollectionReference itemCollection;
     private Vendor vendor;
 
-    public ItemListFragment(){
-
-        Log.d(TAG, "FoodListFragment: onCreate");
-    }
-
-    public static ItemListFragment newInstance(String param1, String param2) {
-        ItemListFragment fragment = new ItemListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,20 +44,11 @@ public class ItemListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_food_list, container, false);
 
         assert getArguments() != null;
-        vendor = getArguments().getParcelable("vendor");
+        vendor = getArguments().getParcelable("vendor"); // get vendor
 
 
         initService(view);
 
-
-
-
-        // grid styles
-//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        recyclerView.setLayoutManager(mLayoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setAdapter(mAdapter);
-//        recyclerView.setNestedScrollingEnabled(false);
         Log.d(TAG, "FoodListFragment: onCreateView");
 
         return view;

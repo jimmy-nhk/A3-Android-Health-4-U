@@ -172,12 +172,14 @@ public class SignUpStep1Activity extends AppCompatActivity {
             emailText.setError("Email cannot be empty. Please try again!");
             return false;
         }
+        // validate email
         if (!Pattern.compile(emailRegex)
                 .matcher(email)
                 .matches()) {
             emailText.setError("Invalid email format (e.g abc@gmail.com)");
             return false;
         }
+        // validate email
         if (!isEmailUnique(email)) {
             emailText.setError("This email was already used by another account");
             return false;
@@ -225,6 +227,7 @@ public class SignUpStep1Activity extends AppCompatActivity {
                                   String password,
                                   String confirmPassword) {
 
+        //validate
         return isFullNameValid(fullName)
                 && isUsernameValid(username)
                 && isEmailValid(email)

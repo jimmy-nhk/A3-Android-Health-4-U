@@ -146,6 +146,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         textView.setText("Sign in with Google");
     }
 
+    // on log in btn click
     public void onLogInBtnClick(View view) {
 //        email = emailText.getText().toString().trim();
 //        password = passwordText.getText().toString().trim();
@@ -166,6 +167,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
+    // log in with email
     private void logInWithEmail(String email, String password) {
         // validate in case it cannot sign in with authentication
         try {
@@ -207,6 +209,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
+    // log in with user name
     private void logInWithUsername(String username) {
         fireStore.collection("vendors")
                 .document(username)
@@ -228,29 +231,12 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    // get firebase vendor
     private void getFirebaseVendorByEmail(String email) {
 
         Log.d(TAG, "getFirebaseVendorByEmail: " + email);
-//        fireStore.collection("vendors")
-//                .whereEqualTo("email", email)
-//                .addSnapshotListener((value, e) -> {
-//                    if (e != null) {
-//                        Log.w(TAG, "Listen failed.", e);
-//                        return;
-//                    }
-//
-//                    Log.d(TAG, "value size: " + value.size());
-//                    if (value != null) {
-//                        DocumentSnapshot doc = value.getDocuments().get(0);
-//                        if (doc != null) {
-//                            vendor = doc.toObject(Vendor.class);
-//                            Log.d(TAG, "Query Vendor by email="+vendor.toString());
-//
-//                            updateUI();
-//                        }
-//                    }
-//                });
 
+        // firebase collection
         fireStore.collection("vendors")
                 .whereEqualTo("email", email)
                 .get()
@@ -325,6 +311,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+    // add vendor to collection
     private void addVendorToFireStore(String email, String displayedName) {
         // create Vendor
         Vendor c = new Vendor();
@@ -351,6 +338,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         startActivity(intent);
     }
 
+    // request permission
     private void requestPermission() {
         //Request for permission if needed
         ActivityCompat.requestPermissions(LogInActivity.this, new String[]{

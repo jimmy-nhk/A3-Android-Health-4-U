@@ -213,7 +213,7 @@
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="20sp"
                 android:backgroundTint="@color/blue_phantom"
-                android:onClick="addAddItemOnClick"
+                android:onClick="addItemOnClick"
 
                 android:text="Add"
                 android:textColor="@color/white" />
