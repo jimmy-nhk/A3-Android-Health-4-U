@@ -32,6 +32,7 @@ import java.util.List;
 
 public class ClientsFragment extends Fragment {
 
+    // attributes
     private static final String TAG = "UsersFragment";
     private RecyclerView recyclerView;
 
@@ -75,6 +76,7 @@ public class ClientsFragment extends Fragment {
             }
         });
 
+
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -87,8 +89,11 @@ public class ClientsFragment extends Fragment {
 
 
         // set the current value
-        vendorViewModel = new ViewModelProvider(requireActivity()).get(VendorViewModel.class);
-        currentVendor = vendorViewModel.getValue();
+        if (isAdded()){
+            vendorViewModel = new ViewModelProvider(requireActivity()).get(VendorViewModel.class);
+            currentVendor = vendorViewModel.getValue();
+        }
+
 
         loadClients();
 

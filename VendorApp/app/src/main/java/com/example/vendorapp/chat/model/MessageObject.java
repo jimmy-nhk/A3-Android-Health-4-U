@@ -96,6 +96,7 @@ public class MessageObject {
     private int convertInt(String currentTime) {
         String withoutDate = currentTime.substring(11, currentTime.length());
         Log.d("MessageObject", "without date:" + withoutDate);
+        // take the separate value
         int hour = Integer.parseInt(withoutDate.substring(0,2));
         int min = Integer.parseInt(withoutDate.substring(3,5));
         int second = Integer.parseInt(withoutDate.substring(6,8));

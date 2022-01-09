@@ -45,6 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainChatActivity extends AppCompatActivity {
 
+    // attributes
     CircleImageView profile_image;
     TextView username;
 
@@ -107,8 +108,6 @@ public class MainChatActivity extends AppCompatActivity {
 
         // init home fragment
         loadFragment(new ChatsFragment());
-
-
 
     }
 
