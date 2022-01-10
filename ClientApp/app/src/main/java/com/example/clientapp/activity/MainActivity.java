@@ -55,6 +55,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.time.LocalDateTime;
@@ -224,17 +225,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // sign out btn
-    public void onSignOutBtnClick(View view) {
-        client.setStatus("offline");
-        clientCollection.document(client.getId() + "")
-                .set(client.toMap())
-                .addOnSuccessListener(unused -> {
-                    Log.d(TAG, "DocumentSnapshot successfully updated offline status! ");
-                    FirebaseAuth.getInstance().signOut();
-                    finish();
-                })
-                .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
-    }
+//    public void onSignOutBtnClick(View view) {
+//        client.setStatus("offline");
+//        clientCollection.document(client.getId() + "")
+//                .set(client.toMap())
+//                .addOnSuccessListener(unused -> {
+//                    Log.d(TAG, "DocumentSnapshot successfully updated offline status! ");
+//                    FirebaseAuth.getInstance().signOut();
+//                    finish();
+//                })
+//                .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
+//    }
 
     // load fragment with backstack
     public void loadFragmentWithBackStack(Fragment fragment) {
@@ -310,16 +311,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // on profile btn click
-    public void onProfileBtnClick(View view) {
-        Fragment fragment = new ProfileFragment();
-        if (client != null) {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("client", client);
-            Log.d(TAG, "onProfileBtnClick: client=" + client);
-            fragment.setArguments(bundle);
-        }
-        loadFragmentWithBackStack(fragment);
-    }
+//    public void onProfileBtnClick(View view) {
+//        Fragment fragment = new ProfileFragment();
+//        if (client != null) {
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelable("client", client);
+//            Log.d(TAG, "onProfileBtnClick: client=" + client);
+//            fragment.setArguments(bundle);
+//        }
+//        loadFragmentWithBackStack(fragment);
+//    }
 
 
     // on chat btn click
@@ -764,6 +765,51 @@ public class MainActivity extends AppCompatActivity {
 
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
+    }
+
+    public void onProfileBtnClick(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_profile, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.profileEditMenuItem:
+                    Toast.makeText(this, "profileEditMenuItem", Toast.LENGTH_SHORT).show();
+                    handleProfileBtnClick();
+                    break;
+                case R.id.signOutMenuItem:
+                    Toast.makeText(this, "signOutMenuItem", Toast.LENGTH_SHORT).show();
+                    handleSignOutBtnClick();
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
+        });
+        popupMenu.show();
+    }
+
+    private void handleProfileBtnClick() {
+        Fragment fragment = new ProfileFragment();
+        if (client != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("client", client);
+            Log.d(TAG, "onProfileBtnClick: client=" + client);
+            fragment.setArguments(bundle);
+        }
+        loadFragmentWithBackStack(fragment);
+    }
+
+    private void handleSignOutBtnClick() {
+        client.setStatus("offline");
+        clientCollection.document(client.getId() + "")
+                .set(client.toMap())
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "DocumentSnapshot successfully updated offline status! ");
+                    FirebaseAuth.getInstance().signOut();
+                    finish();
+                })
+                .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
     }
 }
 
