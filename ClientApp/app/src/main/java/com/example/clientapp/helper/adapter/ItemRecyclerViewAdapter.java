@@ -29,17 +29,21 @@ import com.example.clientapp.fragment.ItemDetailsFragment;
 import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Vendor;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
 public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder>{
-
+    private final String TAG = "ItemRecyclerViewAdapter";
     private List<Item> itemList;
     private Context context;
     private LayoutInflater mLayoutInflater;
     private ItemViewModel viewModel;
+    private FirebaseFirestore fireStore;
 
     public ItemRecyclerViewAdapter(Context context, List<Item> data, ItemViewModel viewModel) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
@@ -90,9 +94,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
             holder.name.setText((item.getName()));
             holder.price.setText((item.getPrice() + "$"));
-            holder.vendorName.setText(("VendorID: " + item.getVendorID()));
             holder.category.setText(("Category: " + item.getCategory()));
             setItemImage(holder, item.getImage());
+            setVendorName(holder, item.getVendorID());
 
             // init final position for on click
             holder.addBtn.setOnClickListener(v -> {
@@ -134,6 +138,30 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
             }
         } catch (Exception e) {
 //            .setImageResource(R.drawable.bun); //Set something else
+            e.printStackTrace();
+        }
+    }
+
+    private void setVendorName(@NonNull ItemViewHolder holder, int vendorID) {
+        try {
+            fireStore = FirebaseFirestore.getInstance();
+            DocumentReference docRef = fireStore.collection("vendors").document(String.valueOf(vendorID));
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Vendor v = document.toObject(Vendor.class);
+                        if (v != null)
+                            holder.vendorName.setText(v.getStoreName());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

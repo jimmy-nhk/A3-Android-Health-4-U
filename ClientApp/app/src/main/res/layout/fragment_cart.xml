@@ -20,10 +20,26 @@
             android:onClick="onOrderBtnClick"
             android:text="Order"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/priceTxt"/>
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total price:"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/priceTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/dollar_0"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginVertical="6dp"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"

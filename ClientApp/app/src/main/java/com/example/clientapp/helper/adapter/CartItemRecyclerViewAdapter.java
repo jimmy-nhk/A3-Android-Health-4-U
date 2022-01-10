@@ -21,17 +21,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.clientapp.R;
 import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
+import com.example.clientapp.model.Vendor;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
 public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemViewHolder> {
+    private final String TAG = "CartItemRecyclerViewAdapter";
     private List<Item> itemList;
     private Context context;
     private LayoutInflater mLayoutInflater;
     private ItemViewModel viewModel;
-//    final static String TAG = "CartItemRecyclerViewAdapter";
+    //    final static String TAG = "CartItemRecyclerViewAdapter";
+    private FirebaseFirestore fireStore;
 
     public CartItemRecyclerViewAdapter(Context context, List<Item> data,  ItemViewModel viewModel) {
         Log.d("ItemRecyclerViewAdapter" , "constructor");
@@ -54,8 +62,8 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
     @Override
     public void onBindViewHolder(@NonNull CartItemViewHolder holder, int position) {
         Item item = itemList.get(position);
-        holder.name.setText("Name: " + item.getName());
-        holder.price.setText(("Price: " + item.getPrice()));
+        holder.name.setText("" + item.getName());
+        holder.price.setText((item.getPrice() + "$"));
         holder.vendorName.setText(("VendorID: " + item.getVendorID()));
         holder.category.setText(("Category: " + item.getCategory()));
 
@@ -63,6 +71,7 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
 
         //TODO: Image and Button
         setItemImage(holder, item.getImage());
+        setVendorName(holder, item.getVendorID());
     }
 
     private void setItemImage(CartItemViewHolder holder, String imageUrl) {
@@ -86,6 +95,30 @@ public class CartItemRecyclerViewAdapter extends RecyclerView.Adapter<CartItemVi
             }
         } catch (Exception e) {
 //            .setImageResource(R.drawable.bun); //Set something else
+            e.printStackTrace();
+        }
+    }
+
+    private void setVendorName(@NonNull CartItemViewHolder holder, int vendorID) {
+        try {
+            fireStore = FirebaseFirestore.getInstance();
+            DocumentReference docRef = fireStore.collection("vendors").document(String.valueOf(vendorID));
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Vendor v = document.toObject(Vendor.class);
+                        if (v != null)
+                            holder.vendorName.setText(v.getStoreName());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

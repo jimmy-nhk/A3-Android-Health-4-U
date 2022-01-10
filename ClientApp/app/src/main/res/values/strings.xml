@@ -101,4 +101,5 @@
     <string name="detail">Detail</string>
     <string name="save_changes">Save changes</string>
     <string name="mm_dd_yyyy">MM/dd/yyyy</string>
+    <string name="dollar_0">0 $</string>
 </resources>
