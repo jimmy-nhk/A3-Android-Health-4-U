@@ -53,7 +53,7 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth.AuthStateListener authStateListener;
     private List<Vendor> vendorList;
     private Vendor vendor;
-    private String email, password, username;
+    private String email = "v3@gmail.com", password, username;
 
     // Google sign-in
     String idToken;

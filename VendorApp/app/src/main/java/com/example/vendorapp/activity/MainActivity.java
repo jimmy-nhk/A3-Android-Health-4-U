@@ -61,6 +61,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    //attributes
     private NotificationReceiver notificationReceiver;
     private IntentFilter intentFilter;
     private static final String TAG = "MainActivity";
@@ -104,13 +105,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             vendor = (Vendor) intent.getParcelableExtra("vendor");
+
+            if (intent.getBooleanExtra("toOrder", false)){
+                getBottomNavigationView().setSelectedItemId(R.id.orderNav);
+            }
         }
         Log.d(TAG, "vendor passing from Login: " + vendor.toString());
 
         initService();
         listenMessage();
     }
-
+    public BottomNavigationView getBottomNavigationView() {
+        return bottomNavigationView;
+    }
     // bottom navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
