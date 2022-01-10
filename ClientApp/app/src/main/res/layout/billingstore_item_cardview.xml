@@ -6,17 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="3sp"
-    app:cardBackgroundColor="#FAF5F5">
+    app:cardBackgroundColor="@color/transparent_100"
+    app:cardElevation="0dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/billingstoreItemQuantity"
-            android:layout_width="wrap_content"
+            android:layout_width="30dp"
             android:layout_alignParentStart="true"
             android:layout_height="wrap_content"
-            android:text="quantty"/>
+            android:text="100"/>
 
         <TextView
             android:id="@+id/billingstoreItemName"

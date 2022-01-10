@@ -86,6 +86,7 @@
                 android:id="@+id/billingSavePdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:onClick="savePdfOnClick"
                 android:text="Save as PDF" />

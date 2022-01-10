@@ -83,7 +83,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         holder.cartPrice.setText(cart.getPrice() + "$");
 
         holder.isProcessing.setText(cart.getIsFinished() ? "Finished" : "isProcessing");
-        holder.isProcessing.setTextColor(cart.getIsFinished() ? ContextCompat.getColor(context, R.color.green) : ContextCompat.getColor(context, R.color.yellow));
+        holder.isProcessing.setTextColor(cart.getIsFinished()
+                ? ContextCompat.getColor(context, R.color.green)
+                : ContextCompat.getColor(context, R.color.yellow));
 
         //TODO: Show order in the cart
 

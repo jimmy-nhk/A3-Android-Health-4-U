@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -23,23 +23,25 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Client;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ProfileFragment extends Fragment {
@@ -53,15 +55,20 @@ public class ProfileFragment extends Fragment {
     private TextView usernameTextView;
     private TextView emailTextView;
     private TextView phoneTextView;
+    private TextView addressTextView;
     private TextView dobTextView;
     private TextView weightTextView;
     private TextView heightTextView;
     private ImageView profileImage;
+    private CardView whiteCover;
+    private CardView backBtn;
+    private Button saveChangesBtn;
 
     private String fullName;
     private String username;
     private String email;
     private String phone;
+    private String address;
     private String dob;
     private double weight;
     private double height;
@@ -69,6 +76,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore fireStore;
     private DocumentReference clientDocRef;
     private Client client;
+    private boolean isImageChanged;
+    private String updateImagePath;
+    private final Calendar calendar = Calendar.getInstance();
 
     // Upload pfp
     // Uri indicates, where the image will be picked from
@@ -94,13 +104,14 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         getViews(view);
-        initService(view);
+        initService();
+        isImageChanged = false;
 
         // Inflate the layout for this fragment
         return view;
     }
 
-    private void initService(View view) {
+    private void initService() {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
         clientDocRef = fireStore.collection("clients").document(client.getId() + "");
@@ -121,14 +132,42 @@ public class ProfileFragment extends Fragment {
                     username = c.getUserName();
                     email = c.getEmail();
                     phone = c.getPhone();
+                    address = c.getAddress();
                     dob = c.getDob();
                     weight = c.getWeight();
                     height = c.getHeight();
 
+                    // update client object
+                    client = c;
                     displayUserInfo();
                 }
             }
         });
+//        clientDocRef.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                DocumentSnapshot document = task.getResult();
+//                if (document.exists()) {
+//                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                    Client c = document.toObject(Client.class);
+//                    if (c != null) {
+//                        fullName = c.getFullName();
+//                        username = c.getUserName();
+//                        email = c.getEmail();
+//                        phone = c.getPhone();
+//                        address = c.getAddress();
+//                        dob = c.getDob();
+//                        weight = c.getWeight();
+//                        height = c.getHeight();
+//
+//                        displayUserInfo();
+//                    }
+//                } else {
+//                    Log.d(TAG, "No such document");
+//                }
+//            } else {
+//                Log.d(TAG, "get failed with ", task.getException());
+//            }
+//        });
     }
 
     private void displayUserInfo() {
@@ -136,41 +175,164 @@ public class ProfileFragment extends Fragment {
         usernameTextView.setText(username);
         emailTextView.setText(email);
         phoneTextView.setText(phone);
+        Log.d("displayUserInfo", "address=" + address);
+        addressTextView.setText(address);
         dobTextView.setText(dob);
         weightTextView.setText(String.valueOf(weight));
         heightTextView.setText(String.valueOf(height));
-        setStoreImage(client.getImage());
+        setProfileImageView(client.getImage());
+    }
+
+    // update fire store client
+    private void updateFirestoreClient(String phone,
+                                       String address,
+                                       String dob,
+                                       String weightStr,
+                                       String heightStr) {
+        Log.d(TAG, "updateFirestoreClient address=" + address);
+
+        clientDocRef
+                .update("phone", phone,
+                        "address", address,
+                        "dob", dob,
+                        "weight", (Double.parseDouble(weightStr)),
+                        "height", (Double.parseDouble(heightStr)))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    Toast.makeText(getContext(), "Successfully updated client information", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error updating document", e);
+                    Toast.makeText(getContext(), "Error updating client phone, address, etc.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void getViews(View view) {
+        try {
+            fullNameTextView = view.findViewById(R.id.fullNameTxt);
+            usernameTextView = view.findViewById(R.id.usernameTxt);
+            emailTextView = view.findViewById(R.id.emailTxt);
+            phoneTextView = view.findViewById(R.id.phoneTxt);
+            addressTextView = view.findViewById(R.id.addressTxt);
+            dobTextView = view.findViewById(R.id.dobTxt);
+            weightTextView = view.findViewById(R.id.weightTxt);
+            heightTextView = view.findViewById(R.id.heightTxt);
+            whiteCover = view.findViewById(R.id.whiteCoverCard);
+            saveChangesBtn = view.findViewById(R.id.saveChangesBtn);
+
+            // Init date picker
+            initDatePicker();
+
+            // Profile Image
+            profileImage = view.findViewById(R.id.profileImage);
+            initProfileImageView();
+
+            // Back button
+            backBtn = view.findViewById(R.id.backCardBtn);
+            initBackBtnView();
+
+            // Save changes button
+            saveChangesBtn.setOnClickListener(v -> handleSaveChangesBtnClick());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void getViews(View view) {
-        fullNameTextView = view.findViewById(R.id.fullNameTxt);
-        usernameTextView = view.findViewById(R.id.usernameTxt);
-        emailTextView = view.findViewById(R.id.emailTxt);
-        phoneTextView = view.findViewById(R.id.phoneTxt);
-        dobTextView = view.findViewById(R.id.dobTxt);
-        weightTextView = view.findViewById(R.id.weightTxt);
-        heightTextView = view.findViewById(R.id.heightTxt);
-        CardView whiteCover = view.findViewById(R.id.whiteCoverCard);
+    private void initDatePicker() {
+        try {
+            // date picker dialog
+            DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateDobLabel();
+            };
 
-        profileImage = view.findViewById(R.id.profileImage);
-        profileImage.setOnTouchListener((v, event) -> {
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                whiteCover.setVisibility(View.VISIBLE);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                whiteCover.setVisibility(View.GONE);
-            }
-            return false;
-        });
-        profileImage.setOnLongClickListener(v -> {
-            whiteCover.setVisibility(View.VISIBLE);
-            return false;
-        });
-        profileImage.setOnClickListener(v -> handleProfileImageClick());
+            //edit dob
+            dobTextView.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.performClick();
+                }
+                return true;
+            });
+
+            dobTextView.setOnClickListener(v -> new DatePickerDialog(requireContext(), date, calendar
+                    .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)).show());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void handleProfileImageClick() {
-        selectImage();
+    private void updateDobLabel() {
+        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        dobTextView.setText(sdf.format(calendar.getTime()));
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initProfileImageView() {
+        try {
+            profileImage.setOnTouchListener((v, event) -> {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    whiteCover.setVisibility(View.VISIBLE);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    whiteCover.setVisibility(View.GONE);
+                }
+                return false;
+            });
+            profileImage.setOnLongClickListener(v -> {
+                whiteCover.setVisibility(View.VISIBLE);
+                return false;
+            });
+            profileImage.setOnClickListener(v -> selectImage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initBackBtnView() {
+        try {
+            backBtn.setOnTouchListener((v, event) -> {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    backBtn.setCardBackgroundColor(getResources().getColor(R.color.white_transparent
+                            , requireContext().getTheme()));
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    backBtn.setCardBackgroundColor(getResources().getColor(R.color.transparent_100
+                            , requireContext().getTheme()));
+                }
+                return false;
+            });
+            backBtn.setOnClickListener(v -> {
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    requireActivity().finish();
+                } else {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleSaveChangesBtnClick() {
+        if (isImageChanged) {
+            updateProfileImage(updateImagePath);
+            isImageChanged = false;
+        }
+
+        String fullName = fullNameTextView.getText().toString().trim();
+        String phone = phoneTextView.getText().toString().trim();
+        String address = addressTextView.getText().toString().trim();
+        String dob = dobTextView.getText().toString().trim();
+        String weightStr = weightTextView.getText().toString().trim();
+        String heightStr = heightTextView.getText().toString().trim();
+        if (validateInput(fullName, phone, dob))
+            updateFirestoreClient(phone, address, dob, weightStr, heightStr);
     }
 
     // Select Image method
@@ -227,9 +389,11 @@ public class ProfileFragment extends Fragment {
                     .addOnSuccessListener(
                             taskSnapshot -> {
                                 // get path to add to item ọbject
-                                String path = taskSnapshot.getStorage().getPath();
+                                updateImagePath = taskSnapshot.getStorage().getPath();
                                 // Call function to upload item to DB
-                                updateProfileImage(path);
+                                isImageChanged = true;
+                                // setStoreImage but hasn't save changes
+                                setProfileImageView(updateImagePath);
 
                                 // Image uploaded successfully, turn off the process dialog
                                 progressDialog.dismiss();
@@ -265,10 +429,9 @@ public class ProfileFragment extends Fragment {
                     Log.w(TAG, "Error updating document", e);
                     Toast.makeText(getContext(), "Error updating document path=" + path, Toast.LENGTH_SHORT).show();
                 });
-
     }
 
-    private void setStoreImage(String imageUrl) {
+    private void setProfileImageView(String imageUrl) {
         try {
             if (imageUrl.length() > 0) {
 //                Log.d("setClientImage", imageUrl);
@@ -296,5 +459,63 @@ public class ProfileFragment extends Fragment {
 //            .setImageResource(R.drawable.bun); //Set something else
             e.printStackTrace();
         }
+    }
+
+    // Validation
+    private boolean validateInput(String fullName,
+                                  String phone,
+                                  String dob) {
+
+        return validateFullName(fullName)
+                && isPhoneValid(phone)
+                && isDobValid(dob);
+    }
+
+    private boolean validateFullName(String fullName) {
+        if (fullName.isEmpty()) {
+            fullNameTextView.setError("Full name cannot be empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validate client's phone
+    private boolean isPhoneValid(String phone) {
+        if (phone.isEmpty()) {
+            String EMPTY_PHONE = "Phone cannot be empty";
+            phoneTextView.setError(EMPTY_PHONE);
+            return false;
+        } else if (countDigits(phone) < 9) {
+            String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
+                    "of your phone number!";
+            phoneTextView.setError(INVALID_PHONE);
+            return false;
+        }
+
+        return true;
+    }
+
+    // count digits
+    private int countDigits(String stringToSearch) {
+        Pattern digitRegex = Pattern.compile("\\d");
+        Matcher countEmailMatcher = digitRegex.matcher(stringToSearch);
+
+        int count = 0;
+        while (countEmailMatcher.find()) {
+            count++;
+        }
+
+        return count;
+    }
+
+    // Validate client's dob
+    private boolean isDobValid(String dob) {
+        if (!dob.isEmpty() && 2021 - Integer.parseInt(dob.substring(dob.length() - 4)) < 13) {
+            dobTextView.setError("You should be at least 13 to use this app");
+            return false;
+        }
+
+        return true;
     }
 }

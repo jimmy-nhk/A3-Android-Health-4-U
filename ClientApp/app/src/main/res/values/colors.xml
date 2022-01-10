@@ -9,10 +9,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue_phantom">#0082c8</color>
     <color name="red">#b21f1f</color>
-    <color name="green">#00FF59</color>
+    <color name="green">#63AB62</color>
     <color name="main_blue">#40beee</color>
     <color name="yellow">#c4c400</color>
     <color name="white_transparent">#5FFFFFFF</color>
+    <color name="transparent_100">#00000000</color>
+    <color name="black_transparent">#8F000000</color>
     <color name="grey">#959595</color>
 
     <color name="primary_blue">#01579b</color>

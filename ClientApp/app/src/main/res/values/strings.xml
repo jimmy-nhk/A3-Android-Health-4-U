@@ -99,4 +99,10 @@
     <string name="view_details"><u>View details</u></string>
     <string name="remove">Remove</string>
     <string name="detail">Detail</string>
+    <string name="save_changes">Save changes</string>
+    <string name="mm_dd_yyyy">MM/dd/yyyy</string>
+    <string name="dollar_0">0 $</string>
+    <string name="new_stores">New Stores</string>
+    <string name="new_food">New Food</string>
+    <string name="type_a_message">Type a message...</string>
 </resources>

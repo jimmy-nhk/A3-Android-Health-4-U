@@ -110,7 +110,7 @@ public class CartFragment extends Fragment {
         // Create the observer which updates the UI.
         final Observer<Double> priceObserver = price -> {
             // Update the UI, in this case, a TextView.
-            priceTxt.setText("Total Price: " + price + " $");
+            priceTxt.setText(price + " $");
         };
 
         viewModel.getLiveTotalPrice().observe(requireActivity(), priceObserver);

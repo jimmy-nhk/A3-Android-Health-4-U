@@ -77,7 +77,7 @@ public class MainChatActivity extends AppCompatActivity {
         profile_image = findViewById(R.id.profile_image);
         username  = findViewById(R.id.usernameMainChat);
 
-        username.setText("username: "+currentClient.getUserName());
+        username.setText(currentClient.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
         //FIXME: if has profile please fill in
 //                    Glide.with(getApplicationContext()).load(currentClient.getImage()).into(profile_image);
@@ -91,8 +91,8 @@ public class MainChatActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // attaching bottom sheet behaviour - hide / show on scroll
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
-        layoutParams.setBehavior(new BottomNavigationBehavior());
+//        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+//        layoutParams.setBehavior(new BottomNavigationBehavior());
 
 
         loadFragment(new ChatsFragment());
