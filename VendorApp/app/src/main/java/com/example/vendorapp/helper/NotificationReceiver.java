@@ -118,7 +118,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             Notification notification = builder.build();
             int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
-            notifManager.notify(notifyId, notification); // Notify by id and built notification
+            notifManager.notify(aMessage.length(), notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();
@@ -148,7 +148,8 @@ public class NotificationReceiver extends BroadcastReceiver {
             notifManager.createNotificationChannel(mChannel);
         }
         builder = new NotificationCompat.Builder(context, id);
-        intent = new Intent(context, OrderDetailActivity.class);
+        MainActivity mainActivity = (MainActivity) context;
+        intent = new Intent(context, MainActivity.class);
 
         Log.d(this.getClass().getSimpleName(), "Hello noti intent: ");
         try {
@@ -159,15 +160,17 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             Log.d(this.getClass().getSimpleName(), "Order in noti intent: " + order.toString());
 
-            intent.putExtra("order", order);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP  | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+            intent.putExtra("vendor", vendor);
+            intent.putExtra("toOrder", true);
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP   );
 
 // Create the TaskStackBuilder and add the intent, which inflates the back stack
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-            stackBuilder.addNextIntentWithParentStack(intent);
-            Log.d(this.getClass().getSimpleName(), "Vendor in noti intent: " + vendor.toString());
+            // add with parent stack
+            stackBuilder.addNextIntent(intent);
 
-            stackBuilder.editIntentAt(0).putExtra("vendor", vendor);
 
 // Get the PendingIntent containing the entire back stack
             pendingIntent =

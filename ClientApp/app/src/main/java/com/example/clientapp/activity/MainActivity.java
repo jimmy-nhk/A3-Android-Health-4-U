@@ -30,6 +30,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
@@ -103,17 +104,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // request permission
         requestPermission();
+
+        // init view model
         viewModel = new ViewModelProvider(this).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(this, item -> {
             // Perform an action with the latest item data
         });
+        // selected category
         selectedCategory = "";
 
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
 
-
+        // register service
         registerService();
+        // bottom nav
         bottomNavigationView = findViewById(R.id.bottom_navigation_container);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -126,10 +132,20 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
+            //get current client
             client = intent.getParcelableExtra("client");
-            loadOrderList();
             Log.d(TAG, "onCreate: client=" + client);
+
+            // to history fragment
+            if (intent.getBooleanExtra("toHistory", false)){
+                bottomNavigationView.setSelectedItemId(R.id.historyNav);
+//                loadFragment(new HistoryFragment(client.getId()));
+            }
+
+            loadOrderList();
+
         }
+
 
         listenMessage();
     }
@@ -370,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
 
                         //TODO: add notification here (use broadcast)
                         Intent intent = new Intent(ORDER_NOTIFICATION);
+                        intent.putExtra("client", client);
                         sendBroadcast(intent);
 
                     })
@@ -530,9 +547,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         // load orders
-        orderCollection.whereEqualTo("clientID", client.getId())
+        orderCollection
+                .whereEqualTo("clientID", client.getId())
                 .addSnapshotListener((value, error) -> {
 
+                    if (error != null){
+                        error.printStackTrace();
+                        return;
+                    }
 
                     Log.d(TAG, "loadCart: value.getDocumentChanges size: " + value.getDocumentChanges().size());
 
@@ -663,14 +685,17 @@ public class MainActivity extends AppCompatActivity {
 //                            sendBroadcast(intent);
 
                             /** Using service*/
-                            if (orderModified.getIsProcessed() || orderModified.getIsCancelled()) {
-                                Intent intent = new Intent(this, NotificationService.class);
-                                intent.putExtra("message", orderModified.getIsProcessed() ? PROCESS_NOTIFICATION : CANCEL_NOTIFICATION);
-                                intent.putExtra("client", client);
-                                intent.putExtra("cart", currentCart);
-                                intent.setPackage(this.getPackageName());
-                                startService(intent);
+                            if (orderModified.isNewestOrder()){
+                                if (orderModified.getIsProcessed() || orderModified.getIsCancelled()) {
+                                    Intent intent = new Intent(this, NotificationService.class);
+                                    intent.putExtra("message", orderModified.getIsProcessed() ? PROCESS_NOTIFICATION : CANCEL_NOTIFICATION);
+                                    intent.putExtra("client", client);
+                                    intent.putExtra("cart", currentCart);
+                                    intent.setPackage(this.getPackageName());
+                                    startService(intent);
+                                }
                             }
+
 
 
                             isModified = false;

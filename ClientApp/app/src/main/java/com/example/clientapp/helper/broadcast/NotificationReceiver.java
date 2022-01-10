@@ -10,10 +10,8 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -23,11 +21,7 @@ import com.example.clientapp.chat.MainChatActivity;
 import com.example.clientapp.chat.MessageActivity;
 import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Client;
-import com.example.clientapp.model.Order;
 import com.example.clientapp.model.Vendor;
-
-import java.io.Serializable;
-import java.util.List;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -36,8 +30,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         if (intent.getAction().equals(MainActivity.ORDER_NOTIFICATION)){
-            Toast.makeText(context, MainActivity.ORDER_NOTIFICATION, Toast.LENGTH_SHORT).show();
-            createNotification(MainActivity.ORDER_NOTIFICATION, context , 0);
+//            Toast.makeText(context, MainActivity.ORDER_NOTIFICATION, Toast.LENGTH_SHORT).show();
+            createNotificationInOrder(MainActivity.ORDER_NOTIFICATION, context , 0, intent);
             return;
         }
 
@@ -138,7 +132,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
             Notification notification = builder.build();
 //            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
-            notifManager.notify(notifyId, notification); // Notify by id and built notification
+            notifManager.notify(aMessage.length(), notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();
@@ -146,7 +140,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
     // create notification
-    public void createNotification(String aMessage, Context context , int notifyId) {
+    public void createNotificationInOrder(String aMessage, Context context , int notifyId, Intent intentView) {
         NotificationManager notifManager;
 
         String id = context.getString(R.string.app_name); // default_channel_id
@@ -167,8 +161,18 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
         builder = new NotificationCompat.Builder(context, id);
         intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Client client = intentView.getParcelableExtra("client");
+        intent.putExtra("client", client);
+        intent.putExtra("toHistory", true);
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+
+        stackBuilder.addNextIntent(intent);
+
+// Get the PendingIntent containing the entire back stack
+        pendingIntent =
+                stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
+
         builder.setContentTitle(aMessage)                            // required
                 .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
                 .setContentText(context.getString(R.string.app_name)) // required
@@ -176,7 +180,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setTicker(aMessage)
-                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                .setVibrate(new long[]{100, 200, 300});
 
 
         Notification notification = builder.build();

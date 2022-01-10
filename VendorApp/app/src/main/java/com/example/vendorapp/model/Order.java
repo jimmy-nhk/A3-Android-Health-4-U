@@ -68,7 +68,7 @@ public class Order implements Parcelable {
         }
 
         // if yes, check the time is close to current
-        if (convertInt(this.date) >= currentTimeInt - 60){
+        if (convertInt(this.date) >= currentTimeInt - 5){
             return true;
         }
         return false;
