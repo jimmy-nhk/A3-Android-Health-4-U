@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -30,10 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.clientapp.R;
-import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Client;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,8 +39,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ProfileFragment extends Fragment {
@@ -80,6 +77,7 @@ public class ProfileFragment extends Fragment {
     private DocumentReference clientDocRef;
     private Client client;
     private boolean isImageChanged;
+    private String updateImagePath;
     private final Calendar calendar = Calendar.getInstance();
 
     // Upload pfp
@@ -139,10 +137,37 @@ public class ProfileFragment extends Fragment {
                     weight = c.getWeight();
                     height = c.getHeight();
 
+                    // update client object
+                    client = c;
                     displayUserInfo();
                 }
             }
         });
+//        clientDocRef.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                DocumentSnapshot document = task.getResult();
+//                if (document.exists()) {
+//                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                    Client c = document.toObject(Client.class);
+//                    if (c != null) {
+//                        fullName = c.getFullName();
+//                        username = c.getUserName();
+//                        email = c.getEmail();
+//                        phone = c.getPhone();
+//                        address = c.getAddress();
+//                        dob = c.getDob();
+//                        weight = c.getWeight();
+//                        height = c.getHeight();
+//
+//                        displayUserInfo();
+//                    }
+//                } else {
+//                    Log.d(TAG, "No such document");
+//                }
+//            } else {
+//                Log.d(TAG, "get failed with ", task.getException());
+//            }
+//        });
     }
 
     private void displayUserInfo() {
@@ -150,11 +175,12 @@ public class ProfileFragment extends Fragment {
         usernameTextView.setText(username);
         emailTextView.setText(email);
         phoneTextView.setText(phone);
+        Log.d("displayUserInfo", "address=" + address);
         addressTextView.setText(address);
         dobTextView.setText(dob);
         weightTextView.setText(String.valueOf(weight));
         heightTextView.setText(String.valueOf(height));
-        setStoreImage(client.getImage());
+        setProfileImageView(client.getImage());
     }
 
     // update fire store client
@@ -163,6 +189,7 @@ public class ProfileFragment extends Fragment {
                                        String dob,
                                        String weightStr,
                                        String heightStr) {
+        Log.d(TAG, "updateFirestoreClient address=" + address);
 
         clientDocRef
                 .update("phone", phone,
@@ -293,15 +320,19 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleSaveChangesBtnClick() {
-        if (isImageChanged)
-            uploadImage();
+        if (isImageChanged) {
+            updateProfileImage(updateImagePath);
+            isImageChanged = false;
+        }
 
+        String fullName = fullNameTextView.getText().toString().trim();
         String phone = phoneTextView.getText().toString().trim();
         String address = addressTextView.getText().toString().trim();
         String dob = dobTextView.getText().toString().trim();
         String weightStr = weightTextView.getText().toString().trim();
         String heightStr = heightTextView.getText().toString().trim();
-        updateFirestoreClient(phone, address, dob, weightStr, heightStr);
+        if (validateInput(fullName, phone, dob))
+            updateFirestoreClient(phone, address, dob, weightStr, heightStr);
     }
 
     // Select Image method
@@ -322,7 +353,7 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             filePath = data.getData();
-            isImageChanged = true;
+            uploadImage();
             try {
                 Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), filePath);
                 profileImage.setImageBitmap(bitmapImg);
@@ -358,9 +389,11 @@ public class ProfileFragment extends Fragment {
                     .addOnSuccessListener(
                             taskSnapshot -> {
                                 // get path to add to item ọbject
-                                String path = taskSnapshot.getStorage().getPath();
+                                updateImagePath = taskSnapshot.getStorage().getPath();
                                 // Call function to upload item to DB
-                                updateProfileImage(path);
+                                isImageChanged = true;
+                                // setStoreImage but hasn't save changes
+                                setProfileImageView(updateImagePath);
 
                                 // Image uploaded successfully, turn off the process dialog
                                 progressDialog.dismiss();
@@ -398,7 +431,7 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
-    private void setStoreImage(String imageUrl) {
+    private void setProfileImageView(String imageUrl) {
         try {
             if (imageUrl.length() > 0) {
 //                Log.d("setClientImage", imageUrl);
@@ -426,5 +459,63 @@ public class ProfileFragment extends Fragment {
 //            .setImageResource(R.drawable.bun); //Set something else
             e.printStackTrace();
         }
+    }
+
+    // Validation
+    private boolean validateInput(String fullName,
+                                  String phone,
+                                  String dob) {
+
+        return validateFullName(fullName)
+                && isPhoneValid(phone)
+                && isDobValid(dob);
+    }
+
+    private boolean validateFullName(String fullName) {
+        if (fullName.isEmpty()) {
+            fullNameTextView.setError("Full name cannot be empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validate client's phone
+    private boolean isPhoneValid(String phone) {
+        if (phone.isEmpty()) {
+            String EMPTY_PHONE = "Phone cannot be empty";
+            phoneTextView.setError(EMPTY_PHONE);
+            return false;
+        } else if (countDigits(phone) < 9) {
+            String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
+                    "of your phone number!";
+            phoneTextView.setError(INVALID_PHONE);
+            return false;
+        }
+
+        return true;
+    }
+
+    // count digits
+    private int countDigits(String stringToSearch) {
+        Pattern digitRegex = Pattern.compile("\\d");
+        Matcher countEmailMatcher = digitRegex.matcher(stringToSearch);
+
+        int count = 0;
+        while (countEmailMatcher.find()) {
+            count++;
+        }
+
+        return count;
+    }
+
+    // Validate client's dob
+    private boolean isDobValid(String dob) {
+        if (!dob.isEmpty() && 2021 - Integer.parseInt(dob.substring(dob.length() - 4)) < 13) {
+            dobTextView.setError("You should be at least 13 to use this app");
+            return false;
+        }
+
+        return true;
     }
 }
