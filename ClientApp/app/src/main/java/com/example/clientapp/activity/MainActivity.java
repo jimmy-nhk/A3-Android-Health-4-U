@@ -333,6 +333,15 @@ public class MainActivity extends AppCompatActivity {
     public void onOrderBtnClick(View view) {
         List<Item> cartList = viewModel.getListItem();
 
+        // validate order size = 0
+        try {
+            if (cartList.size() == 0){
+                return;
+            }
+        } catch (Exception e){
+            return;
+        }
+
         // sort the list
         Collections.sort(cartList);
 
