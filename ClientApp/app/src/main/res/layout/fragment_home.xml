@@ -17,7 +17,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="end">
 
                 <Button
                     android:layout_width="wrap_content"
@@ -42,16 +43,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginVertical="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="20dp"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="16dp"
                     android:text="Hydration Reminder"
                     android:textColor="@color/primary_blue_light"
-                    android:textSize="30dp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
 
@@ -59,13 +60,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="10">
+                    android:weightSum="10"
+                    android:paddingHorizontal="18dp">
 
                     <TextView
                         android:layout_width="0sp"
                         android:layout_height="wrap_content"
                         android:layout_weight="6"
-                        android:text="Drinking Notification" />
+                        android:text="Enable water reminder notification" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/hydrationSwitch"
@@ -118,10 +120,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
-                android:layout_marginStart="12dp"
-                android:text="New Stores"
+                android:layout_marginStart="16dp"
+                android:text="@string/new_stores"
                 android:textColor="@color/primary_blue_light"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -134,10 +136,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="20dp"
-                android:layout_marginStart="12dp"
-                android:text="New Food"
+                android:layout_marginStart="16dp"
+                android:text="@string/new_food"
                 android:textColor="@color/primary_blue_light"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
