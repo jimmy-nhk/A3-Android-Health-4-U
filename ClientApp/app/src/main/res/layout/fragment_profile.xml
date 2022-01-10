@@ -8,17 +8,37 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@drawable/bordered_container"
-        android:backgroundTint="@color/primary_blue_light"
+        android:layout_height="180dp"
+        android:background="@drawable/background_gradient_profile"
         android:layout_marginTop="-24dp"
         android:gravity="center_horizontal">
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/background_gradient_back">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/backCardBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            app:cardBackgroundColor="@color/transparent_100"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="40dp"
+            android:clickable="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_back"
+                android:layout_gravity="center"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="30dp">

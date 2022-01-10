@@ -57,6 +57,7 @@ public class ProfileFragment extends Fragment {
     private TextView weightTextView;
     private TextView heightTextView;
     private ImageView profileImage;
+    private CardView backBtn;
 
     private String fullName;
     private String username;
@@ -144,29 +145,54 @@ public class ProfileFragment extends Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     private void getViews(View view) {
-        fullNameTextView = view.findViewById(R.id.fullNameTxt);
-        usernameTextView = view.findViewById(R.id.usernameTxt);
-        emailTextView = view.findViewById(R.id.emailTxt);
-        phoneTextView = view.findViewById(R.id.phoneTxt);
-        dobTextView = view.findViewById(R.id.dobTxt);
-        weightTextView = view.findViewById(R.id.weightTxt);
-        heightTextView = view.findViewById(R.id.heightTxt);
-        CardView whiteCover = view.findViewById(R.id.whiteCoverCard);
+        try {
+            fullNameTextView = view.findViewById(R.id.fullNameTxt);
+            usernameTextView = view.findViewById(R.id.usernameTxt);
+            emailTextView = view.findViewById(R.id.emailTxt);
+            phoneTextView = view.findViewById(R.id.phoneTxt);
+            dobTextView = view.findViewById(R.id.dobTxt);
+            weightTextView = view.findViewById(R.id.weightTxt);
+            heightTextView = view.findViewById(R.id.heightTxt);
+            CardView whiteCover = view.findViewById(R.id.whiteCoverCard);
 
-        profileImage = view.findViewById(R.id.profileImage);
-        profileImage.setOnTouchListener((v, event) -> {
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            // Profile Image
+            profileImage = view.findViewById(R.id.profileImage);
+            profileImage.setOnTouchListener((v, event) -> {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    whiteCover.setVisibility(View.VISIBLE);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    whiteCover.setVisibility(View.GONE);
+                }
+                return false;
+            });
+            profileImage.setOnLongClickListener(v -> {
                 whiteCover.setVisibility(View.VISIBLE);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                whiteCover.setVisibility(View.GONE);
-            }
-            return false;
-        });
-        profileImage.setOnLongClickListener(v -> {
-            whiteCover.setVisibility(View.VISIBLE);
-            return false;
-        });
-        profileImage.setOnClickListener(v -> handleProfileImageClick());
+                return false;
+            });
+            profileImage.setOnClickListener(v -> handleProfileImageClick());
+
+            // Back button
+            backBtn = view.findViewById(R.id.backCardBtn);
+            backBtn.setOnTouchListener((v, event) -> {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    backBtn.setCardBackgroundColor(getResources().getColor(R.color.white_transparent
+                            , requireContext().getTheme()));
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    backBtn.setCardBackgroundColor(getResources().getColor(R.color.transparent_100
+                            , requireContext().getTheme()));
+                }
+                return false;
+            });
+            backBtn.setOnClickListener(v -> {
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    requireActivity().finish();
+                } else {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleProfileImageClick() {
