@@ -1,218 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.ProfileFragment">
+    tools:context=".fragment.ProfileFragment"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@drawable/background_gradient_profile"
-        android:layout_marginTop="-24dp"
-        android:gravity="center_horizontal">
-    </LinearLayout>
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/background_gradient_profile"
+            android:layout_marginTop="-24dp"
+            android:gravity="center_horizontal">
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/background_gradient_back">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/backCardBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="6dp"
-            app:cardBackgroundColor="@color/transparent_100"
-            app:cardElevation="0dp"
-            app:cardCornerRadius="40dp"
-            android:clickable="true">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_back"
-                android:layout_gravity="center"/>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="30dp">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="106dp"
-            android:layout_height="106dp"
-            app:cardCornerRadius="50dp"
-            app:cardBackgroundColor="@color/white"
-            android:layout_marginTop="0dp">
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:cardCornerRadius="50dp"
-            android:layout_marginTop="-104dp"
-            android:clickable="true">
-
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/food"
-                android:scaleType="centerCrop" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/whiteCoverCard"
-            android:layout_width="105dp"
-            android:layout_height="105dp"
-            app:cardCornerRadius="50dp"
-            android:layout_marginTop="-102dp"
-            android:backgroundTint="@color/white_transparent"
-            android:clickable="true"
-            android:visibility="gone">
-        </androidx.cardview.widget.CardView>
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_edit"
-            android:layout_marginTop="-20dp"
-            android:layout_marginStart="30dp"
-            android:elevation="2dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/background_gradient_back">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/backCardBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                app:cardBackgroundColor="@color/transparent_100"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="40dp"
+                android:clickable="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_back"
+                    android:layout_gravity="center"/>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="100dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="106dp"
+                android:layout_height="106dp"
+                app:cardCornerRadius="50dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginTop="0dp">
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:cardCornerRadius="50dp"
+                android:layout_marginTop="-104dp"
+                android:clickable="true">
+
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/food"
+                    android:scaleType="centerCrop" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/whiteCoverCard"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                app:cardCornerRadius="50dp"
+                android:layout_marginTop="-102dp"
+                android:backgroundTint="@color/white_transparent"
+                android:clickable="true"
+                android:visibility="gone">
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_edit"
+                android:layout_marginTop="-20dp"
+                android:layout_marginStart="30dp"
+                android:elevation="2dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Full Name" />
+
+            <EditText
+                android:id="@+id/fullNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Username" />
+
+            <EditText
+                android:id="@+id/usernameTxt"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Email" />
+
+            <EditText
+                android:id="@+id/emailTxt"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Phone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="Full Name" />
-
                 <EditText
-                    android:id="@+id/fullNameTxt"
-                    android:layout_width="match_parent"
+                    android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="Username" />
-
-                <EditText
-                    android:id="@+id/usernameTxt"
-                    android:layout_width="270dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="Email" />
-
-                <EditText
-                    android:id="@+id/emailTxt"
-                    android:layout_width="270dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="Phone" />
+                    android:inputType="date"
+                    android:gravity="center"
+                    android:text="+84"
+                    android:enabled="false"
+                    android:textSize="15sp"/>
 
                 <EditText
                     android:id="@+id/phoneTxt"
-                    android:layout_width="270dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="Date Of Birth" />
-
-                <EditText
-                    android:id="@+id/dobTxt"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
+                    android:inputType="phone"
+                    android:maxLength="50"
+                    android:textSize="15sp"/>
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Date Of Birth" />
+
+            <EditText
+                android:id="@+id/dobTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="15sp"
+                android:hint="@string/mm_dd_yyyy"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Address" />
+
+            <EditText
+                android:id="@+id/addressTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="15sp"
+                android:maxLines="2"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:orientation="vertical">
-
+            android:orientation="horizontal">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:text="Weight" />
-
                 <EditText
                     android:id="@+id/weightTxt"
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
+                    android:layout_marginStart="20dp"
+                    android:inputType="number"
+                    android:textSize="15sp"/>
             </LinearLayout>
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp">
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:text="Height" />
-
                 <EditText
                     android:id="@+id/heightTxt"
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp" />
+                    android:layout_marginStart="20dp"
+                    android:inputType="number"
+                    android:textSize="15sp"/>
             </LinearLayout>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/saveChangesBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/save_changes"/>
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
