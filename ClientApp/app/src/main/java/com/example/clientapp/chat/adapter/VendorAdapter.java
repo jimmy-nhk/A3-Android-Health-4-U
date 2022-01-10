@@ -48,7 +48,7 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
 
         // set components
         Vendor vendor = mVendors.get(position);
-        holder.username.setText("vendor name: " + vendor.getUserName());
+        holder.username.setText(vendor.getUserName());
         holder.profile_image.setImageResource(R.mipmap.ic_launcher);
 //        Glide.with(mContext).load(vendor.getImage()).into(holder.profile_image);
 

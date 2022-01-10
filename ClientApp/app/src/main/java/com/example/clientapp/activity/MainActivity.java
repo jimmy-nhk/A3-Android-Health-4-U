@@ -45,6 +45,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -767,26 +768,29 @@ public class MainActivity extends AppCompatActivity {
         return bottomNavigationView;
     }
 
+    @SuppressLint("NonConstantResourceId")
     public void onProfileBtnClick(View view) {
-        PopupMenu popupMenu = new PopupMenu(this, view);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_profile, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.profileEditMenuItem:
-                    Toast.makeText(this, "profileEditMenuItem", Toast.LENGTH_SHORT).show();
-                    handleProfileBtnClick();
-                    break;
-                case R.id.signOutMenuItem:
-                    Toast.makeText(this, "signOutMenuItem", Toast.LENGTH_SHORT).show();
-                    handleSignOutBtnClick();
-                    break;
-                default:
-                    break;
-            }
+        try {
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_profile, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.profileEditMenuItem:
+                        handleProfileBtnClick();
+                        break;
+                    case R.id.signOutMenuItem:
+                        handleSignOutBtnClick();
+                        break;
+                    default:
+                        break;
+                }
 
-            return false;
-        });
-        popupMenu.show();
+                return false;
+            });
+            popupMenu.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleProfileBtnClick() {

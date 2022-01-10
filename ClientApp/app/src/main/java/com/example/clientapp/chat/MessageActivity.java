@@ -129,7 +129,7 @@ public class MessageActivity extends AppCompatActivity {
         currentVendor = intent.getParcelableExtra("vendor");
         currentClient = intent.getParcelableExtra("client");
 
-        username.setText("username: " + currentVendor.getUserName());
+        username.setText(currentVendor.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
         readMessages();
 
