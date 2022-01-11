@@ -27,8 +27,8 @@
             android:layout_alignBottom="@+id/profileCoverImg"
             android:layout_alignParentEnd="true"
             android:layout_margin="10sp"
-            app:cardBackgroundColor="#BFFFFFFF"
-            app:cardCornerRadius="50sp">
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="25sp">
 
             <ImageButton
                 android:id="@+id/changeCoverImgBtn"
@@ -175,10 +175,10 @@
             </LinearLayout>
             <Button
                 android:id="@+id/profileSaveBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Save"/>
+                android:text="@string/save_changes"/>
 
         </LinearLayout>
     </LinearLayout>

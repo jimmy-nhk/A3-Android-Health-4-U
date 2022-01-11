@@ -114,7 +114,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
             String EMPTY_PHONE = "Phone cannot be empty. Please try again!";
             editPhone.setError(EMPTY_PHONE);
             return false;
-        } else if (countDigits(phone) < 9) {
+        } else if (countDigits(phone) != 9) {
             String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
                     "of your phone number!";
             editPhone.setError(INVALID_PHONE);

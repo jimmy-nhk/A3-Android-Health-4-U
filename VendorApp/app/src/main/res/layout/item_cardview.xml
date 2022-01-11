@@ -3,12 +3,87 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="5sp"
-    android:layout_marginTop="5sp"
-    android:layout_marginRight="5sp"
-    android:layout_marginBottom="5sp"
-    app:cardBackgroundColor="#FAF5F5">
+    android:layout_height="140dp"
+    app:cardBackgroundColor="@color/primary_pink_light_transparent"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="20dp"
+    android:layout_marginVertical="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            app:cardCornerRadius="10dp"
+            android:layout_marginStart="10dp"
+            app:cardElevation="0dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/itemImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:contentDescription="@string/item_image"
+                android:elevation="0dp"
+                android:src="@drawable/food" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp">
+<!--            <TextView-->
+<!--                android:id="@+id/itemVendorName"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="Vendor Name"-->
+<!--                android:visibility="gone"/>-->
+
+            <TextView
+                android:id="@+id/itemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_pink_light"
+                android:text="Item name"/>
+
+
+            <TextView
+                android:id="@+id/itemCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Food Category"/>
+
+            <TextView
+                android:id="@+id/itemPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:text="10$" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/deleteItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:backgroundTint="@color/red"
+            android:text="@string/delete" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,79 +91,13 @@
         android:orientation="horizontal"
         android:weightSum="10">
 
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="0sp"
-            android:layout_height="120sp"
-            android:layout_marginStart="4dp"
-            android:layout_weight="3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/food" />
-
-        <LinearLayout
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_marginStart="10sp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/itemVendorName"
-                android:layout_width="115dp"
-                android:layout_height="23dp"
-                android:layout_marginTop="16dp"
-                android:text="Vendor Name"
-                app:layout_constraintStart_toEndOf="@+id/itemImage"
-                app:layout_constraintTop_toBottomOf="@+id/itemName" />
-
-            <TextView
-                android:id="@+id/itemCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Food Category"
-                app:layout_constraintStart_toEndOf="@+id/itemImage"
-                app:layout_constraintTop_toBottomOf="@+id/itemVendorName" />
-
-
-            <TextView
-                android:id="@+id/itemName"
-                android:layout_width="120dp"
-                android:layout_height="19dp"
-                android:layout_marginTop="16dp"
-                android:text="Item name"
-                app:layout_constraintStart_toEndOf="@+id/itemImage"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="0sp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/itemPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:text="10$"
-                app:layout_constraintBottom_toTopOf="@+id/addItem"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/addItem" />
 
-            <Button
-                android:id="@+id/addItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="4dp"
-                android:backgroundTint="@color/main_blue"
-                android:text="Add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
         </LinearLayout>
 
 

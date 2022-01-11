@@ -22,6 +22,7 @@ import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -36,8 +37,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     private List<Item> itemList;
     private Context context;
     private LayoutInflater mLayoutInflater;
-    private
-    URL imageURL = null;
+    private URL imageURL = null;
 
     public ItemRecyclerViewAdapter(Context context, List<Item> data) {
         Log.d("ItemRecyclerViewAdapter", "constructor");
@@ -68,9 +68,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     // handle recycle item click
     private void handleRecyclerItemClick(RecyclerView parent, View v) {
         int itemPosition = parent.getChildLayoutPosition(v);
-
         Item item = this.itemList.get(itemPosition);
-
         Toast.makeText(this.context, item.getName(), Toast.LENGTH_LONG).show();
     }
 
@@ -125,10 +123,11 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
 
         holder.name.setText(item.getName());
-        holder.price.setText(item.getPrice() + "");
-        holder.vendorName.setText(item.getVendorID() + "");
+        holder.price.setText((item.getPrice() + " $"));
+//        holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
 
+        holder.deleteBtn.setOnClickListener(v -> deleteItem(item.getId(), position));
 
 //        //TODO: Implement service
 //        Intent intent = new Intent(context, LoadImageIntentService.class);
@@ -160,6 +159,17 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
     }
 
+    private void deleteItem(int itemId, int position) {
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        fireStore.collection("items").document(itemId + "")
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "DocumentSnapshot ITEM successfully deleted!");
+                    removeAt(position);
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting ITEM document", e));
+    }
+
     private class FetchImageTask extends AsyncTask<String, Integer, Bitmap> {
         private String imageUrl;
 
@@ -182,6 +192,12 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         }
     }
 
+    private void removeAt(int position) {
+        itemList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, itemList.size());
+    }
+
     @Override
     public int getItemCount() {
         return itemList.size();
@@ -189,22 +205,21 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 }
 
 class ItemViewHolder extends RecyclerView.ViewHolder {
-
     ImageView image;
     TextView name;
-    TextView vendorName;
+//    TextView vendorName;
     TextView price;
     TextView category;
-    Button addBtn;
+    Button deleteBtn;
 
     public ItemViewHolder(@NonNull View itemView) {
         super(itemView);
 
         image = itemView.findViewById(R.id.itemImage);
         name = itemView.findViewById(R.id.itemName);
-        vendorName = itemView.findViewById(R.id.itemVendorName);
+//        vendorName = itemView.findViewById(R.id.itemVendorName);
         category = itemView.findViewById(R.id.itemCategory);
         price = itemView.findViewById(R.id.itemPrice);
-        addBtn = itemView.findViewById(R.id.addItem);
+        deleteBtn = itemView.findViewById(R.id.deleteItem);
     }
 }

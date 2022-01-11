@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/toolbar"
-            android:background="@color/primary_blue_light"
+            android:background="@color/primary_pink"
             app:popupTheme="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:theme="@style/Base.CardView">
 
