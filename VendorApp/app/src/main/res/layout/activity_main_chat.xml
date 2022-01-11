@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/coordinator_layout"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.MainActivity"
+    android:orientation="vertical">
 
 <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
@@ -24,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/toolbar"
-            android:background="@color/primary_blue_light"
+            android:background="@color/primary_pink_dark"
             app:popupTheme="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:theme="@style/Base.CardView">
 
@@ -56,6 +57,18 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_container"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:menu="@menu/menu_chat"
+        android:background="@color/primary_pink"
+        app:itemBackground="@drawable/bottom_nav_tab_background"
+        app:itemIconTint="@drawable/nav_selector"
+        app:itemHorizontalTranslationEnabled="true"
+        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView"
+        app:itemTextColor="@drawable/nav_selector" />
+
 <!--    <androidx.viewpager.widget.ViewPager-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"-->
@@ -64,24 +77,7 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_container"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_gravity="bottom"
-        app:menu="@menu/menu_chat"
-        android:background="@color/blue_phantom"
-        app:itemBackground="@drawable/bottom_nav_tab_background"
-        app:itemIconTint="@drawable/nav_selector"
-        app:itemHorizontalTranslationEnabled="true"
-        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView"
-        app:itemTextColor="@drawable/nav_selector" />
-
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
