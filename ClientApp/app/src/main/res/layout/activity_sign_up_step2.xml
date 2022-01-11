@@ -105,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:inputType="date"
-            android:hint="Date of birth (MM/dd/yyyy)"
+            android:hint="@string/date_of_birth_dd_mm_yyyy"
             android:clickable="true"/>
 
         <LinearLayout

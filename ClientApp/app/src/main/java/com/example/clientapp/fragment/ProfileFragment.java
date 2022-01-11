@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.clientapp.R;
 import com.example.clientapp.model.Client;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -75,8 +76,10 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseFirestore fireStore;
     private DocumentReference clientDocRef;
+    private CollectionReference clientCollection;
+
     private Client client;
-    private boolean isImageChanged;
+    private boolean isImageChanged = false;
     private String updateImagePath;
     private final Calendar calendar = Calendar.getInstance();
 
@@ -115,7 +118,7 @@ public class ProfileFragment extends Fragment {
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
         clientDocRef = fireStore.collection("clients").document(client.getId() + "");
-
+        clientCollection=fireStore.collection("clients");
         // get the Firebase storage reference
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -184,27 +187,49 @@ public class ProfileFragment extends Fragment {
     }
 
     // update fire store client
-    private void updateFirestoreClient(String phone,
-                                       String address,
-                                       String dob,
-                                       String weightStr,
-                                       String heightStr) {
-        Log.d(TAG, "updateFirestoreClient address=" + address);
+    private void updateFirestoreClient() {
+        String phone=phoneTextView.getText().toString().trim();
+        String address=addressTextView.getText().toString().trim();
+        String dob=dobTextView.getText().toString().trim();
+        String weightStr= weightTextView.getText().toString().trim();
+        String heightStr=heightTextView.getText().toString().trim();
 
-        clientDocRef
-                .update("phone", phone,
-                        "address", address,
-                        "dob", dob,
-                        "weight", (Double.parseDouble(weightStr)),
-                        "height", (Double.parseDouble(heightStr)))
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    Toast.makeText(getContext(), "Successfully updated client information", Toast.LENGTH_SHORT).show();
+        client.setWeight(Double.parseDouble(weightStr));
+        client.setHeight(Double.parseDouble(heightStr));
+        client.setAddress(address);
+        client.setPhone(phone);
+        client.setDob(dob);
+//        Log.d(TAG, "updateFirestoreClient address=" + address);
+//
+//        clientDocRef
+//                .update("phone", phone,
+//                        "address", address,
+//                        "dob", dob,
+//                        "weight", (Double.parseDouble(weightStr)),
+//                        "height", (Double.parseDouble(heightStr)))
+//                .addOnSuccessListener(aVoid -> {
+//                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+//                    Toast.makeText(getContext(), "Successfully updated client information", Toast.LENGTH_SHORT).show();
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.w(TAG, "Error updating document", e);
+//                    Toast.makeText(getContext(), "Error updating client phone, address, etc.", Toast.LENGTH_SHORT).show();
+//                });
+//        client.setPhone(phone);
+//        client.setAddress(address);
+//        client.setDob(dob);
+//        client.setHeight(Double.parseDouble(weightStr));
+//        client.setWeight(Double.parseDouble(heightStr));
+        Log.d(TAG,client.toString());
+        // vendor collection
+        clientCollection.document(client.getId() + "")
+                .update(client.toMap())
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Successfully added client to FireStore: " + client.toString());
+//                    updateUI();
                 })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error updating document", e);
-                    Toast.makeText(getContext(), "Error updating client phone, address, etc.", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "Fail to add client to FireStore: " + client.toString()));
+
     }
 
     private void getViews(View view) {
@@ -267,7 +292,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateDobLabel() {
-        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         dobTextView.setText(sdf.format(calendar.getTime()));
@@ -320,19 +345,20 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleSaveChangesBtnClick() {
-        if (isImageChanged) {
-            updateProfileImage(updateImagePath);
-            isImageChanged = false;
-        }
-
         String fullName = fullNameTextView.getText().toString().trim();
         String phone = phoneTextView.getText().toString().trim();
-        String address = addressTextView.getText().toString().trim();
+//        String address = addressTextView.getText().toString().trim();
         String dob = dobTextView.getText().toString().trim();
-        String weightStr = weightTextView.getText().toString().trim();
-        String heightStr = heightTextView.getText().toString().trim();
+//        String weightStr = weightTextView.getText().toString().trim();
+//        String heightStr = heightTextView.getText().toString().trim();
         if (validateInput(fullName, phone, dob))
-            updateFirestoreClient(phone, address, dob, weightStr, heightStr);
+            if (isImageChanged) {
+//            updateProfileImage(updateImagePath);
+                uploadImage();
+                isImageChanged = false;
+            }
+        updateFirestoreClient();
+
     }
 
     // Select Image method
@@ -353,11 +379,12 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             filePath = data.getData();
-            uploadImage();
             try {
                 Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), filePath);
                 profileImage.setImageBitmap(bitmapImg);
-                profileImage.setVisibility(View.VISIBLE);
+//                profileImage.setVisibility(View.VISIBLE);
+                isImageChanged = true;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -371,14 +398,14 @@ public class ProfileFragment extends Fragment {
             // Code for showing progressDialog while uploading
             ProgressDialog progressDialog
                     = new ProgressDialog(getContext());
-            progressDialog.setTitle("Adding item...");
+            progressDialog.setTitle("Adding client...");
             progressDialog.show();
 
             // Defining the child of storageReference
             StorageReference ref
                     = storageReference
                     .child(
-                            "items/"
+                            "clients/"
                                     + UUID.randomUUID().toString());
 
             // adding listeners on upload
@@ -391,10 +418,10 @@ public class ProfileFragment extends Fragment {
                                 // get path to add to item ọbject
                                 updateImagePath = taskSnapshot.getStorage().getPath();
                                 // Call function to upload item to DB
-                                isImageChanged = true;
+                                client.setImage(updateImagePath);
                                 // setStoreImage but hasn't save changes
-                                setProfileImageView(updateImagePath);
-
+//                                setProfileImageView(updateImagePath);
+                                updateFirestoreClient();
                                 // Image uploaded successfully, turn off the process dialog
                                 progressDialog.dismiss();
                             })
@@ -419,16 +446,16 @@ public class ProfileFragment extends Fragment {
     private void updateProfileImage(String path) {
 //        Toast.makeText(getContext(), "path=" + path, Toast.LENGTH_SHORT).show();
 
-        clientDocRef
-                .update("image", path)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    Toast.makeText(getContext(), "update succeeded", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error updating document", e);
-                    Toast.makeText(getContext(), "Error updating document path=" + path, Toast.LENGTH_SHORT).show();
-                });
+//        clientDocRef
+//                .update("image", path)
+//                .addOnSuccessListener(aVoid -> {
+//                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+//                    Toast.makeText(getContext(), "update succeeded", Toast.LENGTH_SHORT).show();
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.w(TAG, "Error updating document", e);
+//                    Toast.makeText(getContext(), "Error updating document path=" + path, Toast.LENGTH_SHORT).show();
+//                });
     }
 
     private void setProfileImageView(String imageUrl) {
@@ -486,7 +513,7 @@ public class ProfileFragment extends Fragment {
             String EMPTY_PHONE = "Phone cannot be empty";
             phoneTextView.setError(EMPTY_PHONE);
             return false;
-        } else if (countDigits(phone) < 9) {
+        } else if (countDigits(phone) != 9) {
             String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
                     "of your phone number!";
             phoneTextView.setError(INVALID_PHONE);

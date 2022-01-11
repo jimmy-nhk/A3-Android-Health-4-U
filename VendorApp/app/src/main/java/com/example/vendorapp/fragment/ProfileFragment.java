@@ -127,6 +127,8 @@ public class ProfileFragment extends Fragment {
         vendor.setAddress(addressTxt.getText().toString());
         vendor.setRating(Double.parseDouble(ratingTxt.getText().toString()));
         vendor.setTotalSale(Integer.parseInt(totalSalesTxt.getText().toString()));
+
+        // vendor collection
         vendorCollection.document(vendor.getId() + "")
                 .update(vendor.toMap())
                 .addOnSuccessListener(unused -> {
@@ -146,9 +148,10 @@ public class ProfileFragment extends Fragment {
         addressTxt.setText(vendor.getAddress());
 
         try {
+            // storage imgRef
             StorageReference mImageRef =
                     FirebaseStorage.getInstance().getReference(vendor.getImage());
-            final long ONE_MEGABYTE = 1024 * 1024;
+            final long ONE_MEGABYTE = 1024 * 1024 * 5;
             mImageRef.getBytes(ONE_MEGABYTE)
                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
@@ -157,6 +160,7 @@ public class ProfileFragment extends Fragment {
                             DisplayMetrics dm = new DisplayMetrics();
                             ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
 
+                            // coverImg
                             coverImg.setMinimumHeight(dm.heightPixels);
                             coverImg.setMinimumWidth(dm.widthPixels);
                             coverImg.setImageBitmap(bm);
@@ -170,6 +174,7 @@ public class ProfileFragment extends Fragment {
         } catch (Exception e) {
 
         }
+        // String rating totalSalesStr
         String ratingStr = String.valueOf(vendor.getRating());
         String totalSalesStr = String.valueOf(vendor.getTotalSale());
         ratingTxt.setText(ratingStr);

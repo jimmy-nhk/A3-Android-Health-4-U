@@ -254,7 +254,7 @@ public class Client implements Parcelable {
         result.put(CLIENT_EMAIL, email);
         result.put(CLIENT_PHONE, phone);
         result.put(CLIENT_DOB, dob);
-        result.put(CLIENT_ADDRESS, phone);
+        result.put(CLIENT_ADDRESS, address);
         result.put(CLIENT_WEIGHT, weight);
         result.put(CLIENT_HEIGHT, height);
         result.put(CLIENT_BMI, bmi);

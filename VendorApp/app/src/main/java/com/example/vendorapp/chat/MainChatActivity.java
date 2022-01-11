@@ -170,6 +170,7 @@ public class MainChatActivity extends AppCompatActivity {
 
 }
 
+// bottom navigation
 class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {
 
     public BottomNavigationBehavior() {
@@ -191,6 +192,7 @@ class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigati
         return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL;
     }
 
+    // nested pre scroll
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, BottomNavigationView child, View target, int dx, int dy, int[] consumed) {
         if (dy < 0) {
@@ -200,10 +202,12 @@ class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigati
         }
     }
 
+    // hide bottom view
     private void hideBottomNavigationView(BottomNavigationView view) {
         view.animate().translationY(view.getHeight());
     }
 
+    // show bottom view
     private void showBottomNavigationView(BottomNavigationView view) {
         view.animate().translationY(0);
     }

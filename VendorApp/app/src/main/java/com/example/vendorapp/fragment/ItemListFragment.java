@@ -41,12 +41,14 @@ public class ItemListFragment extends Fragment {
 
 
 
+        //view
         View view = inflater.inflate(R.layout.fragment_food_list, container, false);
 
+        // get vendor
         assert getArguments() != null;
         vendor = getArguments().getParcelable("vendor"); // get vendor
 
-
+        // init service
         initService(view);
 
         Log.d(TAG, "FoodListFragment: onCreateView");
@@ -88,6 +90,7 @@ public class ItemListFragment extends Fragment {
 
             recyclerView = view.findViewById(R.id.recycler_view);
 
+            // check activity null
             if (isAdded()){
                 mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList);
 

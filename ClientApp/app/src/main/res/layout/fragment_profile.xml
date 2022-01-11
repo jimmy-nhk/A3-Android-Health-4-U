@@ -171,9 +171,10 @@
                     android:layout_height="wrap_content"
                     android:inputType="date"
                     android:gravity="center"
-                    android:text="+84"
-                    android:enabled="false"
-                    android:textSize="15sp"/>
+                    android:text="@string/plus_84"
+                    android:textSize="15sp"
+                    android:cursorVisible="false"
+                    android:focusable="false"/>
 
                 <EditText
                     android:id="@+id/phoneTxt"
@@ -200,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:textSize="15sp"
-                android:hint="@string/mm_dd_yyyy"/>
+                android:hint="@string/dd_mm_yyyy"/>
         </LinearLayout>
 
         <LinearLayout
