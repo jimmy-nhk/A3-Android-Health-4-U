@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
+import com.example.vendorapp.activity.AddItemActivity;
+import com.example.vendorapp.activity.MainActivity;
 import com.example.vendorapp.chat.adapter.MessageAdapter;
 import com.example.vendorapp.chat.model.MessageObject;
 import com.example.vendorapp.model.Client;
@@ -58,7 +60,7 @@ public class MessageActivity extends AppCompatActivity {
 
     Intent intent;
 
-    private int messageSize ;
+    private int messageSize;
     private FirebaseFirestore fireStore;
     private CollectionReference messageCollection;
     private CollectionReference vendorCollection;
@@ -87,7 +89,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     // get views
-    private void getViews(){
+    private void getViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -114,9 +116,9 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String msg = text_send.getText().toString();
-                if (!msg.equals("")){
-                    sendMessage( currentVendor.getUserName(),currentClient.getUserName(), msg);
-                }else {
+                if (!msg.equals("")) {
+                    sendMessage(currentVendor.getUserName(), currentClient.getUserName(), msg);
+                } else {
                     Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
                 }
 
@@ -140,11 +142,11 @@ public class MessageActivity extends AppCompatActivity {
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);
     }
 
-    private void sendMessage(String sender, String receiver, String message){
+    private void sendMessage(String sender, String receiver, String message) {
 
         messageSize++;
         // init message
-        MessageObject messageObject = new MessageObject( messageSize,sender, receiver, message , false, true);
+        MessageObject messageObject = new MessageObject(messageSize, sender, receiver, message, false, true);
 
         // add message to db
         messageCollection.document(messageObject.getId() + "")
@@ -159,7 +161,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     // read message
-    private void readMessages(){
+    private void readMessages() {
 
 
         // load items
@@ -167,15 +169,15 @@ public class MessageActivity extends AppCompatActivity {
             messageObjectList = new ArrayList<>();
 
             messageSize = value.size();
-            Log.d(TAG, "messageSize:  " +messageSize);
+            Log.d(TAG, "messageSize:  " + messageSize);
 
 
             MessageObject messageObject;
             //scan the value from db
-            for (DocumentSnapshot ds: value
+            for (DocumentSnapshot ds : value
             ) {
                 messageObject = ds.toObject(MessageObject.class);
-                Log.d(TAG, "messageObj:  " +messageObject.toString());
+                Log.d(TAG, "messageObj:  " + messageObject.toString());
 
 
                 if (messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName()) ||
@@ -187,19 +189,19 @@ public class MessageActivity extends AppCompatActivity {
             }
             // set reverse the collection
 //            Collections.reverse(messageObjectList);
-            Log.d(TAG, "messageObjectList size:  " +messageObjectList.size());
+            Log.d(TAG, "messageObjectList size:  " + messageObjectList.size());
 
-            messageAdapter = new MessageAdapter(MessageActivity.this, messageObjectList, currentClient , currentVendor);
+            messageAdapter = new MessageAdapter(MessageActivity.this, messageObjectList, currentClient, currentVendor);
             recyclerView.setAdapter(messageAdapter);
 
         });
     }
 
     // toggle
-    private void toggleStatus(String status){
+    private void toggleStatus(String status) {
 
         // update vendor
-        vendorCollection.document(currentVendor.getId()+"")
+        vendorCollection.document(currentVendor.getId() + "")
                 .update("status", status)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -228,4 +230,5 @@ public class MessageActivity extends AppCompatActivity {
         super.onPause();
         toggleStatus("offline");
     }
+
 }

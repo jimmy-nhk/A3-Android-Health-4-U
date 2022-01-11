@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="end"
-                android:paddingVertical="30dp"
+                android:paddingVertical="15dp"
                 android:paddingHorizontal="20dp">
 
 <!--                <Button-->
@@ -44,10 +44,10 @@
                 <ImageButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginStart="16dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
                     android:background="@drawable/ic_profile"
-                    android:onClick="onProfileBtnClick"/>
+                    android:onClick="onProfileBtnClick" />
             </LinearLayout>
 
 

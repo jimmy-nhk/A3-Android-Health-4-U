@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private EditText fullNameTxt, usernameTxt, emailTxt, phoneTxt, addressTxt, ratingTxt, totalSalesTxt;
     private ImageView coverImg;
     private ImageButton changeImgBtn;
+    private ImageButton backBtn;
     private Button profileSaveBtn;
     private Vendor vendor;
 
@@ -85,7 +87,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         getViews(view);
-
+        //Back button on click
+            initBackBtnClick();
         // display vendor
         if (vendor != null) {
             updateUI();
@@ -97,6 +100,20 @@ public class ProfileFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void initBackBtnClick() {
+        try {
+            backBtn.setOnClickListener(v -> {
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    requireActivity().finish();
+                } else {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void onSaveProfile(View view) {
@@ -119,7 +136,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void uploadProfileToDB() {
-        // create Item
+        // create vendor
         vendor.setFullName(fullNameTxt.getText().toString());
         vendor.setStoreName(usernameTxt.getText().toString());
         vendor.setEmail(emailTxt.getText().toString());
@@ -193,6 +210,7 @@ public class ProfileFragment extends Fragment {
         totalSalesTxt = view.findViewById(R.id.editTotalSales);
         coverImg = view.findViewById(R.id.profileCoverImg);
         changeImgBtn = view.findViewById(R.id.changeCoverImgBtn);
+        backBtn = view.findViewById(R.id.backBtn);
         profileSaveBtn = view.findViewById(R.id.profileSaveBtn);
     }
 

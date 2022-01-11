@@ -4,11 +4,13 @@ import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,7 +63,7 @@ public class MainChatActivity extends AppCompatActivity {
 
     private FragmentTransaction transaction;
     private BottomNavigationView bottomNavigationView;
-
+    private ImageView backMessageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,14 @@ public class MainChatActivity extends AppCompatActivity {
         // init home fragment
         loadFragment(new ChatsFragment());
 
+
+        //init back button
+        initBackButtonHandler();
+    }
+
+    private void initBackButtonHandler() {
+        backMessageBtn=findViewById(R.id.backMessageBtn);
+        backMessageBtn.setOnClickListener(v -> finish());
     }
 
     // bottom navigation

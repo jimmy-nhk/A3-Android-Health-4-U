@@ -19,6 +19,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null) {
             vendor = (Vendor) intent.getParcelableExtra("vendor");
 
-            if (intent.getBooleanExtra("toOrder", false)){
+            if (intent.getBooleanExtra("toOrder", false)) {
                 getBottomNavigationView().setSelectedItemId(R.id.orderNav);
             }
         }
@@ -115,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
         initService();
         listenMessage();
     }
+
     public BottomNavigationView getBottomNavigationView() {
         return bottomNavigationView;
     }
+
     // bottom navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
@@ -172,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             DocumentChange dc = value.getDocumentChanges().get(value.getDocumentChanges().size() - 1);
 
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         try {
@@ -183,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                             DocumentSnapshot ds = value.getDocuments().get(size);
                             DocumentChange dc = value.getDocumentChanges().get(value.getDocumentChanges().size() - 1);
 
-                            if (dc.getType() == DocumentChange.Type.ADDED){
+                            if (dc.getType() == DocumentChange.Type.ADDED) {
 
                             } else {
                                 return;
@@ -241,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
     @Override
     protected void onResume() {
         toggleStatus("online");
@@ -256,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Fragment stack size : " + fm.getBackStackEntryCount());
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 //        // validate the back button in the device
@@ -267,8 +271,9 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
 //        }
     }
+
     // on chat btn
-    public void onChatBtnClick(View view){
+    public void onChatBtnClick(View view) {
 
         // pass to new intent
         Intent intent = new Intent(MainActivity.this, MainChatActivity.class);
@@ -329,8 +334,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private void registerService(){
+    private void registerService() {
         notificationReceiver = new NotificationReceiver();
         intentFilter = new IntentFilter();
         intentFilter.addAction(ORDER_COMING);
@@ -381,12 +385,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // listen for all values
-                    for (DocumentSnapshot ds: value.getDocuments()
-                             ) {
-                            Order messageObject = ds.toObject(Order.class);
-                            Log.d(TAG, "order newest: " + messageObject.toString());
+                    for (DocumentSnapshot ds : value.getDocuments()
+                    ) {
+                        Order messageObject = ds.toObject(Order.class);
+                        Log.d(TAG, "order newest: " + messageObject.toString());
 
-                        }
+                    }
 
 
                     int valueSize = value.getDocuments().size();
@@ -411,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
                                 Intent intent = new Intent(ORDER_COMING);
                                 intent.putExtra("message", ORDER_COMING + "");
                                 intent.putExtra("order", orderModified);
-                                intent.putExtra("vendor",vendor);
+                                intent.putExtra("vendor", vendor);
                                 sendBroadcast(intent);
 
 
@@ -471,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // toggle status
-    private void toggleStatus(String status){
+    private void toggleStatus(String status) {
 
         // vendor collection
         vendorCollection.document(vendor.getId() + "")
@@ -522,7 +526,6 @@ public class MainActivity extends AppCompatActivity {
 
     // add item on click
     public void addItemOnClick(View view) {
-
         try {
             Intent intent = new Intent(MainActivity.this, AddItemActivity.class);
             intent.putExtra("vendorID", vendor.getId());
@@ -533,13 +536,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onProfileBtnClick(View view) {
-        Fragment fragment = new ProfileFragment();
-        if (vendor != null) {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("vendor", vendor);
-            fragment.setArguments(bundle);
+        try {
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_profile, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.profileEditMenuItem:
+                        handleProfileBtnClick();
+                        break;
+                    case R.id.signOutMenuItem:
+                        handleSignOutBtnClick();
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
+            });
+            popupMenu.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        loadFragmentWithBackStack(fragment);
+    }
+
+    private void handleSignOutBtnClick() {
+        try {
+            vendorCollection.document(vendor.getId() + "")
+                    .update("status", "offline")
+                    .addOnSuccessListener(unused -> {
+                        Log.d(TAG, "DocumentSnapshot successfully updated offline status! ");
+                        FirebaseAuth.getInstance().signOut();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> Log.d(TAG, "DocumentSnapshot fail updated status!"));
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    private void handleProfileBtnClick() {
+        try {
+            Fragment fragment = new ProfileFragment();
+            if (vendor != null) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("vendor", vendor);
+                fragment.setArguments(bundle);
+            }
+            loadFragmentWithBackStack(fragment);
+        } catch (Exception ignored) {
+
+        }
     }
 
     // In your activity
@@ -551,28 +597,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // sign out btn
-    public void onSignOut(View view) {
-
-
-        vendorCollection.document(vendor.getId() + "")
-                .update("status", "offline")
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(@NonNull Void unused) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated offline status! " );
-                        FirebaseAuth.getInstance().signOut();
-                        finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "DocumentSnapshot fail updated status!");
-
-                    }
-                });
-    }
 }
 
 class BottomNavigationBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {

@@ -54,6 +54,7 @@ public class StoreDetailsFragment extends Fragment {
     private RecyclerView recycler_view_store;
     private List<Item> itemList;
     private ItemRecyclerViewAdapter mAdapter;
+    private  ImageView backBtnV;
     // Item list
     private FirebaseFirestore fireStore;
     private CollectionReference itemCollection;
@@ -95,7 +96,22 @@ public class StoreDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         initService(view);
+        initBackBtnHandler();
 
+    }
+
+    private void initBackBtnHandler() {
+        try {
+            backBtnV.setOnClickListener(v -> {
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    requireActivity().finish();
+                } else {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // init service
@@ -202,7 +218,7 @@ public class StoreDetailsFragment extends Fragment {
                                     });
                                 }
                             } catch (Exception e) {
-                                coverImg.setImageResource(R.drawable.bun); //Set something else
+                                coverImg.setImageResource(R.drawable.food); //Set something else
                                 e.printStackTrace();
                             }
                             Log.d(TAG,"vendor: "+vendor.toString());
@@ -223,6 +239,7 @@ public class StoreDetailsFragment extends Fragment {
         ratingTxt = view.findViewById(R.id.storeRating);
         soldQuantityTxt = view.findViewById(R.id.storeSoldQuantity);
         coverImg = view.findViewById(R.id.storeCoverImg);
+        backBtnV = view.findViewById(R.id.backBtn);
 
     }
 }

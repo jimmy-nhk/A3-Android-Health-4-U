@@ -10,34 +10,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="50sp"
-        android:text="HOME" />
-
+        android:text="HOME"
+        android:textSize="50sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Profile"
-            android:onClick="onProfileBtnClick"/>
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp">
+
+        <!--                <Button-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:onClick="onProfileBtnClick"-->
+        <!--                    android:text="Profile" />-->
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chat"
-            android:onClick="onChatBtnClick"/>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_message"
+            android:onClick="onChatBtnClick" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign out"
-            android:onClick="onSignOut"/>
+        <!--                <Button-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="Sign out"-->
+        <!--                    android:onClick="onSignOutBtnClick"/>-->
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/ic_profile"
+            android:backgroundTint="@color/primary_pink"
+            android:onClick="onProfileBtnClick" />
     </LinearLayout>
-
-
 
 
 </FrameLayout>

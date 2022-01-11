@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.clientapp.R;
@@ -32,6 +33,7 @@ public class ItemDetailsFragment extends Fragment {
     TextView itemCaloriesTxt;
     TextView storeNameTxt;
     TextView itemExpirationDateTxt;
+    ImageView backBtnV;
     Button addToCardButton;
 
     private Item item;
@@ -54,9 +56,24 @@ public class ItemDetailsFragment extends Fragment {
         getViews(view);
         // Render item detail
         displayItemDetail();
-
+        //Init back btn
+        initBackbtnHandler();
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void initBackbtnHandler() {
+        try {
+            backBtnV.setOnClickListener(v -> {
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    requireActivity().finish();
+                } else {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // On store name click => go to Store profile page
@@ -126,6 +143,7 @@ public class ItemDetailsFragment extends Fragment {
         itemCategoryTxt = view.findViewById(R.id.itemCategoryText);
         itemExpirationDateTxt = view.findViewById(R.id.itemExpirationDateText);
         addToCardButton = view.findViewById(R.id.addToCartBtn);
+        backBtnV = view.findViewById(R.id.backBtn);
 
         // addToCardButton onClick
         addToCardButton.setOnClickListener(v -> handleAddItemToCardClick(item));
