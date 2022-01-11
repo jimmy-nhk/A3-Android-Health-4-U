@@ -8,6 +8,9 @@
     <string name="sign_up_underline"><u>Sign Up</u></string>
     <string name="save_changes">Save changes</string>
     <string name="don_t_have_an_account_yet">Don\'t have an account yet?</string>
+    <string name="add_item">Add Item</string>
+    <string name="item_image">Item Image</string>
+    <string name="delete">Delete</string>
     <string-array name="category_array">
         <item>Rice</item>
         <item>Noodles</item>

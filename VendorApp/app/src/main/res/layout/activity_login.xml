@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:text="Welcome,"
-        android:textColor="@color/primary_blue_light"
+        android:textColor="@color/primary_pink_light"
         android:textAlignment="textStart"
         android:textSize="30sp"/>
 

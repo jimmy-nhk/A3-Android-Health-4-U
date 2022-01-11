@@ -39,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/usernameMainChat"
                 android:text="username"
-                android:textColor="#fff"
+                android:textColor="@color/white"
+                android:textSize="18sp"
                 android:layout_marginStart="25dp"/>
 
 
@@ -67,7 +68,8 @@
         app:itemIconTint="@drawable/nav_selector"
         app:itemHorizontalTranslationEnabled="true"
         app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView"
-        app:itemTextColor="@drawable/nav_selector" />
+        app:itemTextColor="@drawable/nav_selector"
+        app:elevation="0dp"/>
 
 <!--    <androidx.viewpager.widget.ViewPager-->
 <!--        android:layout_width="match_parent"-->
