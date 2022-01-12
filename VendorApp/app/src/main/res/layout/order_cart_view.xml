@@ -4,114 +4,109 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5sp"
-    android:layout_marginTop="5sp"
-    android:layout_marginRight="5sp"
-    android:layout_marginBottom="5sp"
-    app:cardBackgroundColor="#FAF5F5">
+    app:cardBackgroundColor="@color/primary_pink_light_transparent"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="20dp"
+    android:layout_marginVertical="5dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10">
-
-        <ImageView
-            android:id="@+id/itemImage"
-            android:layout_width="0sp"
-            android:layout_height="120sp"
-            android:layout_marginStart="4dp"
-            android:layout_weight="3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/food" />
 
         <LinearLayout
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_marginStart="10sp"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
 
-            <TextView
-                android:id="@+id/itemVendorName"
-                android:layout_width="115dp"
-                android:layout_height="23dp"
-                android:layout_marginTop="16dp"
-                android:text="Vendor Name"
-                app:layout_constraintStart_toEndOf="@+id/itemImage"
-                app:layout_constraintTop_toBottomOf="@+id/itemName" />
 
-            <TextView
-                android:id="@+id/dateOrder"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="0sp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Food Category"
-                app:layout_constraintStart_toEndOf="@+id/itemImage"
-                app:layout_constraintTop_toBottomOf="@+id/itemVendorName" />
+                android:layout_weight="7"
+                android:padding="10sp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/orderClientName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Client Name"  />
+
+                <TextView
+                    android:id="@+id/orderClientPhoneTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Client Phone" />
+
+                <TextView
+                    android:id="@+id/orderClientAddressTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Client Address" />
 
 
-            <TextView
-                android:id="@+id/orderIdTxt"
-                android:layout_width="120dp"
-                android:layout_height="19dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="5dp"
-                android:text="Item name"
-                 />
+                <TextView
+                    android:id="@+id/dateOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Ordered Date"
+                    app:layout_constraintTop_toBottomOf="@+id/clientPhoneTxt" />
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/orderItemListView"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:padding="5sp"
+                android:layout_gravity=""
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/itemPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10$"
+                    app:layout_constraintBottom_toTopOf="@+id/processBtn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/processBtn" />
+
+                <TextView
+                    android:id="@+id/announcementTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Processed"
+
+                    app:layout_constraintBottom_toTopOf="@+id/processBtn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/processBtn" />
+
+                <Button
+                    android:id="@+id/processBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                     android:backgroundTint="@color/primary_pink"
+                     android:text="Process" />
+
+                <Button
+                    android:id="@+id/cancelBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                      android:layout_marginBottom="4dp"
+                    android:backgroundTint="@color/primary_pink"
+                    android:text="Cancel"  />
+
+
+            </LinearLayout>
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0sp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/itemPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10$"
-                app:layout_constraintBottom_toTopOf="@+id/processBtn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/processBtn" />
-
-            <TextView
-                android:id="@+id/announcementTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Processed"
-
-                app:layout_constraintBottom_toTopOf="@+id/processBtn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/processBtn" />
-
-
-            <Button
-                android:id="@+id/processBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/main_blue"
-                android:text="Process" />
-
-            <Button
-                android:id="@+id/cancelBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="4dp"
-                android:backgroundTint="@color/main_blue"
-                android:text="Cancel"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

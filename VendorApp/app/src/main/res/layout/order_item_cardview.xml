@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3sp"
+    android:backgroundTint="#00FFFFFF"
+    app:cardElevation="0dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/dot"
+            android:layout_width="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_height="wrap_content"
+            android:text="○"/>
+        <TextView
+            android:id="@+id/orderItemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="5sp"
+            android:layout_toEndOf="@+id/dot"
+            android:layout_height="wrap_content"
+            android:text="100"/>
+
+        <TextView
+            android:id="@+id/orderItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/orderItemQuantity"
+            android:text="item Name" />
+
+        <TextView
+            android:id="@+id/orderItemPrice"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="price"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

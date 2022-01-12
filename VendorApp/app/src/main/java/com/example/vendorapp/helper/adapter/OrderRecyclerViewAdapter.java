@@ -9,18 +9,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.activity.OrderDetailActivity;
+import com.example.vendorapp.model.Client;
+import com.example.vendorapp.model.Item;
 import com.example.vendorapp.model.Order;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.net.URL;
@@ -34,7 +40,6 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     private LayoutInflater mLayoutInflater;
     private
     URL imageURL = null;
-
 
 
     // init db
@@ -101,42 +106,22 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         orderRef = orderCollection.document(String.valueOf(order.getId()));
 
 
-        // TODO: Fix order name
-        holder.orderIdText.setText("OrderID: " + order.getId() + "");
+//        // TODO: Fix order name
+//        holder.orderIdText.setText("OrderID: " + order.getId() + "");
 
         // price
         holder.price.setText("Price: " + order.getPrice() + "$");
-        // name
-        holder.vendorName.setText("vendor name" + order.getVendorID() + "");
         //date
         holder.dateOrder.setText("Date: " + order.getDate() + "");
 
         //TODO: check again the text appearance
-        holder.announcementTxt.setText(order.getIsProcessed() ? "Processed" : order.getIsCancelled() ? "Cancel" :"Not yet process");
-        holder.announcementTxt.setTextColor(order.getIsProcessed() ? GREEN_COLOR :  order.getIsCancelled() ? RED_COLOR :BLACK_COLOR);
+        holder.announcementTxt.setText(order.getIsProcessed() ? "Processed" : order.getIsCancelled() ? "Cancel" : "Not yet process");
+        holder.announcementTxt.setTextColor(order.getIsProcessed() ? GREEN_COLOR : order.getIsCancelled() ? RED_COLOR : BLACK_COLOR);
 
         holder.cancelBtn.setVisibility(order.getIsProcessed() ? View.GONE : order.getIsCancelled() ? View.GONE : View.VISIBLE);
         holder.processBtn.setVisibility(order.getIsProcessed() ? View.GONE : order.getIsCancelled() ? View.GONE : View.VISIBLE);
 
 
-//        try {
-//            Thread thread = new Thread(new Runnable(){
-//                @Override
-//                public void run() {
-//                    try {
-//                        imageURL = new URL(item.getImage());
-//                        Bitmap mIcon_val = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
-//                        holder.image.setImageBitmap(mIcon_val);
-//                    } catch (Exception e) {
-//                        Log.e(TAG, e.getMessage());
-//                    }
-//                }
-//            });
-//            thread.start();
-//        } catch (Exception e) {
-//            holder.image.setImageResource(R.drawable.food);
-//            e.printStackTrace();
-//        }
         //TODO: Image and Button
         holder.processBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +136,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
                         Log.d(TAG, "processBtn: click: " + order.toString());
 
                         holder.announcementTxt.setText("Processed!");
-                        holder.announcementTxt.setTextColor( GREEN_COLOR );
+                        holder.announcementTxt.setTextColor(GREEN_COLOR);
 
                         holder.cancelBtn.setVisibility(View.GONE);
                         holder.cancelBtn.setEnabled(false);
@@ -176,7 +161,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
                         Log.d(TAG, "cancelBtn: click: " + order.toString());
 
                         holder.announcementTxt.setText("Cancel!");
-                        holder.announcementTxt.setTextColor( RED_COLOR );
+                        holder.announcementTxt.setTextColor(RED_COLOR);
 
                         holder.cancelBtn.setVisibility(View.GONE);
                         holder.cancelBtn.setEnabled(false);
@@ -187,6 +172,58 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
             }
         });
 
+        //ListView
+
+        List<Item> itemList = order.getItemList();
+        List<Integer> quantityList = order.getQuantity();
+
+        // linear styles
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        holder.itemListV.setNestedScrollingEnabled(false);
+        holder.itemListV.setAdapter(new OrderItemListViewAdapter(itemList, quantityList, context));
+        holder.itemListV.setDivider(null);
+        setListViewHeightBasedOnChildren(holder.itemListV);
+
+        //get client by id
+        getClientById(holder, order.getClientID() + "", itemList, quantityList);
+
+    }
+
+    private void getClientById(OrderViewHolder holder, String s, List<Item> itemList, List<Integer> quantityList) {
+        fireStore = FirebaseFirestore.getInstance();
+        DocumentReference docRef = fireStore.collection("clients").document(s);
+
+        try{
+            // load items
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot != null) {
+                        Log.d(TAG, "value " + s);
+                        Log.d(TAG, "value != null");
+                        Client c = documentSnapshot.toObject(Client.class);
+                        Log.d(TAG, c.toString());
+                        onBindViewHolder2(holder, c, itemList, quantityList);
+
+                    }
+                }
+            });
+        } catch (Exception ignored){
+
+        }
+    }
+
+    private void onBindViewHolder2(@NonNull OrderViewHolder holder, Client c,
+                                   List<Item> itemList,
+                                   List<Integer> quantityList) {
+
+        // name
+        holder.clientName.setText(c.getFullName());
+        // phone
+        holder.clientPhone.setText(c.getPhone());
+        // address
+        holder.clientAddress.setText(c.getAddress());
     }
 
     @Override
@@ -195,15 +232,36 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 //        Log.d(TAG, "OrderRecyclerViewAdapter: getItemCount: " + orderList.size());
         return orderList.size();
     }
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
 }
 
 class OrderViewHolder extends RecyclerView.ViewHolder {
 
-    ImageView image;
-    TextView orderIdText;
-    TextView vendorName;
-    TextView price;
+    TextView clientName;
+    TextView clientPhone;
+    TextView clientAddress;
+    ListView itemListV;
     TextView dateOrder;
+    TextView price;
     TextView announcementTxt;
     Button processBtn;
     Button cancelBtn;
@@ -212,9 +270,10 @@ class OrderViewHolder extends RecyclerView.ViewHolder {
         super(orderView);
 
         Log.d("OrderRecyclerViewAdapter", "OrderViewHolder: constructor");
-        image = orderView.findViewById(R.id.itemImage);
-        orderIdText = orderView.findViewById(R.id.orderIdTxt);
-        vendorName = orderView.findViewById(R.id.itemVendorName);
+        clientName = orderView.findViewById(R.id.orderClientName);
+        clientPhone = orderView.findViewById(R.id.orderClientPhoneTxt);
+        clientAddress = orderView.findViewById(R.id.orderClientAddressTxt);
+        itemListV = orderView.findViewById(R.id.orderItemListView);
         dateOrder = orderView.findViewById(R.id.dateOrder);
         announcementTxt = orderView.findViewById(R.id.announcementTxt);
         price = orderView.findViewById(R.id.itemPrice);
