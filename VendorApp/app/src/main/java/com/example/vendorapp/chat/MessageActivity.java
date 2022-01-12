@@ -136,7 +136,7 @@ public class MessageActivity extends AppCompatActivity {
         currentVendor = intent.getParcelableExtra("vendor");
         currentClient = intent.getParcelableExtra("client");
 
-        username.setText("username: " + currentClient.getUserName());
+        username.setText(currentClient.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
         //FIXME: fix image
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);

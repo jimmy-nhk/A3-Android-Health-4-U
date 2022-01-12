@@ -121,16 +121,6 @@
                                 android:text="5sao"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/viewDetails"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="8dp"
-                                android:text="@string/view_details"
-                                android:textColor="#C5C5C5"
-                                android:textSize="16sp"
-                                android:clickable="true"/>
                         </LinearLayout>
 
 

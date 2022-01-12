@@ -83,7 +83,7 @@ public class MainChatActivity extends AppCompatActivity {
         // attach the component
         profile_image = findViewById(R.id.profile_image);
         username  = findViewById(R.id.usernameMainChat);
-        username.setText("username: "+currentVendor.getUserName());
+        username.setText(currentVendor.getUserName());
         profile_image.setImageResource(R.mipmap.ic_launcher);
 //        //FIXME: if has profile please fill in
 ////                    Glide.with(getApplicationContext()).load(currentvendor.getImage()).into(profile_image);
