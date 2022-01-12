@@ -32,8 +32,10 @@ import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Item;
 import com.example.clientapp.model.Order;
 import com.example.clientapp.model.Vendor;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -246,11 +248,56 @@ public class BillingStoreRecycleViewAdapter extends RecyclerView.Adapter<Billing
                         Log.d(TAG, "Successfully rate order to FireStore: " + order.toString());
                         holder.dialog.dismiss();
                         holder.indicatorRatingBar.setRating((float) rating);
+
+                        // update vendor total sales
+                        getVendor(order.getVendorID(), rating);
                     })
                     .addOnFailureListener(e -> Log.d(TAG, "Fail to rate order to FireStore: " + order.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateFirestoreVendor(Vendor vendor, double rating) {
+        // (vendor.getRating * vendor.totalSale + rating) / (vendor.totalSale + 1)
+        int totalSales = vendor.getTotalSale() + 1;
+        double vendorRating = (vendor.getRating() * vendor.getTotalSale() + rating)
+                / totalSales;
+        vendor.setTotalSale(totalSales);
+        vendor.setRating(vendorRating);
+        try {
+            // vendor collection
+            fireStore.collection("vendors").document(vendor.getId() + "")
+                    .update(vendor.toMap())
+                    .addOnSuccessListener(unused -> {
+                        Log.d(TAG, "Successfully updated total sale of vendor to FireStore: "
+                                + vendor.toString());
+                    })
+                    .addOnFailureListener(e -> Log.d(TAG, "Fail to updated total sale of vendor to FireStore: "
+                            + vendor.toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getVendor(int vendorID, double rating) {
+        fireStore.collection("vendors")
+                .document(vendorID + "")
+                .get()
+                .addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    Vendor vendor = document.toObject(Vendor.class);
+                    updateFirestoreVendor(vendor, rating);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 
     @Override
