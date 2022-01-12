@@ -21,24 +21,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="40sp"
-                    android:layout_height="40sp"
-                    android:layout_alignParentStart="true"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
                     android:layout_alignParentTop="true"
-                    android:layout_margin="10sp"
-                    android:backgroundTint="@color/primary_blue"
-                    app:cardCornerRadius="20sp"
-                    app:cardElevation="2dp">
-
-                    <ImageView
+                    android:background="@drawable/background_gradient_back"
+                    android:elevation="1dp">
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/backBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleX="0.7"
-                        android:scaleY="0.7"
-                        android:src="@drawable/ic_back" />
-                </androidx.cardview.widget.CardView>
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="6dp"
+                        app:cardBackgroundColor="@color/black_transparent_light"
+                        app:cardElevation="0dp"
+                        app:cardCornerRadius="25dp"
+                        android:clickable="true">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_back"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/item_image"/>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:layout_width="40sp"-->
+<!--                    android:layout_height="40sp"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:layout_margin="10sp"-->
+<!--                    android:backgroundTint="@color/primary_blue"-->
+<!--                    app:cardCornerRadius="20sp"-->
+<!--                    app:cardElevation="2dp">-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/backBtn"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:scaleX="0.7"-->
+<!--                        android:scaleY="0.7"-->
+<!--                        android:src="@drawable/ic_back" />-->
+<!--                </androidx.cardview.widget.CardView>-->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
