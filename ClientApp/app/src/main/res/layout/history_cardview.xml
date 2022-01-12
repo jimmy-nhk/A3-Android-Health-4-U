@@ -159,7 +159,10 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="100dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingHorizontal="4dp">
                 <Button
                     android:id="@+id/detailBtn"
                     android:layout_width="wrap_content"

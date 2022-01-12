@@ -109,4 +109,7 @@
     <string name="date_of_birth_dd_mm_yyyy">Date of birth (dd/MM/yyyy)</string>
     <string name="store_cover_image">Store Cover Image</string>
     <string name="don_t_have_an_account_yet">Don\'t have an account yet?</string>
+    <string name="save_as_image">Save as image</string>
+    <string name="save_as_pdf">Save as PDF</string>
+    <string name="rate_this_order"><u>Rate this order</u></string>
 </resources>

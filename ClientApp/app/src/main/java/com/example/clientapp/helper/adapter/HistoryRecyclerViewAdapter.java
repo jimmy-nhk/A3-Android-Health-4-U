@@ -2,10 +2,18 @@ package com.example.clientapp.helper.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
+import android.media.Rating;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +21,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.L;
 import com.example.clientapp.R;
 import com.example.clientapp.activity.BillingActivity;
 import com.example.clientapp.model.Cart;
 import com.example.clientapp.model.Order;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,6 +50,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
     private List<Cart> cartList;
     private Context context;
     private LayoutInflater mLayoutInflater;
+
+    private FirebaseFirestore fireStore;
+    private CollectionReference clientCollection;
 
     // constructor
     public HistoryRecyclerViewAdapter(List<Cart> cartList, Context context) {
@@ -52,6 +71,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryView
         View recyclerViewCart = mLayoutInflater.inflate(R.layout.history_cardview, parent, false);
 
         Log.d("HistoryRecycler" , "onBindViewHolder: onCreateViewHolder");
+        fireStore = FirebaseFirestore.getInstance();
 
         return new HistoryViewHolder(recyclerViewCart);
     }
@@ -140,17 +160,17 @@ class HistoryViewHolder extends RecyclerView.ViewHolder {
     TextView cartPrice;
     TextView isProcessing;
     Button detailBtn;
-    ImageView image;
 
     public HistoryViewHolder(@NonNull View itemView) {
         super(itemView);
-
-        historyDate = itemView.findViewById(R.id.historyDate);
-        historyId = itemView.findViewById(R.id.historyId);
-        cartPrice = itemView.findViewById(R.id.cartPrice);
-        detailBtn = itemView.findViewById(R.id.detailBtn);
-        isProcessing = itemView.findViewById(R.id.isProcessingTxt);
-
+        try {
+            historyDate = itemView.findViewById(R.id.historyDate);
+            historyId = itemView.findViewById(R.id.historyId);
+            cartPrice = itemView.findViewById(R.id.cartPrice);
+            detailBtn = itemView.findViewById(R.id.detailBtn);
+            isProcessing = itemView.findViewById(R.id.isProcessingTxt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
 }

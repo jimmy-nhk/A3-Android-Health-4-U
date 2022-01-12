@@ -20,6 +20,7 @@ public class Order implements Parcelable {
     private int vendorID;
     private int clientID;
     private double price;
+    private double rating;
 
     protected Order(Parcel in) {
         id = in.readInt();
@@ -32,8 +33,8 @@ public class Order implements Parcelable {
         vendorID = in.readInt();
         clientID = in.readInt();
         price = in.readDouble();
+        rating = in.readDouble();
         Log.e("OrderClass", "Constructor : " + this.toString());
-
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -47,6 +48,7 @@ public class Order implements Parcelable {
         dest.writeInt(vendorID);
         dest.writeInt(clientID);
         dest.writeDouble(price);
+        dest.writeDouble(rating);
 
         Log.e("OrderClass", "write : " + this.toString());
 
@@ -143,6 +145,7 @@ public class Order implements Parcelable {
         result.put("vendorID", vendorID);
         result.put("clientID", clientID);
         result.put("price", price);
+        result.put("rating", rating);
         return result;
     }
 
@@ -157,12 +160,19 @@ public class Order implements Parcelable {
         this.itemList = itemList;
         this.quantity = quantity;
         this.vendorID = vendorID;
+        this.rating = 0;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
-
     }
 
-    public Order(int id, String date, boolean isProcessed, List<Item> itemList, List<Integer> quantity, int vendorID, int clientID, double price) {
+    public Order(int id,
+                 String date,
+                 boolean isProcessed,
+                 List<Item> itemList,
+                 List<Integer> quantity,
+                 int vendorID,
+                 int clientID,
+                 double price) {
         this.id = id;
         this.date = date;
         this.isProcessed = isProcessed;
@@ -172,6 +182,7 @@ public class Order implements Parcelable {
         this.vendorID = vendorID;
         this.clientID = clientID;
         this.price = price;
+        this.rating = 0;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
     }
@@ -248,6 +259,14 @@ public class Order implements Parcelable {
         this.clientID = clientID;
     }
 
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -260,6 +279,7 @@ public class Order implements Parcelable {
                 ", vendorID=" + vendorID +
                 ", clientID=" + clientID +
                 ", price=" + price +
+                ", rating=" + rating +
                 '}';
     }
 
