@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class BillingActivity extends AppCompatActivity {
     private TextView billingStoreDate;
     private TextView billingStoreIsProcessed;
     private TextView billingMoneyTotal;
+    private RatingBar billingRatingBar;
     private Bitmap bitmap;
     // params init
     private Cart cart;
@@ -65,6 +67,14 @@ public class BillingActivity extends AppCompatActivity {
         billingStoreDate = findViewById(R.id.billingstoreDate);
         billingStoreIsProcessed = findViewById(R.id.billingstoreIsProcessed);
         billingMoneyTotal = findViewById(R.id.billingMoneyTotal);
+//        billingRatingBar = findViewById(R.id.billingRatingBar);
+//
+//        billingRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+//                Toast.makeText(ratingBar.getContext(), "rating=" + rating, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     // save pdf
@@ -123,7 +133,7 @@ public class BillingActivity extends AppCompatActivity {
             billingStoreIsProcessed.setTextColor(getResources().getColor(R.color.red));
         }
         //Set total money
-        billingMoneyTotal.setText(cart.getPrice()+" $");
+        billingMoneyTotal.setText((cart.getPrice()+" $"));
         //Embed list view form list order of cart
         try {
             // linear styles

@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.clientapp.R;
@@ -44,8 +45,9 @@ import java.util.List;
 
 public class StoreDetailsFragment extends Fragment {
     //Init parameters
-    TextView storeNameTxt, sellerNameTxt,phoneTxt, emailTxt, addressTxt, ratingTxt, soldQuantityTxt;
+    TextView storeNameTxt, sellerNameTxt,phoneTxt, emailTxt, addressTxt, soldQuantityTxt;
     ImageView coverImg;
+    RatingBar ratingBar;
     //
     private final String TAG = StoreDetailsFragment.class.getSimpleName();
     private static final String ITEM_COLLECTION = "items";
@@ -127,106 +129,100 @@ public class StoreDetailsFragment extends Fragment {
         fireStore.collection(ITEM_COLLECTION)
                 .whereEqualTo("vendorID", vendorID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            // validate no value in the list
-                            if (task.getResult() == null || task.getResult().isEmpty()){
-                                return;
-                            }
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                itemList.add(document.toObject(Item.class));
-                            }
-
-                            // sort again
-                            itemList.sort((o1, o2) -> {
-                                // reverse sort
-                                if (o1.getId() < o2.getId()){
-                                    return 1; // normal will return -1
-                                } else if (o1.getId() > o2.getId()){
-                                    return -1; // reverse
-                                }
-                                return 0;
-                            });
-
-                            // Get recycler view
-                            recycler_view_store = view.findViewById(R.id.recycler_view_store);
-
-                            if (isAdded()){
-                                // Initialize list adapter
-                                mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
-
-                                // linear styles
-                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-                                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                                recycler_view_store.setLayoutManager(linearLayoutManager);
-                                recycler_view_store.setItemAnimator(new DefaultItemAnimator());
-                                recycler_view_store.setHasFixedSize(true);
-                                recycler_view_store.setAdapter(mAdapter);
-                            }
-
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // validate no value in the list
+                        if (task.getResult() == null || task.getResult().isEmpty()){
+                            return;
                         }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            itemList.add(document.toObject(Item.class));
+                        }
+
+                        // sort again
+                        itemList.sort((o1, o2) -> {
+                            // reverse sort
+                            if (o1.getId() < o2.getId()){
+                                return 1; // normal will return -1
+                            } else if (o1.getId() > o2.getId()){
+                                return -1; // reverse
+                            }
+                            return 0;
+                        });
+
+                        // Get recycler view
+                        recycler_view_store = view.findViewById(R.id.recycler_view_store);
+
+                        if (isAdded()){
+                            // Initialize list adapter
+                            mAdapter = new ItemRecyclerViewAdapter(getActivity(), itemList, viewModel);
+
+                            // linear styles
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                            recycler_view_store.setLayoutManager(linearLayoutManager);
+                            recycler_view_store.setItemAnimator(new DefaultItemAnimator());
+                            recycler_view_store.setHasFixedSize(true);
+                            recycler_view_store.setAdapter(mAdapter);
+                        }
+
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
 
         fireStore.collection(VENDOR_COLLECTION)
                 .whereEqualTo("id", vendorID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            // validate no value in the list
-                            if (task.getResult() == null || task.getResult().isEmpty()){
-                                return;
-                            }
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                vendor= document.toObject(Vendor.class);
-                            }
-                            storeNameTxt.setText(vendor.getStoreName());
-                            sellerNameTxt.setText(vendor.getFullName());
-                            phoneTxt.setText(vendor.getPhone());
-                            emailTxt.setText(vendor.getEmail());
-                            addressTxt.setText(vendor.getAddress());
-                            ratingTxt.setText(vendor.getRating()+"");
-                            soldQuantityTxt.setText(vendor.getTotalSale()+"");
-                            //set image by URL
-                            try {
-                                if (vendor.getImage().length() > 0) {
-                                    StorageReference mImageRef =
-                                            FirebaseStorage.getInstance().getReference(vendor.getImage());
-
-                                    final long ONE_MEGABYTE = 1024 * 1024 *5;
-                                    mImageRef.getBytes(ONE_MEGABYTE)
-                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                                @Override
-                                                public void onSuccess(byte[] bytes) {
-                                                    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                    DisplayMetrics dm = new DisplayMetrics();
-                                                    ((Activity) view.getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-                                                    coverImg.setMinimumHeight(dm.heightPixels);
-                                                    coverImg.setMinimumWidth(dm.widthPixels);
-                                                    coverImg.setImageBitmap(bm);
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception exception) {
-                                            // Handle any errors
-                                        }
-                                    });
-                                }
-                            } catch (Exception e) {
-                                coverImg.setImageResource(R.drawable.food); //Set something else
-                                e.printStackTrace();
-                            }
-                            Log.d(TAG,"vendor: "+vendor.toString());
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // validate no value in the list
+                        if (task.getResult() == null || task.getResult().isEmpty()){
+                            return;
                         }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            vendor= document.toObject(Vendor.class);
+                        }
+                        storeNameTxt.setText(vendor.getStoreName());
+                        sellerNameTxt.setText(vendor.getFullName());
+                        phoneTxt.setText(vendor.getPhone());
+                        emailTxt.setText(vendor.getEmail());
+                        addressTxt.setText(vendor.getAddress());
+                        ratingBar.setRating((float) vendor.getRating());
+                        soldQuantityTxt.setText((vendor.getTotalSale() + ""));
+                        //set image by URL
+                        try {
+                            if (vendor.getImage().length() > 0) {
+                                StorageReference mImageRef =
+                                        FirebaseStorage.getInstance().getReference(vendor.getImage());
+
+                                final long ONE_MEGABYTE = 1024 * 1024 *5;
+                                mImageRef.getBytes(ONE_MEGABYTE)
+                                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                            @Override
+                                            public void onSuccess(byte[] bytes) {
+                                                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                DisplayMetrics dm = new DisplayMetrics();
+                                                ((Activity) view.getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                                                coverImg.setMinimumHeight(dm.heightPixels);
+                                                coverImg.setMinimumWidth(dm.widthPixels);
+                                                coverImg.setImageBitmap(bm);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            coverImg.setImageResource(R.drawable.food); //Set something else
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG,"vendor: "+vendor.toString());
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
     }
@@ -238,10 +234,9 @@ public class StoreDetailsFragment extends Fragment {
         phoneTxt = view.findViewById(R.id.storePhone);
         emailTxt = view.findViewById(R.id.storeMail);
         addressTxt = view.findViewById(R.id.storeAddress);
-        ratingTxt = view.findViewById(R.id.storeRating);
+        ratingBar = view.findViewById(R.id.storeDetailsRatingBar);
         soldQuantityTxt = view.findViewById(R.id.storeSoldQuantity);
         coverImg = view.findViewById(R.id.storeCoverImg);
         backBtnV = view.findViewById(R.id.backBtn);
-
     }
 }

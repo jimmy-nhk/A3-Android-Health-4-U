@@ -34,13 +34,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:text="date" />
+                    android:text="date"
+                    android:layout_centerVertical="true"/>
 
                 <TextView
                     android:id="@+id/billingstoreIsProcessed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_centerVertical="true"
                     android:text="FINISHED" />
             </RelativeLayout>
 
@@ -75,20 +80,36 @@
 
             <Button
                 android:id="@+id/billingSaveImage"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="saveImageOnClick"
-                android:text="Save as image" />
+                android:text="@string/save_as_image" />
 
             <Button
                 android:id="@+id/billingSavePdf"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_gravity="center"
                 android:onClick="savePdfOnClick"
-                android:text="Save as PDF" />
+                android:text="@string/save_as_pdf" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:text="How was your experience?" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:progressTint="#FBC02D" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
