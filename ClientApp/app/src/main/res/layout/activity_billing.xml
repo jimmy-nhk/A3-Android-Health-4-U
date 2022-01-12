@@ -34,19 +34,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:text="date"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:text="date" />
 
                 <TextView
                     android:id="@+id/billingstoreIsProcessed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginHorizontal="10dp"
                     android:layout_centerVertical="true"
-                    android:text="FINISHED" />
+                    android:layout_marginHorizontal="10dp"
+                    android:text="FINISHED"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
