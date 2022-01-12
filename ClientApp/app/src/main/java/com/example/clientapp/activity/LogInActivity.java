@@ -345,9 +345,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-    public void signInWithGoogleBtnClick(View view) {
-        Log.d(TAG, "Before going into google");
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
-    }
+//    public void signInWithGoogleBtnClick(View view) {
+//        Log.d(TAG, "Before going into google");
+//        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+//        startActivityForResult(intent,GOOGLE_SUCCESSFULLY_SIGN_IN);
+//    }
 }

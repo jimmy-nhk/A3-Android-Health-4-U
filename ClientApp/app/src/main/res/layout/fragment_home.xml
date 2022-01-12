@@ -28,12 +28,13 @@
 <!--                    android:onClick="onProfileBtnClick"-->
 <!--                    android:text="Profile" />-->
 
-                <Button
+                <ImageButton
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:onClick="onChatBtnClick"
+                    android:backgroundTint="@color/primary_blue_light"
                     android:background="@drawable/ic_message"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:onClick="onChatBtnClick"/>
 
 <!--                <Button-->
 <!--                    android:layout_width="wrap_content"-->

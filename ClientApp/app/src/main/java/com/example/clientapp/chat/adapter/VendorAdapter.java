@@ -1,7 +1,11 @@
 package com.example.clientapp.chat.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.chat.MessageActivity;
+import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Vendor;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -49,7 +56,8 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
         // set components
         Vendor vendor = mVendors.get(position);
         holder.username.setText(vendor.getUserName());
-        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+        setStoreImage(holder, vendor.getImage());
+//        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
 //        Glide.with(mContext).load(vendor.getImage()).into(holder.profile_image);
 
         // check if chat is callable
@@ -79,6 +87,34 @@ public class VendorAdapter extends RecyclerView.Adapter<VendorAdapter.ViewHolder
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    private void setStoreImage(ViewHolder holder, String imageUrl) {
+        try {
+            if (imageUrl!=null && imageUrl.length() > 0) {
+//                Log.d("setStoreImage", imageUrl);
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(imageUrl);
+
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            holder.profile_image.setMinimumHeight(dm.heightPixels);
+                            holder.profile_image.setMinimumWidth(dm.widthPixels);
+                            holder.profile_image.setImageBitmap(bm);
+                        }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    exception.printStackTrace();
+                });
+            }
+        } catch (Exception e) {
+//            .setImageResource(R.drawable.bun); //Set something else
+            e.printStackTrace();
+        }
     }
 
     @Override

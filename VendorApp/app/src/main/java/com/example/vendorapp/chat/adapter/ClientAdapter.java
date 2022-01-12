@@ -1,7 +1,11 @@
 package com.example.vendorapp.chat.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +21,8 @@ import com.example.vendorapp.chat.MessageActivity;
 
 import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Vendor;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import java.util.List;
@@ -48,8 +54,9 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Client client = mClients.get(position);
-        holder.username.setText("client name: " + client.getUserName());
-        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+        holder.username.setText(client.getUserName());
+//        holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+        setClientImage(holder, client.getImage());
 //        Glide.with(mContext).load(vendor.getImage()).into(holder.profile_image);
 
         // check if chat is callable
@@ -80,6 +87,32 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ViewHolder
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    private void setClientImage(ViewHolder holder, String imageUrl) {
+        try {
+            if (imageUrl!=null && imageUrl.length() > 0) {
+//                Log.d("setStoreImage", imageUrl);
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(imageUrl);
+
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
+                // Handle any errors
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            holder.profile_image.setMinimumHeight(dm.heightPixels);
+                            holder.profile_image.setMinimumWidth(dm.widthPixels);
+                            holder.profile_image.setImageBitmap(bm);
+                        }).addOnFailureListener(Throwable::printStackTrace);
+            }
+        } catch (Exception e) {
+            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+            e.printStackTrace();
+        }
     }
 
     @Override

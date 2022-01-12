@@ -1,6 +1,10 @@
 package com.example.vendorapp.chat.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,8 @@ import com.example.vendorapp.R;
 import com.example.vendorapp.chat.model.MessageObject;
 import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Vendor;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -58,9 +64,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         MessageObject messageObject = messageObjectList.get(position);
 
         holder.show_message.setText(messageObject.getMessage());
-
+        setClientImage(holder, client.getImage());
 //        if (imageUrl.equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
 //        } else {
 //            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
 //        }
@@ -80,6 +86,33 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.txt_seen.setVisibility(View.GONE);
         }
     }
+
+    private void setClientImage(ViewHolder holder, String imageUrl) {
+        try {
+            if (imageUrl!=null && imageUrl.length() > 0) {
+//                Log.d("setStoreImage", imageUrl);
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(imageUrl);
+
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
+                // Handle any errors
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            holder.profile_image.setMinimumHeight(dm.heightPixels);
+                            holder.profile_image.setMinimumWidth(dm.widthPixels);
+                            holder.profile_image.setImageBitmap(bm);
+                        }).addOnFailureListener(Throwable::printStackTrace);
+            }
+        } catch (Exception e) {
+            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public int getItemCount() {

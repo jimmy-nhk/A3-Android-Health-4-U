@@ -100,14 +100,6 @@
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="wrap_content" />-->
 
-    <com.shobhitpuri.custombuttons.GoogleSignInButton
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:isDarkTheme="false"
-        android:textSize="16sp"
-        android:onClick="signInWithGoogleBtnClick"/>
-
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
@@ -116,7 +108,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Doesn't have an account yet?"/>
+            android:text="@string/don_t_have_an_account_yet"/>
         <TextView
             android:layout_marginStart="4dp"
             android:layout_width="wrap_content"
