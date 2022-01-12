@@ -107,11 +107,11 @@
                             android:paddingHorizontal="5sp"
                             android:gravity="center_vertical">
 
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:src="@drawable/ic_star"
-                                android:contentDescription="Rating Star Icon"/>
+<!--                            <ImageView-->
+<!--                                android:layout_width="26dp"-->
+<!--                                android:layout_height="26dp"-->
+<!--                                android:src="@drawable/ic_star"-->
+<!--                                android:contentDescription="Rating Star Icon"/>-->
 
                             <TextView
                                 android:id="@+id/storeRating"
@@ -121,6 +121,20 @@
                                 android:text="5sao"
                                 android:textColor="@color/white"
                                 android:textSize="16sp" />
+
+                            <RatingBar
+                                android:id="@+id/storeDetailsRatingBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_marginTop="5dp"
+                                android:isIndicator="true"
+                                android:max="5"
+                                android:progressTint="#FBC02D"
+                                android:rating="4.5"
+                                android:scaleX=".7"
+                                android:scaleY=".7"
+                                android:transformPivotX="0dp"
+                                android:transformPivotY="0dp" />
                         </LinearLayout>
 
 
@@ -128,7 +142,8 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_margin="5sp"
+                            android:layout_marginHorizontal="5dp"
+                            android:layout_marginBottom="14dp"
                             android:background="@color/white_transparent"/>
 
                         <LinearLayout
