@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -54,7 +55,8 @@ public class StoreDetailsFragment extends Fragment {
     private RecyclerView recycler_view_store;
     private List<Item> itemList;
     private ItemRecyclerViewAdapter mAdapter;
-    private  ImageView backBtnV;
+//    private ImageView backBtnV;
+    private CardView backBtnV;
     // Item list
     private FirebaseFirestore fireStore;
     private CollectionReference itemCollection;

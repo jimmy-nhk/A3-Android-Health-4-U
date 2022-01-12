@@ -2,6 +2,7 @@ package com.example.clientapp.fragment;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.clientapp.R;
@@ -33,7 +35,8 @@ public class ItemDetailsFragment extends Fragment {
     TextView itemCaloriesTxt;
     TextView storeNameTxt;
     TextView itemExpirationDateTxt;
-    ImageView backBtnV;
+    CardView backBtnV;
+//    ImageView backBtnV;
     Button addToCardButton;
 
     private Item item;
@@ -57,12 +60,12 @@ public class ItemDetailsFragment extends Fragment {
         // Render item detail
         displayItemDetail();
         //Init back btn
-        initBackbtnHandler();
+        initBackBtnHandler();
         // Inflate the layout for this fragment
         return view;
     }
 
-    private void initBackbtnHandler() {
+    private void initBackBtnHandler() {
         try {
             backBtnV.setOnClickListener(v -> {
                 if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
