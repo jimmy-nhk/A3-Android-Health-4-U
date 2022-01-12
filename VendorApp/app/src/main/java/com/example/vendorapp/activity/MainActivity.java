@@ -35,11 +35,9 @@ import com.example.vendorapp.R;
 import com.example.vendorapp.chat.MainChatActivity;
 import com.example.vendorapp.chat.model.MessageObject;
 import com.example.vendorapp.fragment.ItemListFragment;
-import com.example.vendorapp.fragment.HomeFragment;
 import com.example.vendorapp.fragment.OrderListFragment;
 import com.example.vendorapp.fragment.ProfileFragment;
 import com.example.vendorapp.helper.NotificationReceiver;
-import com.example.vendorapp.helper.NotificationService;
 import com.example.vendorapp.helper.viewModel.OrderViewModel;
 import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Order;
@@ -101,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
         // init home fragment
-        loadFragment(new HomeFragment());
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -111,10 +108,12 @@ public class MainActivity extends AppCompatActivity {
                 getBottomNavigationView().setSelectedItemId(R.id.orderNav);
             }
         }
-        Log.d(TAG, "vendor passing from Login: " + vendor.toString());
 
         initService();
         listenMessage();
+        loadFragment(new OrderListFragment(vendor.getId()));
+        Log.d(TAG, "vendor passing from Login: " + vendor.toString());
+
     }
 
     public BottomNavigationView getBottomNavigationView() {
@@ -127,10 +126,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment;
 
         switch (item.getItemId()) {
-            case R.id.homePageNav:
-                fragment = new HomeFragment();
-                loadFragment(fragment);
-                return true;
             case R.id.itemsNav:
                 fragment = new ItemListFragment();
 

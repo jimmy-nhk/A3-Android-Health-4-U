@@ -23,14 +23,13 @@
             android:exported="true" />
 
         <activity
+            android:name=".activity.OrderDetailActivity"
+            android:exported="true" />
+        <activity
             android:name=".chat.MessageActivity"
             android:exported="false" />
         <activity
             android:name=".chat.MainChatActivity"
-            android:exported="false"
-            android:parentActivityName=".activity.MainActivity" />
-        <activity
-            android:name=".activity.OrderDetailActivity"
             android:exported="false"
             android:parentActivityName=".activity.MainActivity" />
 

@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
     private EditText fullNameTxt, usernameTxt, emailTxt, phoneTxt, addressTxt, ratingTxt, totalSalesTxt;
     private ImageView coverImg;
     private ImageButton changeImgBtn;
-    private ImageButton backBtn;
+    private ImageView backBtn;
     private Button profileSaveBtn;
     private Vendor vendor;
 

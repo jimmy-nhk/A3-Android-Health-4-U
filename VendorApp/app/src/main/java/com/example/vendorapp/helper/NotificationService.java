@@ -16,7 +16,6 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.activity.MainActivity;
 import com.example.vendorapp.activity.OrderDetailActivity;
 import com.example.vendorapp.model.Order;
 import com.example.vendorapp.model.Vendor;

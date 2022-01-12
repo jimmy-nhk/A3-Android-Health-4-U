@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,7 +39,8 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     private LayoutInflater mLayoutInflater;
     private
     URL imageURL = null;
-
+    private DocumentReference orderDocRef;
+    private Order order;
 
     // init db
     private static final String ORDER_COLLECTION = "orders";
@@ -69,9 +69,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
 //        Log.d(TAG, "onCreateViewHolder: ");
 
-        recyclerViewOrder.setOnClickListener(v -> handleRecyclerOrderClick((RecyclerView) parent, v)
-
-        );
+        recyclerViewOrder.setOnClickListener(v -> handleRecyclerOrderClick((RecyclerView) parent, v));
 
         return new OrderViewHolder(recyclerViewOrder);
 
@@ -79,12 +77,8 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
     // pass to order details intent
     private void handleRecyclerOrderClick(RecyclerView parent, View v) {
-
-        int position = parent.getChildLayoutPosition(v);
-        Order order = orderList.get(position);
-
         Intent intent = new Intent(context, OrderDetailActivity.class);
-        intent.putExtra("order", order);
+        intent.putExtra("order",order);
         context.startActivity(intent);
     }
 
@@ -97,7 +91,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         final int BLACK_COLOR = ContextCompat.getColor(context, R.color.black);
         final int RED_COLOR = ContextCompat.getColor(context, R.color.red);
 
-        Order order = this.orderList.get(position);
+        order = this.orderList.get(position);
 
 
         // init fireStore db
@@ -110,12 +104,12 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 //        holder.orderIdText.setText("OrderID: " + order.getId() + "");
 
         // price
-        holder.price.setText("Price: " + order.getPrice() + "$");
+        holder.price.setText(order.getPrice() + "$");
         //date
-        holder.dateOrder.setText("Date: " + order.getDate() + "");
+        holder.dateOrder.setText( order.getDate() + "");
 
         //TODO: check again the text appearance
-        holder.announcementTxt.setText(order.getIsProcessed() ? "Processed" : order.getIsCancelled() ? "Cancel" : "Not yet process");
+        holder.announcementTxt.setText(order.getIsProcessed() ? "PROCESSED" : order.getIsCancelled() ? "CANCELLED" : "Not yet process");
         holder.announcementTxt.setTextColor(order.getIsProcessed() ? GREEN_COLOR : order.getIsCancelled() ? RED_COLOR : BLACK_COLOR);
 
         holder.cancelBtn.setVisibility(order.getIsProcessed() ? View.GONE : order.getIsCancelled() ? View.GONE : View.VISIBLE);
@@ -137,7 +131,6 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
                         holder.announcementTxt.setText("Processed!");
                         holder.announcementTxt.setTextColor(GREEN_COLOR);
-
                         holder.cancelBtn.setVisibility(View.GONE);
                         holder.cancelBtn.setEnabled(false);
                         holder.processBtn.setEnabled(false);
@@ -194,7 +187,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         fireStore = FirebaseFirestore.getInstance();
         DocumentReference docRef = fireStore.collection("clients").document(s);
 
-        try{
+        try {
             // load items
             docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -209,7 +202,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
                     }
                 }
             });
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
     }
@@ -232,6 +225,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 //        Log.d(TAG, "OrderRecyclerViewAdapter: getItemCount: " + orderList.size());
         return orderList.size();
     }
+
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)

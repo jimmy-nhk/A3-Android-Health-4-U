@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.vendorapp.activity.MainActivity;
 import com.example.vendorapp.R;
-import com.example.vendorapp.activity.OrderDetailActivity;
 import com.example.vendorapp.chat.MainChatActivity;
 import com.example.vendorapp.chat.MessageActivity;
 import com.example.vendorapp.model.Client;

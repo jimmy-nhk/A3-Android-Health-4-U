@@ -4,11 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     app:cardBackgroundColor="@color/primary_pink_light_transparent"
-    app:cardElevation="0dp"
     app:cardCornerRadius="20dp"
-    android:layout_marginVertical="5dp">
+    app:cardElevation="0dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,96 +21,178 @@
             android:weightSum="10">
 
 
-
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
-                android:padding="10sp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="10sp">
 
-                <TextView
-                    android:id="@+id/orderClientName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Client Name"  />
-
-                <TextView
-                    android:id="@+id/orderClientPhoneTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Client Phone" />
-
-                <TextView
-                    android:id="@+id/orderClientAddressTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Client Address" />
-
-
-                <TextView
-                    android:id="@+id/dateOrder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Ordered Date"
-                    app:layout_constraintTop_toBottomOf="@+id/clientPhoneTxt" />
-                <ListView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/orderItemListView"/>
+                    android:layout_marginTop="5dp"
+
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Name" />
+
+                    <TextView
+                        android:id="@+id/orderClientName"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Client Name" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Phone" />
+
+                    <TextView
+                        android:id="@+id/orderClientPhoneTxt"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Client Phone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Address" />
+
+                    <TextView
+                        android:id="@+id/orderClientAddressTxt"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Client Address" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="Date" />
+
+                    <TextView
+                        android:id="@+id/dateOrder"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:text="Ordered Date" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:padding="5sp"
                 android:layout_gravity=""
-                android:orientation="vertical">
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:paddingTop="10sp">
 
-                <TextView
-                    android:id="@+id/itemPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10$"
-                    app:layout_constraintBottom_toTopOf="@+id/processBtn"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/processBtn" />
 
                 <TextView
                     android:id="@+id/announcementTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10sp"
                     android:text="Processed"
-
                     app:layout_constraintBottom_toTopOf="@+id/processBtn"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/processBtn" />
 
-                <Button
-                    android:id="@+id/processBtn"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/itemPrice"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                     android:backgroundTint="@color/primary_pink"
-                     android:text="Process" />
-
-                <Button
-                    android:id="@+id/cancelBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                      android:layout_marginBottom="4dp"
-                    android:backgroundTint="@color/primary_pink"
-                    android:text="Cancel"  />
+                    android:layout_marginTop="5sp"
+                    android:text="10$"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toTopOf="@+id/processBtn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/processBtn" />
 
 
             </LinearLayout>
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/cancelBtn"
+                android:layout_width="150sp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black_transparent_light"
+                android:text="Cancel" />
+            <Button
+                android:id="@+id/processBtn"
+                android:layout_width="150sp"
+                android:layout_marginStart="40sp"
+
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_pink"
+                 android:text="Process" />
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="5sp"
+            android:background="@color/black" />
+
+        <ListView
+            android:id="@+id/orderItemListView"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="10sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
