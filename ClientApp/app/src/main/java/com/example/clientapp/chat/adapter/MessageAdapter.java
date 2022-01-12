@@ -1,7 +1,11 @@
 package com.example.clientapp.chat.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,8 @@ import com.example.clientapp.chat.MessageActivity;
 import com.example.clientapp.chat.model.MessageObject;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Vendor;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -66,8 +72,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         // set views
         holder.show_message.setText(messageObject.getMessage());
 
+        setStoreImage(holder, vendor.getImage());
 //        if (imageUrl.equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
 //        } else {
 //            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
 //        }
@@ -80,12 +87,38 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             // get is seen
             if (messageObject.getIsSeen()){
-                holder.txt_seen.setText("Seen");
+                holder.txt_seen.setText(("Seen"));
             } else {
-                holder.txt_seen.setText("Delivered");
+                holder.txt_seen.setText(("Delivered"));
             }
         } else {
             holder.txt_seen.setVisibility(View.GONE);
+        }
+    }
+
+    private void setStoreImage(ViewHolder holder, String imageUrl) {
+        try {
+            if (imageUrl!=null && imageUrl.length() > 0) {
+//                Log.d("setStoreImage", imageUrl);
+                StorageReference mImageRef =
+                        FirebaseStorage.getInstance().getReference(imageUrl);
+
+                final long ONE_MEGABYTE = 1024 * 1024 *5;
+                // Handle any errors
+                mImageRef.getBytes(ONE_MEGABYTE)
+                        .addOnSuccessListener(bytes -> {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            holder.profile_image.setMinimumHeight(dm.heightPixels);
+                            holder.profile_image.setMinimumWidth(dm.widthPixels);
+                            holder.profile_image.setImageBitmap(bm);
+                        }).addOnFailureListener(Throwable::printStackTrace);
+            }
+        } catch (Exception e) {
+//            .setImageResource(R.drawable.bun); //Set something else
+            e.printStackTrace();
         }
     }
 
