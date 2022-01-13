@@ -80,7 +80,6 @@ public class BillingActivity extends AppCompatActivity {
     // save pdf
     public void savePdfOnClick(View view) {
         try {
-
             createPdf();
         } catch (Exception ignored) {
 
@@ -161,8 +160,11 @@ public class BillingActivity extends AppCompatActivity {
     // create pdf
      private void createPdf() {
         LinearLayout llScroll = findViewById(R.id.outputLinearLayout);
+        llScroll.setBackgroundColor(getColor(R.color.white));
         bitmap = loadBitmapFromView(llScroll, llScroll.getWidth(), llScroll.getHeight());
-        DisplayMetrics displaymetrics = new DisplayMetrics();
+        llScroll.setBackgroundColor(getColor(R.color.transparent));
+
+         DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         float hight = bitmap.getHeight();
         float width = bitmap.getWidth();

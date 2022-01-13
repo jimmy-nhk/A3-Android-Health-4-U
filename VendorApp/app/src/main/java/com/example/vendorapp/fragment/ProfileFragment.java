@@ -51,6 +51,7 @@ public class ProfileFragment extends Fragment {
 
     private EditText fullNameTxt;
     private TextView usernameTxt;
+    private TextView storeNameTxt;
     private TextView emailTxt;
     private EditText phoneTxt;
     private EditText addressTxt;
@@ -135,7 +136,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // The app validate fullname, phone and address before upload, only execute upload when all is true
-                if (validateInput(fullNameTxt.getText().toString(), phoneTxt.getText().toString(), addressTxt.getText().toString())) {
+                if (validateInput(fullNameTxt.getText().toString(), storeNameTxt.getText().toString(), phoneTxt.getText().toString(), addressTxt.getText().toString())) {
                     // Only upload image if image is Changed => save storage
                     if (isImageChanged) {
                         uploadImage(); // call upload image function, in upload image response, there is call of upload profile function.
@@ -149,9 +150,10 @@ public class ProfileFragment extends Fragment {
     }
 
     //input validation, if all true return true
-    private boolean validateInput(String fullName, String phone, String address) {
+    private boolean validateInput(String fullName,String storeName, String phone, String address) {
 
         return validateFullName(fullName)
+                && validateStoreName(storeName)
                 && isPhoneValid(phone)
                 && isAddressValid(address);
     }
@@ -170,6 +172,16 @@ public class ProfileFragment extends Fragment {
     private boolean validateFullName(String fullName) {
         if (fullName.isEmpty()) {
             fullNameTxt.setError("Full name cannot be empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    //Storename validation if empty
+    private boolean validateStoreName(String storeName) {
+        if (storeName.isEmpty()) {
+            storeNameTxt.setError("Store name cannot be empty");
             return false;
         }
 
@@ -215,12 +227,9 @@ public class ProfileFragment extends Fragment {
     public void uploadProfileToDB() {
         // create vendor
         vendor.setFullName(fullNameTxt.getText().toString());
-        vendor.setStoreName(usernameTxt.getText().toString());
-        vendor.setEmail(emailTxt.getText().toString());
+        vendor.setStoreName(storeNameTxt.getText().toString());
         vendor.setPhone(phoneTxt.getText().toString());
         vendor.setAddress(addressTxt.getText().toString());
-        vendor.setRating(Double.parseDouble(ratingTxt.getText().toString()));
-        vendor.setTotalSale(Integer.parseInt(totalSalesTxt.getText().toString()));
 
         // vendor collection
         vendorCollection.document(vendor.getId() + "")
@@ -237,6 +246,7 @@ public class ProfileFragment extends Fragment {
     private void updateUI() {
         fullNameTxt.setText(vendor.getFullName());
         usernameTxt.setText(vendor.getUserName());
+        storeNameTxt.setText(vendor.getStoreName());
         emailTxt.setText(vendor.getEmail());
         phoneTxt.setText(vendor.getPhone());
         addressTxt.setText(vendor.getAddress());
@@ -282,6 +292,7 @@ public class ProfileFragment extends Fragment {
     private void getViews(View view) {
         fullNameTxt = view.findViewById(R.id.editFullName);
         usernameTxt = view.findViewById(R.id.editUsername);
+        storeNameTxt = view.findViewById(R.id.editStoreName);
         emailTxt = view.findViewById(R.id.editEmail);
         phoneTxt = view.findViewById(R.id.editPhone);
         addressTxt = view.findViewById(R.id.editAddress);
