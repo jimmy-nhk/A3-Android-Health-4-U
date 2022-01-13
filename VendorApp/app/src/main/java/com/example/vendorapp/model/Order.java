@@ -185,14 +185,6 @@ public class Order implements Parcelable {
         isCancelled = cancelled;
     }
 
-    public boolean isCancelled() {
-        return isCancelled;
-    }
-
-    public void setCancelled(boolean cancelled) {
-        isCancelled = cancelled;
-    }
-
     public int getId() {
         return id;
     }
