@@ -27,7 +27,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.broadcast.HydrationReminderReceiver;
@@ -42,7 +41,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -249,7 +248,7 @@ public class HomeFragment extends Fragment {
 
     private void loadNewStoreList(View view) {
         try {
-            ArrayList<Vendor> storeList = new ArrayList<>();
+            AtomicReference<ArrayList<Vendor>> storeList = new AtomicReference<>(new ArrayList<>());
 
             storeCollection.addSnapshotListener((value, error) -> {
                 if (value == null || value.isEmpty())
@@ -258,11 +257,12 @@ public class HomeFragment extends Fragment {
                 int size = value.size();
                 int maxListSize = Math.min(size, 8);
 
+                storeList.set(new ArrayList<>());
                 for (int i = size - 1, j = 0; j < maxListSize; i--, j++)
-                    storeList.add(value.getDocuments().get(i).toObject(Vendor.class));
+                    storeList.get().add(value.getDocuments().get(i).toObject(Vendor.class));
 
                 // Load
-                initNewStoreListAdapter(view, storeList);
+                initNewStoreListAdapter(view, storeList.get());
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -271,7 +271,7 @@ public class HomeFragment extends Fragment {
 
     private void loadNewItemList(View view) {
         try {
-            ArrayList<Item> itemList = new ArrayList<>();
+            AtomicReference<ArrayList<Item>> itemList = new AtomicReference<>(new ArrayList<>());
 
             itemCollection.addSnapshotListener((value, error) -> {
                 if (value == null || value.isEmpty())
@@ -280,13 +280,15 @@ public class HomeFragment extends Fragment {
                 int size = value.size();
                 int maxListSize = Math.min(size, 10);
 
+                itemList.set(new ArrayList<>());
+
                 for (int i = size - 1, j = 0; j < maxListSize; i--, j++) {
-                    itemList.add(value.getDocuments().get(i).toObject(Item.class));
-                    Log.d("HomeFragment", "item=" + itemList.get(j).toString());
+                    itemList.get().add(value.getDocuments().get(i).toObject(Item.class));
+                    Log.d("HomeFragment", "item=" + itemList.get().get(j).toString());
                 }
 
                 // Load
-                initNewItemListAdapter(view, itemList);
+                initNewItemListAdapter(view, itemList.get());
             });
         } catch (Exception e) {
             e.printStackTrace();

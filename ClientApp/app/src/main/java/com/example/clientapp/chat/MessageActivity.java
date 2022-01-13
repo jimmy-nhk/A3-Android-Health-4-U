@@ -170,7 +170,7 @@ public class MessageActivity extends AppCompatActivity {
                 messageObject = ds.toObject(MessageObject.class);
                 Log.e(TAG, "messageObj:  " +messageObject.toString());
 
-                
+
                 //validate the condition to add the message to the list
                 if (messageObject.getReceiver().equals(currentClient.getUserName()) && messageObject.getSender().equals(currentVendor.getUserName()) ||
                         messageObject.getReceiver().equals(currentVendor.getUserName()) && messageObject.getSender().equals(currentClient.getUserName())) {
