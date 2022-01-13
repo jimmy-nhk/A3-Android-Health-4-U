@@ -1,4 +1,4 @@
-package com.example.vendorapp.chat.adapter;
+package com.example.vendorapp.helper.adapter;
 
 import android.app.Activity;
 import android.content.Context;

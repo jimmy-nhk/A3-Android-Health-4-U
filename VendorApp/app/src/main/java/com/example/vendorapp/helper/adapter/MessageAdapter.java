@@ -1,8 +1,7 @@
-package com.example.clientapp.chat.adapter;
+package com.example.vendorapp.helper.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
@@ -15,12 +14,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.clientapp.R;
-import com.example.clientapp.chat.MessageActivity;
-import com.example.clientapp.chat.model.MessageObject;
-import com.example.clientapp.model.Client;
-import com.example.clientapp.model.Vendor;
+import com.example.vendorapp.R;
+import com.example.vendorapp.model.MessageObject;
+import com.example.vendorapp.model.Client;
+import com.example.vendorapp.model.Vendor;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -30,6 +27,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private Context mContext;
     private List<MessageObject> messageObjectList;
+    private String imageUrl;
 
     private final static String TAG = "MessageAdapter";
     private Client client;
@@ -38,6 +36,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TYPE_RIGHT = 1;
 
 
+    // constructor
     public MessageAdapter(Context mContext, List<MessageObject> messageObjectList,Client currentClient, Vendor vendor){
         this.mContext = mContext;
         this.messageObjectList = messageObjectList;
@@ -47,10 +46,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @NonNull
     @Override
-    public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
 
-        // check the position
+        // type right and left
         if (viewType == MSG_TYPE_RIGHT){
             view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
 
@@ -63,38 +62,30 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
 
     @Override
-    public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        // message object
         MessageObject messageObject = messageObjectList.get(position);
 
-        // set views
+        // set message
         holder.show_message.setText(messageObject.getMessage().trim());
-
-        setStoreImage(holder, vendor.getImage());
-//        if (imageUrl.equals("default")){
-//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-//        } else {
-//            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
-//        }
-
-        //TODO: set up image here
-//        holder.txt_seen.setVisibility(View.GONE);
+        setClientImage(holder, client.getImage());
 
         // check for the last message
         if (position == messageObjectList.size() - 1){
 
-            // get is seen
+            // set text
             if (messageObject.getIsSeen()){
-                holder.txt_seen.setText(("Seen"));
+                holder.txt_seen.setText("Seen");
             } else {
-                holder.txt_seen.setText(("Delivered"));
+                holder.txt_seen.setText("Delivered");
             }
         } else {
             holder.txt_seen.setVisibility(View.GONE);
         }
     }
 
-    private void setStoreImage(ViewHolder holder, String imageUrl) {
+    private void setClientImage(ViewHolder holder, String imageUrl) {
         try {
             if (imageUrl!=null && imageUrl.length() > 0) {
 //                Log.d("setStoreImage", imageUrl);
@@ -115,10 +106,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                         }).addOnFailureListener(Throwable::printStackTrace);
             }
         } catch (Exception e) {
-//            .setImageResource(R.drawable.bun); //Set something else
+            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
             e.printStackTrace();
         }
     }
+
 
     @Override
     public int getItemCount() {
@@ -128,8 +120,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
 
-        // get item view type
-        if (messageObjectList.get(position).getSender().equals(client.getUserName())){
+        // set item left or right
+        if (messageObjectList.get(position).getSender().equals(vendor.getUserName())){
             return MSG_TYPE_RIGHT;
         } else
             return MSG_TYPE_LEFT;
@@ -142,6 +134,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         private ImageView profile_image;
         private TextView txt_seen;
 
+
         // constructor
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -149,6 +142,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             show_message = itemView.findViewById(R.id.show_message);
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
+
 
         }
 

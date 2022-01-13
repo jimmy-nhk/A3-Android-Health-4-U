@@ -23,8 +23,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.activity.MainActivity;
-import com.example.vendorapp.chat.fragments.ChatsFragment;
-import com.example.vendorapp.chat.fragments.ClientsFragment;
+import com.example.vendorapp.fragment.ChatsFragment;
+import com.example.vendorapp.fragment.ClientsFragment;
+import com.example.vendorapp.helper.viewModel.VendorViewModel;
 import com.example.vendorapp.model.Vendor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;

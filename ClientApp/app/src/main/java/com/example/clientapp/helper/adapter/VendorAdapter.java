@@ -1,4 +1,4 @@
-package com.example.clientapp.chat.adapter;
+package com.example.clientapp.helper.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.clientapp.R;
 import com.example.clientapp.chat.MessageActivity;
-import com.example.clientapp.helper.adapter.NewStoreRecyclerViewAdapter;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Vendor;
 import com.google.firebase.storage.FirebaseStorage;

@@ -33,7 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.chat.MainChatActivity;
-import com.example.vendorapp.chat.model.MessageObject;
+import com.example.vendorapp.model.MessageObject;
 import com.example.vendorapp.fragment.ItemListFragment;
 import com.example.vendorapp.fragment.OrderListFragment;
 import com.example.vendorapp.fragment.ProfileFragment;

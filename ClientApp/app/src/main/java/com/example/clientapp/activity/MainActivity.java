@@ -4,7 +4,7 @@ import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import com.example.clientapp.R;
 import com.example.clientapp.chat.MainChatActivity;
-import com.example.clientapp.chat.model.MessageObject;
+import com.example.clientapp.model.MessageObject;
 import com.example.clientapp.fragment.CartFragment;
 import com.example.clientapp.fragment.HistoryFragment;
 import com.example.clientapp.fragment.ItemListFragment;
@@ -30,7 +30,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
@@ -44,10 +43,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -57,7 +53,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

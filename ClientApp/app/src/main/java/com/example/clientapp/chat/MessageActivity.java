@@ -1,22 +1,14 @@
 package com.example.clientapp.chat;
 
 import com.example.clientapp.R;
-import com.example.clientapp.activity.MainActivity;
-import com.example.clientapp.chat.adapter.MessageAdapter;
-import com.example.clientapp.chat.model.MessageObject;
+import com.example.clientapp.helper.adapter.MessageAdapter;
+import com.example.clientapp.model.MessageObject;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Vendor;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;

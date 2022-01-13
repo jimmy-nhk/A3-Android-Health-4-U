@@ -1,4 +1,4 @@
-package com.example.vendorapp.chat;
+package com.example.vendorapp.helper.viewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

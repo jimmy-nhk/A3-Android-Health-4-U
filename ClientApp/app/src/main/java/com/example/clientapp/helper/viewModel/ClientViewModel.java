@@ -1,4 +1,4 @@
-package com.example.clientapp.chat;
+package com.example.clientapp.helper.viewModel;
 
 import android.util.Log;
 

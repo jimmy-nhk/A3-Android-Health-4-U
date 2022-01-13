@@ -3,20 +3,11 @@ package com.example.clientapp.chat;
 import static androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 import com.example.clientapp.R;
-import com.example.clientapp.chat.fragments.ChatsFragment;
-import com.example.clientapp.chat.fragments.VendorsFragment;
-import com.example.clientapp.chat.model.MessageObject;
+import com.example.clientapp.fragment.ChatsFragment;
+import com.example.clientapp.fragment.VendorsFragment;
+import com.example.clientapp.helper.viewModel.ClientViewModel;
 import com.example.clientapp.model.Client;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +20,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;

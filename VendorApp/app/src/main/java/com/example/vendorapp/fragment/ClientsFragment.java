@@ -1,4 +1,4 @@
-package com.example.vendorapp.chat.fragments;
+package com.example.vendorapp.fragment;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
-import com.example.vendorapp.chat.VendorViewModel;
-import com.example.vendorapp.chat.adapter.ClientAdapter;
+import com.example.vendorapp.helper.viewModel.VendorViewModel;
+import com.example.vendorapp.helper.adapter.ClientAdapter;
 import com.example.vendorapp.model.Client;
 import com.example.vendorapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;

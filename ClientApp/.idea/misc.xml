@@ -40,7 +40,6 @@
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/list_view_category.xml" value="0.15572916666666667" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/layout/number_picker_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/menu/menu.xml" value="0.13020833333333334" />
-        <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/menu/menu_chat.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/menu/menu_profile.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Downloads/Semester_3C/Android/A3-Android-Health-4-U/ClientApp/app/src/main/res/xml/filepaths.xml" value="0.1375" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4101123595505618" />
@@ -59,6 +58,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3104166666666667" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.15729166666666666" />
         <entry key="app/src/main/res/layout/cart_with_num.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/chat_item_left.xml" value="0.19635416666666666" />
         <entry key="app/src/main/res/layout/feed_update_count.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_billing.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.1" />

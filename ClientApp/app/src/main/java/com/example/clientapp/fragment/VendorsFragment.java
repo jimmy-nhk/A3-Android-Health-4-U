@@ -1,4 +1,4 @@
-package com.example.clientapp.chat.fragments;
+package com.example.clientapp.fragment;
 
 import android.os.Bundle;
 
@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.clientapp.R;
-import com.example.clientapp.chat.ClientViewModel;
-import com.example.clientapp.chat.adapter.VendorAdapter;
+import com.example.clientapp.helper.viewModel.ClientViewModel;
+import com.example.clientapp.helper.adapter.VendorAdapter;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Vendor;
 import com.google.firebase.firestore.CollectionReference;

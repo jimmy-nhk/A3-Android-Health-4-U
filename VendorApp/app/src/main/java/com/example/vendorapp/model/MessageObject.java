@@ -1,4 +1,4 @@
-package com.example.vendorapp.chat.model;
+package com.example.vendorapp.model;
 
 import android.util.Log;
 
