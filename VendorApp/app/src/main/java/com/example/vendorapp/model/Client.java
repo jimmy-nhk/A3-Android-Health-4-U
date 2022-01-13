@@ -32,7 +32,7 @@ public class Client implements Parcelable {
     private double weight;
     private double height;
     private double bmi;
-    private String image;
+    private String image="/clients/default_profile.png";
     private String status = "offline";
 
     public Client() {

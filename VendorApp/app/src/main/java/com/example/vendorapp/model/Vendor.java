@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.Map;
+
 public class Vendor implements Parcelable {
 
     private int id;
@@ -64,7 +65,7 @@ public class Vendor implements Parcelable {
         this.rating = rating;
         this.totalSale = totalSale;
 
-        this.image = image;
+        this.image =  "/clients/default_profile.png";
     }
 
     public int getId() {
@@ -180,8 +181,8 @@ public class Vendor implements Parcelable {
         email = in.readString();
         phone = in.readString();
         address = in.readString();
-        rating=in.readDouble();
-        totalSale=in.readInt();
+        rating = in.readDouble();
+        totalSale = in.readInt();
         image = in.readString();
         status = in.readString();
     }

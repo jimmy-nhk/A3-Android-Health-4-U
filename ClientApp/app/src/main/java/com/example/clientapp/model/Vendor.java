@@ -20,7 +20,7 @@ public class Vendor implements Parcelable {
     private String address;
     private double rating;
     private int totalSale;
-    private String image="/vendors/food.jpg";
+    private String image="/clients/default_profile.png";
     private String status;
 
 
