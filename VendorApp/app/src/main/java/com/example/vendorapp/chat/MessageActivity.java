@@ -1,7 +1,11 @@
 package com.example.vendorapp.chat;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -25,6 +29,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,9 +129,41 @@ public class MessageActivity extends AppCompatActivity {
         currentClient = intent.getParcelableExtra("client");
 
         username.setText(currentClient.getUserName());
-        profile_image.setImageResource(R.mipmap.ic_launcher);
+
+        setProfileImage();
         //FIXME: fix image
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);
+    }
+
+    public void setProfileImage(){
+        try {
+            // storage imgRef
+            StorageReference mImageRef =
+                    FirebaseStorage.getInstance().getReference(currentClient.getImage());
+            final long ONE_MEGABYTE = 1024 * 1024 * 5;
+            mImageRef.getBytes(ONE_MEGABYTE)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            // coverImg
+                            profile_image.setMinimumHeight(dm.heightPixels);
+                            profile_image.setMinimumWidth(dm.widthPixels);
+                            profile_image.setImageBitmap(bm);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    profile_image.setImageResource(R.mipmap.ic_launcher);
+                }
+            });
+        } catch (Exception e) {
+            profile_image.setImageResource(R.mipmap.ic_launcher);
+        }
     }
 
     private void sendMessage(String sender, String receiver, String message) {

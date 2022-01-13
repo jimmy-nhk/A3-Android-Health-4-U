@@ -5,17 +5,25 @@ import com.example.clientapp.helper.adapter.MessageAdapter;
 import com.example.clientapp.model.MessageObject;
 import com.example.clientapp.model.Client;
 import com.example.clientapp.model.Vendor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -121,13 +129,45 @@ public class MessageActivity extends AppCompatActivity {
         currentClient = intent.getParcelableExtra("client");
 
         username.setText(currentVendor.getUserName());
-        profile_image.setImageResource(R.mipmap.ic_launcher);
+
+        setProfileImage();
         readMessages();
 
 //        seenMessage();
         //FIXME: fix image
 //        Glide.with(getApplicationContext()).load(vendor.getImage()).into(holder.profile_image);
 
+    }
+
+    public void setProfileImage(){
+        try {
+            // storage imgRef
+            StorageReference mImageRef =
+                    FirebaseStorage.getInstance().getReference(currentVendor.getImage());
+            final long ONE_MEGABYTE = 1024 * 1024 * 5;
+            mImageRef.getBytes(ONE_MEGABYTE)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                            // coverImg
+                            profile_image.setMinimumHeight(dm.heightPixels);
+                            profile_image.setMinimumWidth(dm.widthPixels);
+                            profile_image.setImageBitmap(bm);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    profile_image.setImageResource(R.mipmap.ic_launcher);
+                }
+            });
+        } catch (Exception e) {
+            profile_image.setImageResource(R.mipmap.ic_launcher);
+        }
     }
 
 
