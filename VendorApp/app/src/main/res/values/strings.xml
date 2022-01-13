@@ -11,6 +11,8 @@
     <string name="add_item">Add Item</string>
     <string name="item_image">Item Image</string>
     <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="process">Process</string>
     <string-array name="category_array">
         <item>Rice</item>
         <item>Noodles</item>

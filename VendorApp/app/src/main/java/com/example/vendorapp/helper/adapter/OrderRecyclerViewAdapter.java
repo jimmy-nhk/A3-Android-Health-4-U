@@ -1,7 +1,9 @@
 package com.example.vendorapp.helper.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -117,52 +120,47 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
 
         //TODO: Image and Button
-        holder.processBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.processBtn.setOnClickListener(v -> {
 
-                order.setIsProcessed(true);
-                orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Order successfully updated!");
+            order.setIsProcessed(true);
+            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d(TAG, "Order successfully updated!");
 
-                        Log.d(TAG, "processBtn: click: " + order.toString());
+                    Log.d(TAG, "processBtn: click: " + order.toString());
 
-                        holder.announcementTxt.setText("Processed!");
-                        holder.announcementTxt.setTextColor(GREEN_COLOR);
-                        holder.cancelBtn.setVisibility(View.GONE);
-                        holder.cancelBtn.setEnabled(false);
-                        holder.processBtn.setEnabled(false);
-                        holder.processBtn.setVisibility(View.GONE);
+                    holder.announcementTxt.setText("Processed!");
+                    holder.announcementTxt.setTextColor(GREEN_COLOR);
+                    holder.cancelBtn.setVisibility(View.GONE);
+                    holder.cancelBtn.setEnabled(false);
+                    holder.processBtn.setEnabled(false);
+                    holder.processBtn.setVisibility(View.GONE);
 
-                    }
-                });
-            }
+                }
+            });
         });
 
-        holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                order.setIsCancelled(true);
-                order.setPrice(0);
-                orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Order successfully updated!");
-
-                        Log.d(TAG, "cancelBtn: click: " + order.toString());
-
-                        holder.announcementTxt.setText("Cancel!");
-                        holder.announcementTxt.setTextColor(RED_COLOR);
-
-                        holder.cancelBtn.setVisibility(View.GONE);
-                        holder.cancelBtn.setEnabled(false);
-                        holder.processBtn.setEnabled(false);
-                        holder.processBtn.setVisibility(View.GONE);
-                    }
-                });
-            }
+        holder.cancelBtn.setOnClickListener(v -> {
+            initCancelDialog(context, holder, order);
+//            order.setIsCancelled(true);
+//            order.setPrice(0);
+//            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void unused) {
+//                    Log.d(TAG, "Order successfully updated!");
+//
+//                    Log.d(TAG, "cancelBtn: click: " + order.toString());
+//
+//                    holder.announcementTxt.setText("Cancel!");
+//                    holder.announcementTxt.setTextColor(RED_COLOR);
+//
+//                    holder.cancelBtn.setVisibility(View.GONE);
+//                    holder.cancelBtn.setEnabled(false);
+//                    holder.processBtn.setEnabled(false);
+//                    holder.processBtn.setVisibility(View.GONE);
+//                }
+//            });
         });
 
         //ListView
@@ -181,6 +179,48 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         //get client by id
         getClientById(holder, order.getClientID() + "", itemList, quantityList);
 
+    }
+
+    private void initCancelDialog(Context context, OrderViewHolder holder, Order order) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                context);
+//        builder.setIcon(context.getResources().getDrawable(
+//                R.drawable.ic_launcher_foreground));
+        builder.setTitle("Cancel order");
+        builder.setMessage("Are you sure you want to cancel this order?");
+        builder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        handleCancelOrder(holder, order);
+                    }
+                });
+        builder.setNegativeButton("No",
+                (dialog, which) -> dialog.dismiss());
+        builder.setCancelable(false);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void handleCancelOrder(OrderViewHolder holder, Order order) {
+        order.setIsCancelled(true);
+        order.setPrice(0);
+        orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(unused -> {
+            Log.d(TAG, "Order successfully updated!");
+
+            Log.d(TAG, "cancelBtn: click: " + order.toString());
+            Toast.makeText(context, "Cancelled order " + order.getId(), Toast.LENGTH_SHORT).show();
+
+            holder.announcementTxt.setText("Cancel!");
+            holder.announcementTxt.setTextColor(ContextCompat.getColor(context, R.color.red));
+
+            holder.cancelBtn.setVisibility(View.GONE);
+            holder.cancelBtn.setEnabled(false);
+            holder.processBtn.setEnabled(false);
+            holder.processBtn.setVisibility(View.GONE);
+        });
     }
 
     private void getClientById(OrderViewHolder holder, String s, List<Item> itemList, List<Integer> quantityList) {

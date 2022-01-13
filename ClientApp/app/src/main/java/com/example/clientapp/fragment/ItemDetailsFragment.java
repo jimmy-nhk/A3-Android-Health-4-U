@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.viewModel.ItemViewModel;
@@ -159,5 +160,6 @@ public class ItemDetailsFragment extends Fragment {
         if (item == null) return;
         ItemViewModel viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         viewModel.addItem(item);
+        Toast.makeText(requireContext(), "Added item " + item.getName() + " to cart", Toast.LENGTH_SHORT).show();
     }
 }
