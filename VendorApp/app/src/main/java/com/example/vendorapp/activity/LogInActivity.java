@@ -71,6 +71,9 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
         if (firebaseUser != null) {
             firebaseUser.getEmail();
         }
+
+        emailText.setText(("v1@gmail.com"));
+        passwordText.setText(("111111"));
     }
 
     // init services

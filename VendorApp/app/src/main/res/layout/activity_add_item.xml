@@ -176,7 +176,7 @@
 
                     <Button
                         android:id="@+id/addImageBtn"
-                        android:layout_width="100dp"
+                        android:layout_width="140dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:onClick="uploadImageAddItemOnClick"
