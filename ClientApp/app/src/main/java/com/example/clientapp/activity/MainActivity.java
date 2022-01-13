@@ -54,6 +54,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.homePageNav:
                 fragment = new HomeFragment();
-                loadFragment(fragment);
+                loadFragmentWithBackStack(fragment);
                 return true;
             case R.id.itemsNav:
                 fragment = new ItemListFragment();
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("category", selectedCategory);
                     fragment.setArguments(bundle);
-                    loadFragment(fragment);
+                    loadFragmentWithBackStack(fragment);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -181,11 +182,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.cartNav:
                 fragment = new CartFragment();
-                loadFragment(fragment);
+                loadFragmentWithBackStack(fragment);
                 return true;
             case R.id.historyNav:
                 fragment = new HistoryFragment(client.getId());
-                loadFragment(fragment);
+                loadFragmentWithBackStack(fragment);
                 return true;
         }
         return false;
@@ -326,6 +327,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // round up price
+    public static double round(double d) {
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);return bd.doubleValue();
+    }
+
+
     // order btn
     public void onOrderBtnClick(View view) {
         List<Item> cartList = viewModel.getListItem();
@@ -378,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             orderSize++;
-            order = new Order(orderSize, filterDateOrder(LocalDateTime.now().toString()), false, itemOrder, quantity, list.get(0).getVendorID(), client.getId(), price);
+            order = new Order(orderSize, filterDateOrder(LocalDateTime.now().toString()), false, itemOrder, quantity, list.get(0).getVendorID(), client.getId(), round(price));
 
             Log.d(TAG, "order: orderDATE: " + LocalDateTime.now().toString());
             Order finalOrder = order;

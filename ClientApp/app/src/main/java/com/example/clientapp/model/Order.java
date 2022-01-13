@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,10 +182,16 @@ public class Order implements Parcelable {
         this.quantity = quantity;
         this.vendorID = vendorID;
         this.clientID = clientID;
-        this.price = price;
+        this.price = round(price);
         this.rating = 0;
         System.out.println("InConstructor: " + itemList.size());
         System.out.println("InConstructor: " + quantity.size());
+    }
+
+    // round up price
+    public static double round(double d) {
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);return bd.doubleValue();
     }
 
     public boolean getIsCancelled() {

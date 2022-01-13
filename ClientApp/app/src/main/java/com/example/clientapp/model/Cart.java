@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Cart implements Parcelable {
         this.id = id;
         this.date = date;
         this.orderList = orderList;
-        this.price = price;
+        this.price = round(price);
         this.isFinished = false;
     }
 
@@ -40,6 +41,14 @@ public class Cart implements Parcelable {
             Log.d("CartConstructor", "constructor: " + orderList.get(i).toString());
             price += orderList.get(i).getPrice();
         }
+
+        price = round(price);
+    }
+
+    // round up price
+    public static double round(double d) {
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);return bd.doubleValue();
     }
 
     public Cart(int id, String date, List<Order> orderList, double price, boolean isFinished) {

@@ -23,6 +23,7 @@ import com.example.clientapp.helper.adapter.CartItemRecyclerViewAdapter;
 import com.example.clientapp.helper.viewModel.ItemViewModel;
 import com.example.clientapp.model.Item;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,12 +94,18 @@ public class CartFragment extends Fragment {
         // Create the observer which updates the UI.
         final Observer<Double> priceObserver = price -> {
             // Update the UI, in this case, a TextView.
-            priceTxt.setText(price + " $");
+            priceTxt.setText(round(price) + " $");
         };
 
         // get view model
         viewModel.getLiveTotalPrice().observe(requireActivity(), priceObserver);
 
+    }
+
+    // round up price
+    public static double round(double d) {
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);return bd.doubleValue();
     }
 
     @Override

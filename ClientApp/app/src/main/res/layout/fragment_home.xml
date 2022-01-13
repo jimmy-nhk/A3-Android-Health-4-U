@@ -93,6 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:paddingHorizontal="18dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -104,7 +105,7 @@
                         <TextView
                             android:layout_width="0sp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="6"
+                            android:layout_weight="8"
                             android:text="Interal" />
 
                         <TextView
