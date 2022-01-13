@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:text="One more step...."
-            android:textColor="@color/primary_blue_light"
+            android:textColor="@color/primary_pink_light"
             android:textAlignment="textStart"
             android:textSize="30sp"/>
 
@@ -103,7 +103,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/primary_blue"
+            android:backgroundTint="@color/primary_pink"
             android:textColor="@color/white"
             android:layout_marginTop="10dp"
             android:text="Create Account"

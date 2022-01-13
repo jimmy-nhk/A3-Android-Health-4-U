@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:text="Welcome,"
-            android:textColor="@color/primary_blue_light"
+            android:textColor="@color/primary_pink_light"
             android:textAlignment="textStart"
             android:textSize="30sp"/>
 
@@ -115,18 +115,26 @@
         <!--                android:hint="Height"/>-->
         <!--        </LinearLayout>-->
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
+            android:id="@+id/editPasswordSignUpTxt"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            app:passwordToggleEnabled="true">
-            <EditText
-                android:id="@+id/editPasswordSignUpTxt"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:maxLength="50"
-                android:inputType="textPassword"
-                android:hint="Password" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:maxLength="50"
+            android:inputType="textPassword"
+            android:hint="Password" />
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            app:passwordToggleEnabled="true">-->
+<!--            <EditText-->
+<!--                android:id="@+id/editPasswordSignUpTxt"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="60dp"-->
+<!--                android:maxLength="50"-->
+<!--                android:inputType="textPassword"-->
+<!--                android:hint="Password" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
         <EditText
             android:id="@+id/editConfirmPasswordSignUpTxt"
@@ -149,7 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bordered_container"
-            android:backgroundTint="@color/primary_blue"
+            android:backgroundTint="@color/primary_pink"
             android:padding="8dp"
             android:layout_gravity="end"
             android:clickable="true"
