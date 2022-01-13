@@ -43,7 +43,6 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     private
     URL imageURL = null;
     private DocumentReference orderDocRef;
-    private Order order;
 
     // init db
     private static final String ORDER_COLLECTION = "orders";
@@ -80,6 +79,8 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
     // pass to order details intent
     private void handleRecyclerOrderClick(RecyclerView parent, View v) {
+        int position = parent.getChildLayoutPosition(v);
+        Order order = orderList.get(position);
         Intent intent = new Intent(context, OrderDetailActivity.class);
         intent.putExtra("order",order);
         context.startActivity(intent);
@@ -94,8 +95,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         final int BLACK_COLOR = ContextCompat.getColor(context, R.color.black);
         final int RED_COLOR = ContextCompat.getColor(context, R.color.red);
 
-        order = this.orderList.get(position);
-
+        Order order = this.orderList.get(position);
 
         // init fireStore db
         fireStore = FirebaseFirestore.getInstance();
@@ -121,28 +121,30 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
         //TODO: Image and Button
         holder.processBtn.setOnClickListener(v -> {
+            initProcessDialog(context, holder, order);
 
-            order.setIsProcessed(true);
-            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d(TAG, "Order successfully updated!");
-
-                    Log.d(TAG, "processBtn: click: " + order.toString());
-
-                    holder.announcementTxt.setText("Processed!");
-                    holder.announcementTxt.setTextColor(GREEN_COLOR);
-                    holder.cancelBtn.setVisibility(View.GONE);
-                    holder.cancelBtn.setEnabled(false);
-                    holder.processBtn.setEnabled(false);
-                    holder.processBtn.setVisibility(View.GONE);
-
-                }
-            });
+//            order.setIsProcessed(true);
+//            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void unused) {
+//                    Log.d(TAG, "Order successfully updated!");
+//
+//                    Log.d(TAG, "processBtn: click: " + order.toString());
+//
+//                    holder.announcementTxt.setText("Processed!");
+//                    holder.announcementTxt.setTextColor(GREEN_COLOR);
+//                    holder.cancelBtn.setVisibility(View.GONE);
+//                    holder.cancelBtn.setEnabled(false);
+//                    holder.processBtn.setEnabled(false);
+//                    holder.processBtn.setVisibility(View.GONE);
+//
+//                }
+//            });
         });
 
         holder.cancelBtn.setOnClickListener(v -> {
             initCancelDialog(context, holder, order);
+
 //            order.setIsCancelled(true);
 //            order.setPrice(0);
 //            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -204,10 +206,46 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         alert.show();
     }
 
+    private void initProcessDialog(Context context, OrderViewHolder holder, Order order) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                context);
+//        builder.setIcon(context.getResources().getDrawable(
+//                R.drawable.ic_launcher_foreground));
+        builder.setTitle("Process order");
+        builder.setMessage("Would you like to process this order?");
+        builder.setPositiveButton("Confirm",
+                (dialog, which) -> handleProcessOrder(holder, order));
+        builder.setNegativeButton("Cancel",
+                (dialog, which) -> dialog.dismiss());
+        builder.setCancelable(false);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void handleProcessOrder(OrderViewHolder holder, Order order) {
+        order.setIsProcessed(true);
+        orderCollection.document(order.getId() + "").set(order.toMap()).addOnSuccessListener(unused -> {
+            Log.d(TAG, "Order successfully updated!");
+
+            Log.d(TAG, "processBtn: click: " + order.toString());
+            Toast.makeText(context, "Successfully process order " + order.getId()
+                    , Toast.LENGTH_SHORT).show();
+
+            holder.announcementTxt.setText("Processed!");
+            holder.announcementTxt.setTextColor(ContextCompat.getColor(context, R.color.green));
+            holder.cancelBtn.setVisibility(View.GONE);
+            holder.cancelBtn.setEnabled(false);
+            holder.processBtn.setEnabled(false);
+            holder.processBtn.setVisibility(View.GONE);
+        });
+    }
+
     private void handleCancelOrder(OrderViewHolder holder, Order order) {
+
         order.setIsCancelled(true);
         order.setPrice(0);
-        orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(unused -> {
+        Log.d(TAG, "cancel order=" + order.toString());
+        orderCollection.document(order.getId() + "").set(order.toMap()).addOnSuccessListener(unused -> {
             Log.d(TAG, "Order successfully updated!");
 
             Log.d(TAG, "cancelBtn: click: " + order.toString());
