@@ -113,15 +113,6 @@
 <!--                                android:src="@drawable/ic_star"-->
 <!--                                android:contentDescription="Rating Star Icon"/>-->
 
-                            <TextView
-                                android:id="@+id/storeRating"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="8dp"
-                                android:text="5sao"
-                                android:textColor="@color/white"
-                                android:textSize="16sp" />
-
                             <RatingBar
                                 android:id="@+id/storeDetailsRatingBar"
                                 android:layout_width="wrap_content"
