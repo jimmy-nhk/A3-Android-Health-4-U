@@ -453,7 +453,8 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     if (messageObject.isNewestMessage()) {
 
-                                        // get the vendor object
+
+                                            // get the vendor object
                                         vendorCollection.whereEqualTo(Vendor.VENDOR_USERNAME + "", messageObject.getSender() + "")
                                                 .get()
                                                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -464,13 +465,16 @@ public class MainActivity extends AppCompatActivity {
 
                                                             // TODO: send notification here
                                                             Log.d(TAG, "New noti");
+                                                            if (messageObject.getReceiver().equals(client.getUserName()) && messageObject.getSender().equals(vendor.getUserName()) ||
+                                                                    messageObject.getReceiver().equals(vendor.getUserName()) && messageObject.getSender().equals(client.getUserName())) {
 
-                                                            // create new intent
-                                                            Intent intent = new Intent(NEW_MESSAGE);
-                                                            intent.putExtra("message", messageObject.getMessage());
-                                                            intent.putExtra("client", client);
-                                                            intent.putExtra("vendor", vendor);
-                                                            sendBroadcast(intent);
+                                                                // create new intent
+                                                                Intent intent = new Intent(NEW_MESSAGE);
+                                                                intent.putExtra("message", messageObject.getMessage());
+                                                                intent.putExtra("client", client);
+                                                                intent.putExtra("vendor", vendor);
+                                                                sendBroadcast(intent);
+                                                            }
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }

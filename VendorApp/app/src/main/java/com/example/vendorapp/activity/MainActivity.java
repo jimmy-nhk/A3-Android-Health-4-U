@@ -211,12 +211,16 @@ public class MainActivity extends AppCompatActivity {
                                                             // TODO: send notification here
                                                             Log.d(TAG, "New noti");
 
-                                                            Intent intent = new Intent(NEW_MESSAGE);
-                                                            intent.putExtra("message", messageObject.getMessage());
-                                                            intent.putExtra("client", client);
-                                                            intent.putExtra("vendor", vendor);
-                                                            sendBroadcast(intent);
-                                                            return;
+                                                            if (messageObject.getReceiver().equals(client.getUserName()) && messageObject.getSender().equals(vendor.getUserName()) ||
+                                                                    messageObject.getReceiver().equals(vendor.getUserName()) && messageObject.getSender().equals(client.getUserName())) {
+
+                                                                Intent intent = new Intent(NEW_MESSAGE);
+                                                                intent.putExtra("message", messageObject.getMessage());
+                                                                intent.putExtra("client", client);
+                                                                intent.putExtra("vendor", vendor);
+                                                                sendBroadcast(intent);
+                                                                return;
+                                                            }
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
