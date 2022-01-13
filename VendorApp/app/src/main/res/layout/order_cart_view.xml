@@ -168,8 +168,9 @@
                 android:id="@+id/cancelBtn"
                 android:layout_width="150sp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/black_transparent_light"
-                android:text="Cancel" />
+                android:backgroundTint="#989898"
+                android:textColor="@color/white"
+                android:text="@string/cancel" />
             <Button
                 android:id="@+id/processBtn"
                 android:layout_width="150sp"
@@ -177,7 +178,7 @@
 
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/primary_pink"
-                 android:text="Process" />
+                 android:text="@string/process" />
 
 
         </LinearLayout>
