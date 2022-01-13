@@ -1,7 +1,9 @@
 package com.example.vendorapp.helper.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
+import com.example.vendorapp.model.Order;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -127,7 +130,10 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 //        holder.vendorName.setText(item.getVendorID() + "");
         holder.category.setText(item.getCategory());
 
-        holder.deleteBtn.setOnClickListener(v -> deleteItem(item.getId(), position));
+        holder.deleteBtn.setOnClickListener(v -> {
+            initDeleteItemDialog(context, item, position);
+//            deleteItem(item.getId(), position);
+        });
 
 //        //TODO: Implement service
 //        Intent intent = new Intent(context, LoadImageIntentService.class);
@@ -159,12 +165,31 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
 
     }
 
+    private void initDeleteItemDialog(Context context, Item item, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                context);
+//        builder.setIcon(context.getResources().getDrawable(
+//                R.drawable.ic_launcher_foreground));
+        builder.setTitle("Delete item");
+        builder.setMessage("Are you sure you want to delete this item?");
+        builder.setPositiveButton("Yes",
+                (dialog, which) -> deleteItem(item.getId(), position));
+        builder.setNegativeButton("No",
+                (dialog, which) -> dialog.dismiss());
+        builder.setCancelable(false);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private void deleteItem(int itemId, int position) {
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         fireStore.collection("items").document(itemId + "")
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "DocumentSnapshot ITEM successfully deleted!");
+                    Toast.makeText(context,
+                            "Deleted item " + itemList.get(position).getName(),
+                            Toast.LENGTH_SHORT).show();
                     removeAt(position);
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting ITEM document", e));
