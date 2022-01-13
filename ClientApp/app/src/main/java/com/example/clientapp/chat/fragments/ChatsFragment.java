@@ -65,6 +65,7 @@ public class ChatsFragment extends Fragment {
         clientViewModel = new ViewModelProvider(requireActivity()).get(ClientViewModel.class);
         currentClient = clientViewModel.getValue();
 
+        // recycler view
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

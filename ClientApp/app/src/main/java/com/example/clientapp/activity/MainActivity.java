@@ -569,6 +569,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d(TAG, "loadCart: value.getDocumentChanges size: " + value.getDocumentChanges().size());
 
+                    // loop through the document change
                     Order orderModified = null;
                     for (DocumentChange documentChange : value.getDocumentChanges()) {
                         if (documentChange.getType() == DocumentChange.Type.MODIFIED) {

@@ -51,7 +51,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         // to main
         if (intent.getAction().equals(MainActivity.PROCESS_NOTIFICATION)){
-            createNotificationWithIntent(MainActivity.PROCESS_NOTIFICATION, context , 1, intent);
+            createNotificationWithIntent(MainActivity.PROCESS_NOTIFICATION, context , 0, intent);
             return;
         }
 
@@ -242,8 +242,8 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 
             Notification notification = builder.build();
-//            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
-            notifManager.notify(notifyId, notification); // Notify by id and built notification
+            int oneTimeID = (int) SystemClock.uptimeMillis(); // Init onetime ID by current time so the notification can display multiple notification
+            notifManager.notify(oneTimeID, notification); // Notify by id and built notification
 
         } catch (Exception ignored){
             ignored.printStackTrace();

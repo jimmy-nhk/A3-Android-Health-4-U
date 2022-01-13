@@ -57,6 +57,7 @@ public class VendorsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_users, container, false);
 
+        // search vendor
         searchVendors = view.findViewById(R.id.search_vendors);
         searchVendors.addTextChangedListener(new TextWatcher() {
             @Override
@@ -75,6 +76,7 @@ public class VendorsFragment extends Fragment {
             }
         });
 
+        // recycler view
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -90,6 +92,7 @@ public class VendorsFragment extends Fragment {
         clientViewModel = new ViewModelProvider(requireActivity()).get(ClientViewModel.class);
         currentClient = clientViewModel.getValue();
 
+        // load vendors
         loadVendors();
 
         return view;
@@ -132,21 +135,27 @@ public class VendorsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                // validate in the normal case without search
-                if (searchVendors.getText().toString().equals("")){
-                    mVendors = new ArrayList<>();
-                    for (int i = value.size() - 1 ; i >= 0; i--){
-                        mVendors.add(value.getDocuments().get(i).toObject(Vendor.class));
-                    }
+                try {
+                    // validate in the normal case without search
+                    if (searchVendors.getText().toString().equals("")){
+                        mVendors = new ArrayList<>();
+                        for (int i = value.size() - 1 ; i >= 0; i--){
+                            mVendors.add(value.getDocuments().get(i).toObject(Vendor.class));
+                        }
 
-                    searchVendorList = mVendors;
-                    Log.d(TAG, "mVendors: size" + mVendors.size());
-                    if (isAdded()){
-                        vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, false);
-                        recyclerView.setAdapter(vendorAdapter);
+                        // vendors
+                        searchVendorList = mVendors;
+                        Log.d(TAG, "mVendors: size" + mVendors.size());
+                        if (isAdded()){
+                            vendorAdapter = new VendorAdapter(getContext(), mVendors, currentClient, false);
+                            recyclerView.setAdapter(vendorAdapter);
+                        }
+
                     }
+                } catch (Exception e){
 
                 }
+
 
             }
         });

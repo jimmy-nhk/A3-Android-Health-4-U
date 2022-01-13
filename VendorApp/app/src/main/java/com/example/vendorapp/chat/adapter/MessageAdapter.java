@@ -36,6 +36,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TYPE_RIGHT = 1;
 
 
+    // constructor
     public MessageAdapter(Context mContext, List<MessageObject> messageObjectList,Client currentClient, Vendor vendor){
         this.mContext = mContext;
         this.messageObjectList = messageObjectList;
@@ -47,6 +48,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
+
+        // type right and left
         if (viewType == MSG_TYPE_RIGHT){
             view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
 
@@ -61,22 +64,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        // message object
         MessageObject messageObject = messageObjectList.get(position);
 
-        holder.show_message.setText(messageObject.getMessage());
+        // set message
+        holder.show_message.setText(messageObject.getMessage().trim());
         setClientImage(holder, client.getImage());
-//        if (imageUrl.equals("default")){
-//            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
-//        } else {
-//            Glide.with(mContext).load(imageUrl).into(holder.profile_image);
-//        }
 
-//        holder.txt_seen.setVisibility(View.GONE);
         // check for the last message
         if (position == messageObjectList.size() - 1){
 
-
-
+            // set text
             if (messageObject.getIsSeen()){
                 holder.txt_seen.setText("Seen");
             } else {

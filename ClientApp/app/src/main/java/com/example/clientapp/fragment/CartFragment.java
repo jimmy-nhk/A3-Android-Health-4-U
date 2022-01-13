@@ -26,11 +26,7 @@ import com.example.clientapp.model.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class CartFragment extends Fragment {
     private static final String TAG = CartFragment.class.getSimpleName();
 
@@ -42,19 +38,6 @@ public class CartFragment extends Fragment {
     private ItemViewModel viewModel;
 
 
-    public CartFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CartFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CartFragment newInstance(String param1, String param2) {
         CartFragment fragment = new CartFragment();
         Bundle args = new Bundle();
@@ -91,7 +74,7 @@ public class CartFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         viewModel.getSelectedItem().observe(getViewLifecycleOwner(), itemList -> {
 
-
+        // check null
             if (isAdded()){
                 mAdapter = new CartItemRecyclerViewAdapter(getActivity(), itemList , viewModel);
 
@@ -113,8 +96,8 @@ public class CartFragment extends Fragment {
             priceTxt.setText(price + " $");
         };
 
+        // get view model
         viewModel.getLiveTotalPrice().observe(requireActivity(), priceObserver);
-
 
     }
 

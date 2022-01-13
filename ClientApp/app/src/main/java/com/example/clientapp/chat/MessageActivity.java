@@ -139,60 +139,6 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-//    // listen to change
-//    private ListenerRegistration listenerRegistration;
-//
-//    private void seenMessage(){
-//
-//        listenerRegistration = messageCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//
-//                MessageObject messageObject;
-//                assert value != null;
-//
-//
-//                for (DocumentChange dc : value.getDocumentChanges()){
-//
-//                    // check if added
-//                    if (dc.getType() == DocumentChange.Type.ADDED){
-//                        messageObject = dc.getDocument().toObject(MessageObject.class);
-//
-//                        // check the message is already read
-//                        if (messageObject.getReceiver().equals(currentVendor.getUserName())
-//                                && messageObject.getSender().equals(currentClient.getUserName())){
-//
-//
-//                            // set the isSeen to true
-//                            HashMap<String , Object> hashMap = new HashMap<>();
-//                            hashMap.put("isSeen", true);
-//
-//                            messageObject.setIsSeen(true);
-//                            // update db
-//                            Log.d(TAG, "updated isSeen here");
-//
-//                            dc.getDocument().getReference().update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                @Override
-//                                public void onSuccess(Void unused) {
-//                                    Log.d(TAG, "successfully update seen");
-//
-//                                }
-//                            });
-////                        messageCollection.document(messageObject.getId() + "")
-////                                .set(messageObject.toMap())
-////                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                    @Override
-////                                    public void onSuccess(Void unused) {
-////                                        Log.d(TAG, "successfully update seen");
-////                                    }
-////                                });
-//                    }
-//
-//                    }
-//                }
-//            }
-//        });
-//    }
 
     // send message to the other client
     private void sendMessage(String sender, String receiver, String message){

@@ -30,7 +30,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private Context mContext;
     private List<MessageObject> messageObjectList;
-    private String imageUrl;
 
     private final static String TAG = "MessageAdapter";
     private Client client;
@@ -43,7 +42,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         this.mContext = mContext;
         this.messageObjectList = messageObjectList;
         this.client = currentClient;
-        this.imageUrl = imageUrl;
         this.vendor = vendor;
     }
 
@@ -70,7 +68,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         MessageObject messageObject = messageObjectList.get(position);
 
         // set views
-        holder.show_message.setText(messageObject.getMessage());
+        holder.show_message.setText(messageObject.getMessage().trim());
 
         setStoreImage(holder, vendor.getImage());
 //        if (imageUrl.equals("default")){
