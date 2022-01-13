@@ -11,7 +11,7 @@ public class Item implements Parcelable, Comparable<Item> {
     private int id = 0;
     private String name = "";
     private int quantity = 0;
-    private String image = "";
+    private String image = "/items/food.jpg";;
     private String description = "";
     private int vendorID = 0;
     private String category = "";
