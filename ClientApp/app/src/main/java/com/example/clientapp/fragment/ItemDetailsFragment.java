@@ -160,6 +160,6 @@ public class ItemDetailsFragment extends Fragment {
         if (item == null) return;
         ItemViewModel viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         viewModel.addItem(item);
-        Toast.makeText(requireContext(), "Added item " + item.getName() + " to cart", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(requireContext(), "Added item " + item.getName() + " to cart", Toast.LENGTH_SHORT).show();
     }
 }

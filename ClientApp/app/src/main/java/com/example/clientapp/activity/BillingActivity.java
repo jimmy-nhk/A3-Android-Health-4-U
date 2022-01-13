@@ -194,7 +194,7 @@ public class BillingActivity extends AppCompatActivity {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
         }
 
         // close the document
@@ -224,11 +224,11 @@ public class BillingActivity extends AppCompatActivity {
                 if (intent.resolveActivity(getPackageManager()) == null) {
                     // Show an error
                 } else {
-                    Toast.makeText(BillingActivity.this, "Export pdf", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(BillingActivity.this, "Export pdf", Toast.LENGTH_LONG).show();
                     startActivity(intent); //Start intent to show pdf file
                 }
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(BillingActivity.this, "No Application available to view pdf", Toast.LENGTH_LONG).show();
+//                Toast.makeText(BillingActivity.this, "No Application available to view pdf", Toast.LENGTH_LONG).show();
             }
         }
     }

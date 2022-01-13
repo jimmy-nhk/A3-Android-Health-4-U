@@ -116,7 +116,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
         Intent intent = getIntent();
         vendor = intent.getParcelableExtra("vendor");
         if (vendor != null) {
-            Toast.makeText(this, "vendor=" + vendor.toString(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "vendor=" + vendor.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

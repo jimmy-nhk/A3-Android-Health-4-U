@@ -214,7 +214,7 @@ public class SignUpStep2Activity extends AppCompatActivity {
         Intent intent = getIntent();
         client = intent.getParcelableExtra("client");
         if (client != null) {
-            Toast.makeText(this, "client=" + client.toString(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "client=" + client.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

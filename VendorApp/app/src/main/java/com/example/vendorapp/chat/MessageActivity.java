@@ -105,7 +105,7 @@ public class MessageActivity extends AppCompatActivity {
                 if (!msg.equals("")) {
                     sendMessage(currentVendor.getUserName(), currentClient.getUserName(), msg);
                 } else {
-                    Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
                 }
 
                 text_send.setText("");

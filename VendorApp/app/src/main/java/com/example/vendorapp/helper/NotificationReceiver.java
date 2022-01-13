@@ -29,7 +29,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         if (intent.getAction().equals(MainActivity.ORDER_COMING)){
-            Toast.makeText(context, MainActivity.ORDER_COMING, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, MainActivity.ORDER_COMING, Toast.LENGTH_SHORT).show();
             createNotificationWithIntent(context ,MainActivity.ORDER_COMING,  0,intent);
             return;
         }

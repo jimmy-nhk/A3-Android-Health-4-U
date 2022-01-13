@@ -357,7 +357,7 @@ public class AddItemActivity extends AppCompatActivity implements AdapterView.On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // category selected
         category = parent.getItemAtPosition(position).toString();
-        Toast.makeText(this, category, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, category, Toast.LENGTH_SHORT).show();
     }
 
     @Override

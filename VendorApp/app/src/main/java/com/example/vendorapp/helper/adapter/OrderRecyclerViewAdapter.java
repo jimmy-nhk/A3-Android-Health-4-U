@@ -192,8 +192,8 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
             Log.d(TAG, "Order successfully updated!");
 
             Log.d(TAG, "processBtn: click: " + order.toString());
-            Toast.makeText(context, "Successfully process order " + order.getId()
-                    , Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Successfully process order " + order.getId()
+//                    , Toast.LENGTH_SHORT).show();
 
             holder.announcementTxt.setText("Processed!");
             holder.announcementTxt.setTextColor(ContextCompat.getColor(context, R.color.green));
@@ -213,7 +213,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
             Log.d(TAG, "Order successfully updated!");
 
             Log.d(TAG, "cancelBtn: click: " + order.toString());
-            Toast.makeText(context, "Cancelled order " + order.getId(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Cancelled order " + order.getId(), Toast.LENGTH_SHORT).show();
 
             holder.announcementTxt.setText("Cancel!");
             holder.announcementTxt.setTextColor(ContextCompat.getColor(context, R.color.red));

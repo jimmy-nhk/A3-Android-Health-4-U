@@ -178,9 +178,9 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "DocumentSnapshot ITEM successfully deleted!");
-                    Toast.makeText(context,
-                            "Deleted item " + itemList.get(position).getName(),
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context,
+//                            "Deleted item " + itemList.get(position).getName(),
+//                            Toast.LENGTH_SHORT).show();
                     removeAt(position);
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting ITEM document", e));
