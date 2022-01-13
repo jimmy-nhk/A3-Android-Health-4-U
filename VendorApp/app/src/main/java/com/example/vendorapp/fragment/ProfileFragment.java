@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.vendorapp.R;
 import com.example.vendorapp.model.Item;
@@ -38,6 +39,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ProfileFragment extends Fragment {
 
@@ -46,12 +49,20 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final String VENDOR_COLLECTION = "vendors";
 
-    private EditText fullNameTxt, usernameTxt, emailTxt, phoneTxt, addressTxt, ratingTxt, totalSalesTxt;
+    private EditText fullNameTxt;
+    private TextView usernameTxt;
+    private TextView emailTxt;
+    private EditText phoneTxt;
+    private EditText addressTxt;
+    private TextView ratingTxt;
+    private TextView totalSalesTxt;
+
     private ImageView coverImg;
     private ImageButton changeImgBtn;
     private ImageView backBtn;
     private Button profileSaveBtn;
     private Vendor vendor;
+    private boolean isImageChanged = false;
 
     // request code
     private final int PICK_IMAGE_REQUEST = 33;
@@ -93,17 +104,19 @@ public class ProfileFragment extends Fragment {
         if (vendor != null) {
             updateUI();
             //Add event wait for change img btn click
-            onUpdateImg(view);
+            initUpdateImgEventHandler(view);
             //Add event wait for change save profile btn click
-            onSaveProfile(view);
+            initSaveProfileHandler(view);
         }
 
         // Inflate the layout for this fragment
         return view;
     }
 
+    //Init back button on click handler function
     private void initBackBtnClick() {
         try {
+            // backBtn on Click event Handler
             backBtn.setOnClickListener(v -> {
                 if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
                     requireActivity().finish();
@@ -116,17 +129,81 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void onSaveProfile(View view) {
+    //function init save profile button
+    private void initSaveProfileHandler(View view) {
         profileSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // The app upload image first then call update vendor profile on image response successfull
-                uploadImage();
+                // The app validate fullname, phone and address before upload, only execute upload when all is true
+                if (validateInput(fullNameTxt.getText().toString(), phoneTxt.getText().toString(), addressTxt.getText().toString())) {
+                    // Only upload image if image is Changed => save storage
+                    if (isImageChanged) {
+                        uploadImage(); // call upload image function, in upload image response, there is call of upload profile function.
+                        isImageChanged = false; // set back to false if user change image again
+                    }else{
+                        uploadProfileToDB(); // call upload profile without upload image
+                    }
+                }
             }
         });
     }
 
-    private void onUpdateImg(View view) {
+    //input validation, if all true return true
+    private boolean validateInput(String fullName, String phone, String address) {
+
+        return validateFullName(fullName)
+                && isPhoneValid(phone)
+                && isAddressValid(address);
+    }
+
+    //Address validation if empty
+    private boolean isAddressValid(String address) {
+        if (address.isEmpty()) {
+            addressTxt.setError("Address cannot be empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    //Fullname validation if empty
+    private boolean validateFullName(String fullName) {
+        if (fullName.isEmpty()) {
+            fullNameTxt.setError("Full name cannot be empty");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validate vendor's phone
+    private boolean isPhoneValid(String phone) {
+        if (phone.isEmpty()) {
+            String EMPTY_PHONE = "Phone cannot be empty";
+            phoneTxt.setError(EMPTY_PHONE);
+            return false;
+        } else if (countDigits(phone) != 9) { // check phone length
+            String INVALID_PHONE = "Invalid phone number. Please enter the last 9 digits" +
+                    "of your phone number!";
+            phoneTxt.setError(INVALID_PHONE);
+            return false;
+        }
+
+        return true;
+    }
+    // count digits function
+    private int countDigits(String stringToSearch) {
+        Pattern digitRegex = Pattern.compile("\\d");
+        Matcher countEmailMatcher = digitRegex.matcher(stringToSearch);
+
+        int count = 0;
+        while (countEmailMatcher.find()) {
+            count++;
+        }
+
+        return count;
+    }
+    private void initUpdateImgEventHandler(View view) {
         changeImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,6 +271,8 @@ public class ProfileFragment extends Fragment {
         // String rating totalSalesStr
         String ratingStr = String.valueOf(vendor.getRating());
         String totalSalesStr = String.valueOf(vendor.getTotalSale());
+
+        //set value for rating and totalsale text view
         ratingTxt.setText(ratingStr);
         totalSalesTxt.setText(totalSalesStr);
     }
@@ -285,6 +364,9 @@ public class ProfileFragment extends Fragment {
             filePath = data.getData();
             try {
                 Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath);
+                // set state for isImage
+                isImageChanged = true;
+
                 coverImg.setImageBitmap(bitmapImg);
             } catch (IOException e) {
                 e.printStackTrace();

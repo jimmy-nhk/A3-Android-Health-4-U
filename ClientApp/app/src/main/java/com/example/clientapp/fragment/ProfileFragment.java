@@ -131,6 +131,7 @@ public class ProfileFragment extends Fragment {
 
                 Log.d(TAG, "c != null=" + (c != null));
                 if (c != null) {
+                    //set vaue from fetched client object
                     fullName = c.getFullName();
                     username = c.getUserName();
                     email = c.getEmail();
@@ -146,31 +147,6 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
-//        clientDocRef.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                DocumentSnapshot document = task.getResult();
-//                if (document.exists()) {
-//                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                    Client c = document.toObject(Client.class);
-//                    if (c != null) {
-//                        fullName = c.getFullName();
-//                        username = c.getUserName();
-//                        email = c.getEmail();
-//                        phone = c.getPhone();
-//                        address = c.getAddress();
-//                        dob = c.getDob();
-//                        weight = c.getWeight();
-//                        height = c.getHeight();
-//
-//                        displayUserInfo();
-//                    }
-//                } else {
-//                    Log.d(TAG, "No such document");
-//                }
-//            } else {
-//                Log.d(TAG, "get failed with ", task.getException());
-//            }
-//        });
     }
 
     private void displayUserInfo() {
@@ -347,17 +323,16 @@ public class ProfileFragment extends Fragment {
     private void handleSaveChangesBtnClick() {
         String fullName = fullNameTextView.getText().toString().trim();
         String phone = phoneTextView.getText().toString().trim();
-//        String address = addressTextView.getText().toString().trim();
         String dob = dobTextView.getText().toString().trim();
-//        String weightStr = weightTextView.getText().toString().trim();
-//        String heightStr = heightTextView.getText().toString().trim();
-        if (validateInput(fullName, phone, dob))
+        if (validateInput(fullName, phone, dob)) {
             if (isImageChanged) {
 //            updateProfileImage(updateImagePath);
                 uploadImage();
                 isImageChanged = false;
+            } else{
+                updateFirestoreClient();
             }
-        updateFirestoreClient();
+        }
 
     }
 
@@ -382,7 +357,6 @@ public class ProfileFragment extends Fragment {
             try {
                 Bitmap bitmapImg = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), filePath);
                 profileImage.setImageBitmap(bitmapImg);
-//                profileImage.setVisibility(View.VISIBLE);
                 isImageChanged = true;
 
             } catch (IOException e) {
@@ -411,7 +385,7 @@ public class ProfileFragment extends Fragment {
             // adding listeners on upload
             // or failure of image
             // Progress Listener for loading
-// percentage on the dialog box
+            // percentage on the dialog box
             ref.putFile(filePath)
                     .addOnSuccessListener(
                             taskSnapshot -> {
@@ -441,21 +415,6 @@ public class ProfileFragment extends Fragment {
                                                 + (int) progress + "%");
                             });
         }
-    }
-
-    private void updateProfileImage(String path) {
-//        Toast.makeText(getContext(), "path=" + path, Toast.LENGTH_SHORT).show();
-
-//        clientDocRef
-//                .update("image", path)
-//                .addOnSuccessListener(aVoid -> {
-//                    Log.d(TAG, "DocumentSnapshot successfully updated!");
-//                    Toast.makeText(getContext(), "update succeeded", Toast.LENGTH_SHORT).show();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.w(TAG, "Error updating document", e);
-//                    Toast.makeText(getContext(), "Error updating document path=" + path, Toast.LENGTH_SHORT).show();
-//                });
     }
 
     private void setProfileImageView(String imageUrl) {
