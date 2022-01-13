@@ -66,7 +66,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        //TODO: switch the xml file
+        //switch the xml file
         View recyclerViewOrder = mLayoutInflater.inflate(R.layout.order_cart_view, parent, false);
 
 //        Log.d(TAG, "onCreateViewHolder: ");
@@ -103,7 +103,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         orderRef = orderCollection.document(String.valueOf(order.getId()));
 
 
-//        // TODO: Fix order name
+//        // Fix order name
 //        holder.orderIdText.setText("OrderID: " + order.getId() + "");
 
         // price
@@ -111,7 +111,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         //date
         holder.dateOrder.setText( order.getDate() + "");
 
-        //TODO: check again the text appearance
+        //check again the text appearance
         holder.announcementTxt.setText(order.getIsProcessed() ? "PROCESSED" : order.getIsCancelled() ? "CANCELLED" : "Not yet process");
         holder.announcementTxt.setTextColor(order.getIsProcessed() ? GREEN_COLOR : order.getIsCancelled() ? RED_COLOR : BLACK_COLOR);
 
@@ -119,7 +119,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         holder.processBtn.setVisibility(order.getIsProcessed() ? View.GONE : order.getIsCancelled() ? View.GONE : View.VISIBLE);
 
 
-        //TODO: Image and Button
+        //Image and button
         holder.processBtn.setOnClickListener(v -> {
             initProcessDialog(context, holder, order);
         });
@@ -147,6 +147,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
     }
 
+    // init cancel dialog
     private void initCancelDialog(Context context, OrderViewHolder holder, Order order) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 context);
@@ -170,6 +171,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         alert.show();
     }
 
+    // init process
     private void initProcessDialog(Context context, OrderViewHolder holder, Order order) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 context);
@@ -186,6 +188,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         alert.show();
     }
 
+    // handle order process
     private void handleProcessOrder(OrderViewHolder holder, Order order) {
         order.setIsProcessed(true);
         orderCollection.document(order.getId() + "").set(order.toMap()).addOnSuccessListener(unused -> {
@@ -204,8 +207,10 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         });
     }
 
+    // handle cancel order
     private void handleCancelOrder(OrderViewHolder holder, Order order) {
 
+        // set order cancel
         order.setIsCancelled(true);
         order.setPrice(0);
         Log.d(TAG, "cancel order=" + order.toString());
@@ -225,6 +230,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         });
     }
 
+    // get client by id
     private void getClientById(OrderViewHolder holder, String s, List<Item> itemList, List<Integer> quantityList) {
         fireStore = FirebaseFirestore.getInstance();
         DocumentReference docRef = fireStore.collection("clients").document(s);
@@ -249,6 +255,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         }
     }
 
+    // onbind view holder2
     private void onBindViewHolder2(@NonNull OrderViewHolder holder, Client c,
                                    List<Item> itemList,
                                    List<Integer> quantityList) {
@@ -268,6 +275,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         return orderList.size();
     }
 
+    // set list view height based on children
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
@@ -292,6 +300,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
 
 class OrderViewHolder extends RecyclerView.ViewHolder {
 
+    // attributes
     TextView clientName;
     TextView clientPhone;
     TextView clientAddress;
@@ -305,6 +314,7 @@ class OrderViewHolder extends RecyclerView.ViewHolder {
     public OrderViewHolder(@NonNull View orderView) {
         super(orderView);
 
+        // attach view
         Log.d("OrderRecyclerViewAdapter", "OrderViewHolder: constructor");
         clientName = orderView.findViewById(R.id.orderClientName);
         clientPhone = orderView.findViewById(R.id.orderClientPhoneTxt);
