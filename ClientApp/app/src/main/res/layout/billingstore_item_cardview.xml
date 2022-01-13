@@ -23,6 +23,7 @@
         <TextView
             android:id="@+id/billingstoreItemName"
             android:layout_width="300sp"
+            android:maxWidth="300sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/billingstoreItemQuantity"

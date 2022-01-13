@@ -65,7 +65,7 @@ public class HydrationReminderReceiver extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.bun)  // Set icon
+                .setSmallIcon(R.drawable.ic_alarm)  // Set icon
                 .setTicker(aMessage)
                 .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400}); // Set vibration
 

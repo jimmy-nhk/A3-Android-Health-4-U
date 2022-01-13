@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.clientapp.R;
 import com.example.clientapp.helper.broadcast.HydrationReminderReceiver;
@@ -41,6 +44,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HomeFragment extends Fragment {
@@ -74,8 +78,9 @@ public class HomeFragment extends Fragment {
     private FirebaseFirestore fireStore;
     private CollectionReference storeCollection;
     private CollectionReference itemCollection;
-    private AlarmManager alarmManager;
-    private PendingIntent alarmIntent;
+    static private AlarmManager alarmManager;
+    static private PendingIntent alarmIntent;
+    static private Boolean isNotifying =false;
 
 
     @Override
@@ -84,37 +89,46 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
         getViews(view);
         initService(view);
         initCategoryListAdapter(view);
         initHydrationReminder(view);
+
     }
 
     //Init button on click
     private void initHydrationReminder(View view) {
-        isRemindButton.setChecked(false);
-
+        updateDrinkingLayout(isNotifying);
         isRemindButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateDrinkingLayout(isChecked);
                 if (isChecked) { // If ischecked, run the alarm intent and show the hydration layout
                     runAlarm(remindInterval);
-                    isDrinkingLayout.setVisibility(View.VISIBLE); //show the hydration layout
                 } else {
                     cancelAlarm(); // If ! ischecked, cancel the alarm intent and hide the hydration layout
-                    isDrinkingLayout.setVisibility(View.GONE); //hide the hydration layout
-
                 }
             }
         });
         remindIntervalTxt.setOnClickListener(v -> { //Check if the interval text is clicked, if yes, show the dialog
             showIntervalDialog();
         });
+    }
+
+    private void updateDrinkingLayout(Boolean isChecked) {
+        if (isChecked) {
+            isNotifying = true;
+            isDrinkingLayout.setVisibility(View.VISIBLE); //show the hydration layout
+        } else {
+            isNotifying = false;
+            isDrinkingLayout.setVisibility(View.GONE); //hide the hydration layout
+        }
+        isRemindButton.setChecked(isChecked);
     }
 
     //Function show dialog to set interval
@@ -160,7 +174,6 @@ public class HomeFragment extends Fragment {
 
         // cancel the previous alarm first
         cancelAlarm();
-
         //Configure alarm
         Intent intent = new Intent(getContext(), HydrationReminderReceiver.class); // set the broadcast HydrationReminderReceiver to be receiver
         alarmIntent = PendingIntent.getBroadcast(
@@ -173,12 +186,16 @@ public class HomeFragment extends Fragment {
 
     //Cancel set alarm if existed
     private void cancelAlarm() {
+        Intent intent = new Intent(getContext(), HydrationReminderReceiver.class); // set the broadcast HydrationReminderReceiver to be receiver
+        alarmIntent = PendingIntent.getBroadcast(
+                getContext(), ALARM_REQUEST_CODE, intent, 0); // Set intent with broadcast
         if (alarmManager != null) { // if alarmManager is not null, it is used to set alarm
             alarmManager.cancel(alarmIntent); // cancel set alarm in this alarm manager by alarm intent, which is the code of set alarm
             Log.d(TAG, "cancel alarm: " + remindInterval);
 
         }
     }
+
 
     // init category list
     private void initCategoryListAdapter(View view) {
@@ -204,7 +221,7 @@ public class HomeFragment extends Fragment {
                 = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
         newStoreRecyclerView.setLayoutManager(horizontalLayoutManager);
 
-        if (isAdded()){
+        if (isAdded()) {
             newStoresAdapter = new NewStoreRecyclerViewAdapter(view.getContext(), newStoreList);
             newStoreRecyclerView.setAdapter(newStoresAdapter);
         }
@@ -228,8 +245,7 @@ public class HomeFragment extends Fragment {
         newItemRecyclerView = view.findViewById(R.id.recyclerNewItems);
 
         // Initialize list adapter
-        if (isAdded())
-        {
+        if (isAdded()) {
             mAdapter = new ItemRecyclerViewAdapter(getActivity(), newItemList, viewModel);
             mAdapter.notifyDataSetChanged();
             // linear styles
@@ -240,7 +256,6 @@ public class HomeFragment extends Fragment {
             newItemRecyclerView.setHasFixedSize(true);
             newItemRecyclerView.setAdapter(mAdapter);
         }
-
 
 
     }

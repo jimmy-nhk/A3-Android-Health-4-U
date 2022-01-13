@@ -53,6 +53,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -284,6 +285,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         toggleStatus("online");
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+//        Toast.makeText(this, "Destroyed", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
     }
 
     @Override
