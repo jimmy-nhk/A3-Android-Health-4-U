@@ -160,9 +160,7 @@ public class BillingActivity extends AppCompatActivity {
     // create pdf
      private void createPdf() {
         LinearLayout llScroll = findViewById(R.id.outputLinearLayout);
-        llScroll.setBackgroundColor(getColor(R.color.white));
         bitmap = loadBitmapFromView(llScroll, llScroll.getWidth(), llScroll.getHeight());
-        llScroll.setBackgroundColor(getColor(R.color.transparent));
 
          DisplayMetrics displaymetrics = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -204,7 +202,6 @@ public class BillingActivity extends AppCompatActivity {
 
         // open generated pdf file
         openGeneratedPDF(filePath);
-
     }
 
     // Function open generated pdf file

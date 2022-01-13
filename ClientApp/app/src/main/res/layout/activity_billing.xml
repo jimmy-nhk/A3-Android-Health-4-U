@@ -10,17 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <Button
-            android:layout_margin="5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5sp"
             android:onClick="finishIntentOnClick"
-            android:text="Back"/>
+            android:text="Back" />
 
         <LinearLayout
             android:id="@+id/outputLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -35,7 +37,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="date" />
+                    android:text="date"
+                    android:textColor="@color/grey" />
 
                 <TextView
                     android:id="@+id/billingstoreIsProcessed"
@@ -45,6 +48,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="10dp"
                     android:text="FINISHED"
+                    android:textColor="@color/grey"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </RelativeLayout>
@@ -58,17 +62,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20sp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TOTAL"/>
+                    android:text="TOTAL"
+                    android:textColor="@color/grey" />
 
                 <TextView
                     android:id="@+id/billingMoneyTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="total" />
+                    android:text="total"
+                    android:textColor="@color/grey" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -90,26 +97,10 @@
                 android:id="@+id/billingSavePdf"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_gravity="center"
+                android:layout_marginStart="10dp"
                 android:onClick="savePdfOnClick"
                 android:text="@string/save_as_pdf" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:text="How was your experience?" />
-
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"
-            android:progressTint="#FBC02D" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
