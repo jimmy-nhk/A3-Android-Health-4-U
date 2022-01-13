@@ -125,7 +125,8 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
     // normal log in
     public void normalLogIn(View view) {
-
+        errorLoginTxt.setVisibility(View.INVISIBLE);
+        errorLoginTxt.setText("");
         // validate in case it cannot sign in with authentication
         try {
 
@@ -147,13 +148,14 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
                         } else {
                             // if sign in fails, display a message to the user
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                                Toast.makeText(LogInActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                            errorLoginTxt.setVisibility(View.VISIBLE);
+                            errorLoginTxt.setText(("Log in failed. Please try again!"));
                         }
                     });
 
         } catch (Exception e){
             errorLoginTxt.setVisibility(View.VISIBLE);
-            errorLoginTxt.setText("Please enter your mail and password.");
+            errorLoginTxt.setText(("Please enter your mail and password"));
             return;
         }
     }
@@ -204,21 +206,27 @@ public class LogInActivity extends AppCompatActivity implements GoogleApiClient.
 
         Log.d(TAG, "getFirebaseVendorByEmail: " + email);
 
-        // firebase collection
-        fireStore.collection("vendors")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
-                        vendor = queryDocumentSnapshots.getDocuments().get(0).toObject(Vendor.class);
-                        if (vendor != null) {
-                            Log.d(TAG, "Query Vendor by email="+vendor.toString());
+        try {
+            // firebase collection
+            fireStore.collection("vendors")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                            vendor = queryDocumentSnapshots.getDocuments().get(0).toObject(Vendor.class);
+                            if (vendor != null) {
+                                Log.d(TAG, "Query Vendor by email="+vendor.toString());
 
-                            updateUI();
+                                updateUI();
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorLoginTxt.setVisibility(View.INVISIBLE);
+            errorLoginTxt.setText(("Log in failed. Please try again!"));
+        }
     }
 
     // handle sign in with google

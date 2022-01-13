@@ -52,7 +52,8 @@
         android:text="Cannot find the account. Please try again."
         android:backgroundTint="@color/red"
         android:textColor="@color/red"
-        android:layout_marginStart="3dp"/>
+        android:layout_marginStart="3dp"
+        android:visibility="invisible"/>
 
 
     <Button
