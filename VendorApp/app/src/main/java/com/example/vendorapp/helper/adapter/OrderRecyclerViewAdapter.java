@@ -122,47 +122,11 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderViewHold
         //TODO: Image and Button
         holder.processBtn.setOnClickListener(v -> {
             initProcessDialog(context, holder, order);
-
-//            order.setIsProcessed(true);
-//            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                @Override
-//                public void onSuccess(Void unused) {
-//                    Log.d(TAG, "Order successfully updated!");
-//
-//                    Log.d(TAG, "processBtn: click: " + order.toString());
-//
-//                    holder.announcementTxt.setText("Processed!");
-//                    holder.announcementTxt.setTextColor(GREEN_COLOR);
-//                    holder.cancelBtn.setVisibility(View.GONE);
-//                    holder.cancelBtn.setEnabled(false);
-//                    holder.processBtn.setEnabled(false);
-//                    holder.processBtn.setVisibility(View.GONE);
-//
-//                }
-//            });
         });
 
         holder.cancelBtn.setOnClickListener(v -> {
             initCancelDialog(context, holder, order);
 
-//            order.setIsCancelled(true);
-//            order.setPrice(0);
-//            orderCollection.document(order.getId() + "").set(order).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                @Override
-//                public void onSuccess(Void unused) {
-//                    Log.d(TAG, "Order successfully updated!");
-//
-//                    Log.d(TAG, "cancelBtn: click: " + order.toString());
-//
-//                    holder.announcementTxt.setText("Cancel!");
-//                    holder.announcementTxt.setTextColor(RED_COLOR);
-//
-//                    holder.cancelBtn.setVisibility(View.GONE);
-//                    holder.cancelBtn.setEnabled(false);
-//                    holder.processBtn.setEnabled(false);
-//                    holder.processBtn.setVisibility(View.GONE);
-//                }
-//            });
         });
 
         //ListView

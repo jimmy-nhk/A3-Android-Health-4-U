@@ -72,7 +72,7 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
     private void handleRecyclerItemClick(RecyclerView parent, View v) {
         int itemPosition = parent.getChildLayoutPosition(v);
         Item item = this.itemList.get(itemPosition);
-        Toast.makeText(this.context, item.getName(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(this.context, item.getName(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -80,15 +80,6 @@ public class ItemRecyclerViewAdapter extends RecyclerView.Adapter<ItemViewHolder
         Log.d("ItemRecyclerViewAdapter", "render");
 
         Item item = this.itemList.get(position);
-
-//        new FetchImageTask(item.getImage()) {
-//            @Override
-//            protected void onPostExecute(Bitmap result) {
-//                if (result != null) {
-//                    holder.image.setImageBitmap(result);
-//                }
-//            }
-//        }.execute("IMAGE_URL");
 
         try {
             if (item.getImage().length() > 0) {
