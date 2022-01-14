@@ -345,7 +345,10 @@ public class SignUpStep1Activity extends AppCompatActivity {
             String confirmPassword = confirmPasswordText.getText().toString().trim();
 
             if (validateInput(username,storeName, fullName, email, password, confirmPassword))
+            {
                 addVendorToAuthentication(emailText.getText().toString(), confirmPasswordText.getText().toString());
+
+            }
         } catch (Exception ignored){
 
         }
